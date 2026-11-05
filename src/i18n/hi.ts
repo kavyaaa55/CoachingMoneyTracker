@@ -4,6 +4,7 @@ export const hi: Messages = {
   appName: "फ़ीस ट्रैकर",
   tagline: "बिना फ़ोन किए जानें कि कितना और कब देना है।",
   institute: "Company A",
+  city: "जयपुर",
   signOut: "साइन आउट करें",
   status: {
     paid: "भुगतान हो गया",

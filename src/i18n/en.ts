@@ -2,6 +2,7 @@ export const en = {
   appName: "Fee Tracker",
   tagline: "Know what is due and when, without calling.",
   institute: "Company A",
+  city: "Jaipur",
   signOut: "Sign out",
   status: {
     paid: "Paid",

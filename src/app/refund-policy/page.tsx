@@ -42,7 +42,7 @@ export default async function RefundPolicyPage() {
 
       <article className="flex flex-col gap-6 rounded-md border border-divider bg-surface p-6">
         <header>
-          <p className="text-sm text-muted">{t.institute}, Jaipur</p>
+          <p className="text-sm text-muted">{t.institute}, {t.city}</p>
           <h1 className="mt-1 text-[32px] leading-10 font-medium">{p.title}</h1>
           <p className="mt-3">{p.intro}</p>
         </header>

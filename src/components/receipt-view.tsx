@@ -33,7 +33,7 @@ export function ReceiptView({ receipt, locale, t }: Props) {
       <article className="rounded-md border border-divider bg-surface p-6">
         <header>
           <p className="text-sm text-muted">
-            {t.institute}, Jaipur · {t.receipt.gstin} {SAMPLE_GSTIN}
+            {t.institute}, {t.city} · {t.receipt.gstin} {SAMPLE_GSTIN}
           </p>
           <h1 className="mt-1 text-[32px] leading-10 font-medium">{t.receipt.title}</h1>
         </header>
