@@ -2,7 +2,7 @@
 
 **GitHub:** https://github.com/Siddhesh-source/coaching_institute
 **Live app:** not deployed yet (see [deployment.md](../deployment.md))
-**Status:** in progress, last updated 5 Nov 2026 (risk flag added). Sections marked *Planned* are designed but not built.
+**Status:** in progress, last updated 5 Nov 2026 (polish check done). Sections marked *Planned* are designed but not built.
 
 ---
 
@@ -325,7 +325,9 @@ The 31 mockups are kept in `docs/mockups` as layout reference only. They contain
 
 Tests use the brief's own rows, so Aarav, Ishita and Mohit must produce exactly the brief's statuses. Main flows were also walked through in a real browser at 360px, in both languages.
 
-Testing found real problems: a day count of `-0` on the due date, sample data that put every overdue student in NEET batches, a Hindi button overflowing its box, and an export that would have broken the production build.
+A polish check then visited every screen at 360px in both languages, 67 views in all, measuring overflow, tap targets, field labels, headings and dead links. It also tried to reach another parent's child by changing the address, and looked for secrets in the full git history. Nothing leaked and no secrets were found.
+
+Testing found real problems: forms that cleared every field after a validation error, a day count of `-0` on the due date, sample data that put every overdue student in NEET batches, a Hindi button overflowing its box, and an export that would have broken the production build.
 
 ## 11. Assumptions
 
@@ -377,9 +379,10 @@ The brief does not state these. Each one is my judgement.
 - The job holds the instalment lock while sending. That is fine for a mock, but a real provider should be called with a timeout.
 - OTP limits are per phone number, with no limit per IP address.
 - Signing out clears the cookie on that device. It does not cancel a copied session token.
-- Hindi text needs review by a native speaker before real use.
+- Hindi text needs review by a native speaker before real use. Its layout has been checked, its wording has not.
+- Screen behaviour such as forms keeping their values is checked in a browser, not by automated tests. Adding component tests would need a new dependency.
+- The error page and loading placeholders were reviewed in code, not forced in a browser.
 - The mock gateway is available only when `DEMO_MODE=true`. A real gateway needs its own webhook format.
-- The phone field clears after a validation error.
 - A saved refund cannot be edited or reversed, so a wrong exit date needs a database fix. It needs a reversal entry, as manual payments do.
 - The app works out a refund but does not pay it. There is no "refund paid" step, and no list of refunds across students, so staff track the deadline from each ledger.
 - The refund policy wording is a sample built on assumed rules. Company A must confirm it before real use.
@@ -392,4 +395,4 @@ The brief does not state these. Each one is my judgement.
 
 **Cut from the core build:** bulk upload, parent attendance and test score pages, audit log.
 
-**Next, in order:** full polish pass, deployment.
+**Next, in order:** deployment and the submission files.

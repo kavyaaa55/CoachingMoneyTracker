@@ -15,7 +15,7 @@ Run these in order, one at a time. Each one ends with a working app and a commit
 - [x] 6. Refund calculator
 - [x] 7. Dues dashboard
 - [x] 8. Dropout-risk flag
-- [ ] 9. Polish check
+- [x] 9. Polish check
 - [ ] 10. Submission files
 
 ## 1. Sample data

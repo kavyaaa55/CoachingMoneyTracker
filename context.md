@@ -2,7 +2,7 @@
 
 Read this first, then continue from **Next step**.
 
-**Last updated:** 5 Nov 2026, after prompt 8.
+**Last updated:** 5 Nov 2026, after prompt 9.
 
 ## What this is
 
@@ -38,8 +38,8 @@ Fee Tracker: a 7-day solo assessment build for Company A, a Jaipur coaching inst
 | 6. Refund calculator | Done |
 | 7. Dues dashboard | Done |
 | 8. Dropout-risk flag | Done |
-| 9. Polish check | **Next** |
-| 10. Submission files | To do |
+| 9. Polish check | Done |
+| 10. Submission files | **Next** |
 
 Last verified: 220 tests pass (138 unit, 82 database), lint, types and build are clean, and CI passes on `main`. The working tree is clean.
 
@@ -66,14 +66,14 @@ Open http://localhost:3000. The server does not survive the session that started
 
 The OTP appears on screen in demo mode.
 
-## Next step: prompt 9
+## Next step: prompt 10
 
-Run the polish check, using the text in `prompt.md`. Already known:
+Write the submission files, using the text in `prompt.md`. Things to know:
 
-- The phone field clears after a validation error.
-- The staff tables scroll inside their box at tablet widths. Check that still reads well.
-- The staff and parent screens in Hindi need one full pass at 360px, including the refund and ledger pages.
-- Check every parent page against another parent's child.
+- `docs/TDD.md` is nearly complete. Remove any *Planned* label that no longer applies, and add the GitHub URL at the top.
+- The app is not deployed yet. The brief wants a live link, so the owner needs to pick a host and provide a database.
+- `deployment.md` needs the demo logins for the live site once it exists.
+- Section **Before submission** below is the checklist.
 
 ## Decisions waiting on the owner
 
@@ -146,6 +146,5 @@ Not blocking, and listed in `docs/TDD.md` where they affect the client:
 - A saved manual payment cannot be reversed. If time allows, add a reversal entry, never a delete.
 - A saved refund cannot be reversed either, and there is no "refund paid" step or list of refunds across students.
 - Unmatched payments have no staff screen yet (optional depth).
-- The phone field clears after a validation error. Fix in prompt 9.
 - The Tally columns are assumed. Receipt and export dates use UTC, which only matters for real payments just after midnight in India.
 - Hindi text needs review by a native speaker.
