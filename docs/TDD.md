@@ -2,7 +2,7 @@
 
 **GitHub:** https://github.com/Siddhesh-source/coaching_institute
 **Live app:** not deployed yet (see [deployment.md](../deployment.md))
-**Status:** in progress, last updated 5 Nov 2026. Sections marked *Planned* are designed but not built.
+**Status:** in progress, last updated 5 Nov 2026 (staff ledger added). Sections marked *Planned* are designed but not built.
 
 ---
 
@@ -31,7 +31,8 @@ Fee Tracker gives parents their dues on a phone in five seconds, in Hindi or Eng
 | Receipts show GST | Built | Printable, Hindi and English |
 | Realistic sample data | Built | 43 students, 4 centres, 9 batches |
 | Pro-rata refund rules | Rules built | Tested logic. Screen is planned |
-| Fee ledger for staff | Planned | Data ready, parent view built |
+| Fee ledger for staff | Built | Search, plan, discount, instalments, payments, balance, days overdue |
+| Manual payments | Built | Same matching code as the webhook |
 | Reminders that stop on payment | Planned | Table ready |
 | Dues dashboard, ageing, Tally export | Planned | |
 | AI dropout-risk flag | Planned | Input data seeded, including test cases |
@@ -85,6 +86,7 @@ The money rules are the hard part of this brief, so they sit in `src/domain` whe
 | Dates as `YYYY-MM-DD` strings | A due date has no time zone, so it cannot shift by a day | Date objects |
 | Paid amount is calculated from payments | One source of truth. Balance can never disagree with history | A stored `paid` column |
 | One function marks instalments paid | `recordPayment` is the single place to audit | Updates spread across routes |
+| Manual entry uses the same `recordPayment` | One matching rule for all money. A mismatch is refused inside the same lock, so it cannot race | A separate staff write path |
 | Only a signed webhook can record a gateway payment | The browser is never trusted to say it paid | Marking paid on the redirect |
 | `gateway_ref` is unique | A repeated webhook changes nothing | Checking in code alone |
 | Lock the instalment row while matching | Two payments cannot both use the same balance | Hoping they never collide |
@@ -96,7 +98,7 @@ The money rules are the hard part of this brief, so they sit in `src/domain` whe
 
 ## 5. Data Model
 
-13 tables, 3 migrations. The core of it:
+13 tables, 4 migrations. The core of it:
 
 ```mermaid
 erDiagram
@@ -158,6 +160,16 @@ sequenceDiagram
 
 A double click sends the same reference, so the second one changes nothing. Tests prove this with six identical events arriving at once.
 
+### Manual payment
+
+Accounts staff record cash, UPI, cheque and bank payments from the student's ledger.
+
+1. Staff pick the instalment, then enter the amount, method, reference and date.
+2. The server checks the role, the input, and that the instalment belongs to this student.
+3. `recordPayment` applies the same matching as the webhook.
+4. Gateway money that does not match has really arrived, so it is queued. A manual entry that does not match is a typing mistake, so it is refused and nothing is saved.
+5. Each payment stores the method, the reference and who entered it. The parent's balance updates at once.
+
 ### Refund (rules built, screen planned)
 
 ```
@@ -199,7 +211,7 @@ The seed already holds three students who should trigger the flag, one with too 
 |---|---|
 | No secrets in the repo | `.env` is ignored by git. Only variable names are committed |
 | Input validation | All checked on the server: Zod for webhook and gateway data, domain rules for phone numbers and OTP codes |
-| Access control | `requireUser` and `requireParent` guard protected pages and actions |
+| Access control | `requireUser` and `requireParent` guard protected pages and actions. Parents cannot open staff pages |
 | Parent isolation | Queries filter by owner. Another family's receipt returns "not found" |
 | OTP abuse | Hashed, 5 minute expiry, 5 tries per code, 5 codes per 10 minutes |
 | Parallel guessing | Attempts are counted in one statement. 12 parallel guesses stopped at exactly 5 |
@@ -231,12 +243,12 @@ The 31 mockups are kept in `docs/mockups` as layout reference only. They contain
 
 ## 10. Testing
 
-83 tests pass, and CI runs lint, types, tests and a build on every push.
+103 tests pass, and CI runs lint, types, tests and a build on every push.
 
 | Suite | Tests | Covers |
 |---|---|---|
-| Unit | 69 | Fee, refund, OTP, GST, matching, sessions, sample data |
-| Database | 14 | Duplicates, races, part payments, unmatched cases, webhook signatures |
+| Unit | 76 | Fee, refund, OTP, GST, matching, ledger totals, sessions, sample data |
+| Database | 27 | Duplicates, races, part payments, unmatched cases, manual entry, webhook signatures, student search |
 
 Tests use the brief's own rows, so Aarav, Ishita and Mohit must produce exactly the brief's statuses. Main flows were also walked through in a real browser at 360px, in both languages.
 
@@ -254,6 +266,7 @@ The brief does not state these. Each one is my judgement.
 | Instalment plans | ₹1,20,000 as 4 × ₹30,000 or 3 × ₹40,000 | Fits the brief's average fee and sample rows |
 | Batch schedules | Due dates per programme, plus JEE 2028 and NEET 2028 | Only three due dates given |
 | Part payments | Up to the balance is applied. More goes to the queue | The brief bars wrong amounts but its sample has part payments |
+| Manual payments | Must fit the balance or are refused. Dates cannot be in the future | A typing mistake is not money that arrived |
 | Parent home amount | Oldest unpaid instalment, other overdue amounts on one line | Pay links are per instalment |
 | GST | 18% inside the fee, 9% CGST and 9% SGST, sample GSTIN | No rate or number given |
 | Reminder days | 7 and 1 before, on the day, 3 and 7 after | The brief says before, on and after |
@@ -270,6 +283,8 @@ The brief does not state these. Each one is my judgement.
 
 - Consent proves control of the registered phone, not legal guardianship. A real rollout needs a stronger check.
 - Consent withdrawal goes through the centre's office. There is no in-app button.
+- A saved manual payment cannot be edited or reversed yet. That needs a reversal entry, not a delete.
+- Every accounts user can see all centres. There is no per-centre access yet.
 - OTP limits are per phone number, with no limit per IP address.
 - Signing out clears the cookie on that device. It does not cancel a copied session token.
 - Hindi text needs review by a native speaker before real use.
@@ -278,4 +293,4 @@ The brief does not state these. Each one is my judgement.
 
 **Cut from the core build:** bulk upload, parent attendance and test score pages, audit log.
 
-**Next, in order:** staff ledger, reminders, refund screen and policy page, dues dashboard with Tally export, risk flag, full polish pass, deployment.
+**Next, in order:** reminders, refund screen and policy page, dues dashboard with Tally export, risk flag, full polish pass, deployment.

@@ -60,6 +60,7 @@ Label each of these in the Technical Design Document. Add new ones here as they 
 | Consent proof | OTP sign-in on the registered number, plus a stored, versioned record per child | The brief requires verifiable consent, not the method |
 | GST | 18%, included in the fee, split into 9% CGST and 9% SGST, with a sample GSTIN | The brief says receipts show GST, not the rate or number |
 | Payment matching | A payment up to the balance is applied, as a part payment if smaller. More than the balance goes to the queue | The brief says a wrong amount marks nothing paid, and its sample data has part payments |
+| Manual payments | Must fit the balance, or they are refused and nothing is saved. Dates cannot be in the future | A staff typing mistake is not money that arrived, so it should not enter the queue |
 | Parent home amount | Shows the oldest unpaid instalment, and mentions any other overdue amount | The pay link is per instalment, so the button must match the amount shown |
 | Pay links | Signed, valid for 7 days, and show no student data | Reminders will carry them, so they must be safe outside a signed-in session |
 
@@ -79,7 +80,7 @@ docs/        brief, mockups and technical design
 ```
 
 - Money is integer paise. Format it only with `formatInr`.
-- `recordPayment` in `lib/payments` is the only code that marks an instalment paid.
+- `recordPayment` in `lib/payments` is the only code that marks an instalment paid, for gateway and manual payments alike.
 - Dates are `YYYY-MM-DD` strings. Get today from `lib/clock`, never `new Date()`, so the demo date holds. Security timers such as OTP expiry use the real clock.
 - Call `requireUser` or `requireParent` from `lib/auth` first in every protected page and server action.
 - User-facing text comes from `src/i18n`, never hardcoded.

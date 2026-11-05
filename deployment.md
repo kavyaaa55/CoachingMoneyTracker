@@ -64,7 +64,7 @@ Pick a language, enter a number, and the code appears on screen.
 | `9000000003` | Parent | Mohit Gurjar: due in 13 days |
 | `9000000001` | Parent | Aarav Meena: up to date |
 | `9000001035` | Parent | Two children |
-| `9000000100` | Accounts staff | Staff area |
+| `9000000100` | Accounts staff | Student list, ledgers and manual payments |
 
 All people and numbers are fictional.
 
