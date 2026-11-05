@@ -2,14 +2,16 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { buttonStyles } from "@/components/button-styles";
 import { DataTable } from "@/components/data-table";
+import { RiskChip } from "@/components/risk-chip";
 import { StatusChip } from "@/components/status-chip";
 import { balanceOf, instalmentStatus, summariseLedger } from "@/domain/instalments";
 import { formatInr } from "@/domain/money";
-import { formatDate, messages } from "@/i18n";
+import { formatDate, messages, riskReasonLabel } from "@/i18n";
 import { requireUser } from "@/lib/auth";
 import { today } from "@/lib/clock";
 import { instalmentsOf, paymentHistoryOf } from "@/lib/ledger";
 import { getLocale } from "@/lib/locale";
+import { riskOf } from "@/lib/risk";
 import { studentById } from "@/lib/staff-students";
 
 type Props = {
@@ -30,7 +32,11 @@ export default async function StudentLedgerPage({ params, searchParams }: Props)
   const l = t.staff.ledger;
   const date = today();
 
-  const [instalments, history] = await Promise.all([instalmentsOf(id), paymentHistoryOf(id)]);
+  const [instalments, history, risk] = await Promise.all([
+    instalmentsOf(id),
+    paymentHistoryOf(id),
+    riskOf(id, date),
+  ]);
   const summary = summariseLedger(instalments, date);
 
   const figures = [
@@ -105,6 +111,32 @@ export default async function StudentLedgerPage({ params, searchParams }: Props)
           </dd>
         </div>
       </dl>
+
+      {!student.exitDate && (
+        <section className="flex flex-col gap-3">
+          <h2 className="text-xl leading-7 font-medium">{l.riskTitle}</h2>
+          <div className="rounded-md border border-divider bg-surface p-6">
+            {risk.band === "none" && <p className="text-muted">{l.riskNone}</p>}
+            {risk.band === "not-enough-data" && <p className="text-muted">{l.riskThin}</p>}
+            {(risk.band === "watch" || risk.band === "high") && (
+              <>
+                <RiskChip band={risk.band} t={t} />
+                <ul className="mt-3 list-disc pl-5">
+                  {risk.reasons.map((reason) => (
+                    <li key={reason.kind}>{riskReasonLabel(reason, t)}</li>
+                  ))}
+                </ul>
+                <Link
+                  href="/staff/tasks"
+                  className="mt-2 inline-block py-3 font-medium underline underline-offset-4"
+                >
+                  {l.riskTasks}
+                </Link>
+              </>
+            )}
+          </div>
+        </section>
+      )}
 
       <section className="flex flex-col gap-3">
         <h2 className="text-xl leading-7 font-medium">{l.instalments}</h2>

@@ -2,6 +2,7 @@ import type { IsoDate } from "@/domain/dates";
 import type { InstalmentStatus } from "@/domain/instalments";
 import { formatInr, type Paise } from "@/domain/money";
 import { stageOf } from "@/domain/reminders";
+import type { RiskReason } from "@/domain/risk";
 import { en, type Messages } from "./en";
 import { hi } from "./hi";
 
@@ -45,6 +46,12 @@ export function reminderMessage(locale: Locale, details: ReminderDetails): strin
   const { dayOffset, studentName, amount, dueDate, link } = details;
   const write = messages(locale).reminders.text[stageOf(dayOffset)];
   return write(studentName, formatInr(amount), formatDate(dueDate, locale), link);
+}
+
+export function riskReasonLabel(reason: RiskReason, t: Messages): string {
+  const { reasons } = t.staff.tasks;
+  if (reason.kind === "missed") return reasons.missed(reason.count);
+  return reasons[reason.kind](reason.from, reason.to);
 }
 
 export function stageLabel(dayOffset: number, t: Messages): string {

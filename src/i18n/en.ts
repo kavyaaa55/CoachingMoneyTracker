@@ -127,6 +127,7 @@ export const en = {
     navDues: "Dues",
     navStudents: "Students",
     navReminders: "Reminders",
+    navTasks: "Call tasks",
     dues: {
       title: "Dues",
       students: (total: number) => `${total} ${total === 1 ? "student" : "students"}`,
@@ -219,6 +220,10 @@ export const en = {
       method: "Method",
       reference: "Reference",
       receipt: "Receipt",
+      riskTitle: "Dropout risk",
+      riskNone: "No signs of risk right now.",
+      riskThin: "Not enough attendance or test records to say yet, so no task was created.",
+      riskTasks: "See call tasks",
     },
     payment: {
       title: "Record a payment",
@@ -239,6 +244,48 @@ export const en = {
       futureDate: "The payment date cannot be in the future.",
       tooHigh: "This is more than the balance on this instalment. Nothing was saved.",
       studentLeft: "This student has left, so no more payments can be recorded.",
+    },
+    tasks: {
+      title: "Call tasks",
+      intro: "A flag only creates a call to the parent. It never changes fees or sends a parent a message. It can be wrong, so mark false flags.",
+      rate: (falseFlags: number, reviewed: number, percent: number) =>
+        `False flags: ${falseFlags} of ${reviewed} reviewed (${percent}%).`,
+      noRate: "No flags reviewed yet, so there is no false-flag rate.",
+      run: "Run risk check now",
+      running: "Checking...",
+      result: (checked: number, flagged: number) =>
+        `Checked ${checked} ${checked === 1 ? "student" : "students"}. ${flagged} new ${flagged === 1 ? "task" : "tasks"}.`,
+      thin: (total: number) =>
+        `${total} had too little data, so no task was created.`,
+      saved: { called: "Marked as called.", false_flag: "Marked as a false flag." },
+      filters: { open: "Open", called: "Called", false_flag: "False flags" },
+      empty: {
+        open: "No open call tasks. A task appears here when the risk check finds a student who needs a call.",
+        called: "No calls recorded yet.",
+        false_flag: "No false flags yet.",
+      },
+      bands: { watch: "Watch", high: "High risk" },
+      call: (name: string) => `Call ${name}`,
+      prefers: (language: string) => `Prefers ${language}`,
+      flaggedOn: (date: string) => `Flagged ${date}`,
+      reviewedOn: (date: string) => `Reviewed ${date}`,
+      reasons: {
+        missed: (count: number) => `${count} ${count === 1 ? "instalment" : "instalments"} overdue`,
+        attendance: (from: number, to: number) => `Attendance fell from ${from}% to ${to}%`,
+        tests: (from: number, to: number) => `Test scores fell from ${from}% to ${to}%`,
+      },
+      form: {
+        note: "Note",
+        noteHint: "Required for a false flag, so others can see why.",
+        called: "Called",
+        falseFlag: "False flag",
+        saving: "Saving...",
+      },
+      noteNeeded: "Add a note saying why this flag is false.",
+      invalid: "Please check the form and try again.",
+      page: (page: number, pages: number) => `Page ${page} of ${pages}`,
+      previous: "Previous",
+      next: "Next",
     },
     refund: {
       title: "Refund",

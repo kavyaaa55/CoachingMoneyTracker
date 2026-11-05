@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { formatDate, messages, reminderMessage, stageLabel, statusLabel } from "./index";
+import {
+  formatDate,
+  messages,
+  reminderMessage,
+  riskReasonLabel,
+  stageLabel,
+  statusLabel,
+} from "./index";
 
 const en = messages("en");
 const hi = messages("hi");
@@ -55,6 +62,17 @@ describe("reminderMessage", () => {
     expect(reminderMessage("en", { ...details, dayOffset: 0 })).toContain("is due today");
     expect(reminderMessage("en", { ...details, dayOffset: 3 })).toContain("was due on 10 Oct 2026");
     expect(reminderMessage("hi", { ...details, dayOffset: 3 })).toContain("देय थी");
+  });
+});
+
+describe("riskReasonLabel", () => {
+  it("words each reason in plain language", () => {
+    expect(riskReasonLabel({ kind: "missed", count: 1 }, en)).toBe("1 instalment overdue");
+    expect(riskReasonLabel({ kind: "missed", count: 2 }, en)).toBe("2 instalments overdue");
+    expect(riskReasonLabel({ kind: "attendance", from: 83, to: 42 }, en)).toBe(
+      "Attendance fell from 83% to 42%",
+    );
+    expect(riskReasonLabel({ kind: "tests", from: 60, to: 35 }, hi)).toContain("35%");
   });
 });
 
