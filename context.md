@@ -2,7 +2,7 @@
 
 Read this first, then continue from **Next step**.
 
-**Last updated:** 5 Nov 2026, after prompt 5.
+**Last updated:** 5 Nov 2026, after prompt 6.
 
 ## What this is
 
@@ -35,13 +35,13 @@ Fee Tracker: a 7-day solo assessment build for Company A, a Jaipur coaching inst
 | 3. Parent home and payment | Done |
 | 4. Fee ledger | Done |
 | 5. Reminders | Done |
-| 6. Refund calculator | **Next** |
-| 7. Dues dashboard | To do |
+| 6. Refund calculator | Done |
+| 7. Dues dashboard | **Next** |
 | 8. Dropout-risk flag | To do |
 | 9. Polish check | To do |
 | 10. Submission files | To do |
 
-Last verified: 132 tests pass (89 unit, 43 database), lint, types and build are clean, and CI passes on `main`. The working tree is clean.
+Last verified: 150 tests pass (93 unit, 57 database), lint, types and build are clean, and CI passes on `main`. The working tree is clean.
 
 ## Run it
 
@@ -66,27 +66,18 @@ Open http://localhost:3000. The server does not survive the session that started
 
 The OTP appears on screen in demo mode.
 
-## Next step: prompt 6
+## Next step: prompt 7
 
-Build the refund screen on `src/domain/refund.ts`, using the text in `prompt.md`. Already in place:
+Build the dues dashboard, using the text in `prompt.md`. Things to know from prompt 6:
 
-- `calculateRefund` and its tests. Ishita leaving on 12 Oct 2026 gives ₹10,808.
-- The `refunds` table, with one refund per student.
-- `students.exit_date`. The reminder job already stops with reason `student-left` when it is set.
-
-Still needed:
-
-- Saving a refund must set `exit_date` and stop that student's queued reminders straight away, not only at the next job run.
-- Staff screen reached from the ledger. Show every working line, the result and the 10-day deadline.
-- Public refund policy page in Hindi and English. Cite only the Ministry of Education 2024 guidelines. The mockups invented "Rajasthan Coaching Regulations" and a ₹15,000 registration fee, so do not copy those.
-- Edge cases: exit before term, exit after term, paid less than used, a discount.
+- A student with `exit_date` set has a closed fee account, so their unpaid instalments are not collectable. Leave them out of dues totals and ageing, and label the assumption in `CLAUDE.md` and `docs/TDD.md`.
+- `refundOf` in `src/lib/refunds.ts` reads a saved refund. The seed has none, so save one in the app to test this.
 
 ## Decisions waiting on the owner
 
-1. **Refund rule.** Built as pure pro-rata with no retained fee, because the owner did not pick. Confirm before prompt 6. The alternatives were a configurable retained fee, or the ₹15,000 from the mockups.
-2. **Long-overdue reminders.** They end 7 days after the due date. The owner has not yet answered whether to repeat them weekly until paid.
-3. **Repo visibility.** It is private. The brief requires it to be public by submission. It is the owner's call when.
-4. **`CLAUDE.md`, `prompt.md` and this file** are committed, and their names will be visible once public. The owner has not yet said whether to keep them tracked.
+1. **Long-overdue reminders.** They end 7 days after the due date. The owner has not yet answered whether to repeat them weekly until paid.
+2. **Repo visibility.** It is private. The brief requires it to be public by submission. It is the owner's call when.
+3. **`CLAUDE.md`, `prompt.md` and this file** are committed, and their names will be visible once public. The owner has not yet said whether to keep them tracked.
 
 ## How each prompt is done
 
@@ -105,6 +96,7 @@ Still needed:
 | `src/lib/payments.ts` | `recordPayment`, the only code that marks an instalment paid |
 | `src/lib/reminders.ts` | The reminder job and list query |
 | `src/lib/auth.ts` | `requireUser`, `requireParent`. Call first in every protected page and action |
+| `src/lib/refunds.ts` | `saveRefund`, which also stops reminders and closes the fee account, and `refundOf` |
 | `src/lib/ledger.ts` | Instalment, payment and receipt queries |
 | `src/lib/staff-students.ts` | Student search and lookup |
 | `src/lib/clock.ts` | `today()`. Never use `new Date()` for business dates |
@@ -146,6 +138,7 @@ Money is whole paise. Dates are `YYYY-MM-DD` strings.
 Not blocking, and listed in `docs/TDD.md` where they affect the client:
 
 - A saved manual payment cannot be reversed. If time allows, add a reversal entry, never a delete.
+- A saved refund cannot be reversed either, and there is no "refund paid" step or list of refunds across students.
 - Unmatched payments have no staff screen yet (optional depth).
 - The phone field clears after a validation error. Fix in prompt 9.
 - Hindi text needs review by a native speaker.

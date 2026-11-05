@@ -12,7 +12,7 @@ Run these in order, one at a time. Each one ends with a working app and a commit
 - [x] 3. Parent home and payment
 - [x] 4. Fee ledger
 - [x] 5. Reminders
-- [ ] 6. Refund calculator
+- [x] 6. Refund calculator
 - [ ] 7. Dues dashboard
 - [ ] 8. Dropout-risk flag
 - [ ] 9. Polish check

@@ -2,7 +2,7 @@
 
 **GitHub:** https://github.com/Siddhesh-source/coaching_institute
 **Live app:** not deployed yet (see [deployment.md](../deployment.md))
-**Status:** in progress, last updated 5 Nov 2026 (reminders added). Sections marked *Planned* are designed but not built.
+**Status:** in progress, last updated 5 Nov 2026 (refunds added). Sections marked *Planned* are designed but not built.
 
 ---
 
@@ -30,7 +30,8 @@ Fee Tracker gives parents their dues on a phone in five seconds, in Hindi or Eng
 | Unmatched payments never mark paid | Built | Stored for the queue. Staff screen is planned |
 | Receipts show GST | Built | Printable, Hindi and English |
 | Realistic sample data | Built | 49 students, 4 centres, 9 batches |
-| Pro-rata refund rules | Rules built | Tested logic. Screen is planned |
+| Pro-rata refund calculator | Built | Every working line, 10 day deadline, saved once per student |
+| Published refund policy | Built | Public page in Hindi and English, printable |
 | Fee ledger for staff | Built | Search, plan, discount, instalments, payments, balance, days overdue |
 | Manual payments | Built | Same matching code as the webhook |
 | Reminders that stop on payment | Built | Hindi and English, before, on and after, with a mock sender |
@@ -172,7 +173,7 @@ Accounts staff record cash, UPI, cheque and bank payments from the student's led
 4. Gateway money that does not match has really arrived, so it is queued. A manual entry that does not match is a typing mistake, so it is refused and nothing is saved.
 5. Each payment stores the method, the reference and who entered it. The parent's balance updates at once.
 
-### Refund (rules built, screen planned)
+### Refund
 
 ```
 fee used = net fee x days used / term days     (both end dates count, rounded to the rupee)
@@ -184,6 +185,17 @@ due by   = exit date + 10 days
 Fee used is ₹1,20,000 × 104 ÷ 365 = ₹34,192. Refund is **₹10,808**, due by 22 Oct 2026.
 
 Tests also cover discounts, exit before term, exit after term, and a parent who paid less than the fee used.
+
+**Screen.** Staff open it from the ledger and pick an exit date. The server shows every working line, the result and the deadline. A future date is a preview only, so the exit-after-term case can be checked before it happens.
+
+**Saving** runs in one transaction:
+
+1. Lock the student's instalments, the same lock `recordPayment` and the reminder job take. A payment in progress finishes first and is counted.
+2. Work out the amount again from the database. Nothing about the amount comes from the form.
+3. Store the refund with the net fee and amount paid, so the working stays true later.
+4. Set the exit date and stop every queued reminder with the reason `student-left`.
+
+**After saving,** the fee account is closed, because a later payment would make the saved refund wrong. Parents see the refund and no pay buttons. Old pay links stop working. Gateway money that still arrives goes to the unmatched queue, and manual payments are refused. The policy lives at `/refund-policy`, with no sign-in, and its example is worked through the real rule.
 
 ### Reminders
 
@@ -241,7 +253,7 @@ The seed already holds three students who should trigger the flag, one with too 
 | Forged webhooks | Signature checked in constant time. Changed bodies are refused |
 | Token reuse | Session and pay link tokens use separate signing keys |
 | DPDP Act 2023 | Consent recorded per child with a notice version. A new version asks again |
-| Coaching guidelines 2024 | Refund rule and 10 day deadline built. Published policy page planned |
+| Coaching guidelines 2024 | Refund rule, 10 day deadline and published policy page built |
 | GST on receipts | Taxable value, CGST and SGST shown. The parts always add up to the total |
 
 ## 9. UI and Design Decisions
@@ -265,12 +277,12 @@ The 31 mockups are kept in `docs/mockups` as layout reference only. They contain
 
 ## 10. Testing
 
-132 tests pass, and CI runs lint, types, tests and a build on every push.
+150 tests pass, and CI runs lint, types, tests and a build on every push.
 
 | Suite | Tests | Covers |
 |---|---|---|
-| Unit | 89 | Fee, refund, OTP, GST, matching, ledger totals, reminder rules, sessions, sample data |
-| Database | 43 | Duplicates, races, part payments, unmatched cases, manual entry, reminder stages and stopping, webhook and cron security, student search |
+| Unit | 93 | Fee, refund, exit dates, OTP, GST, matching, ledger totals, reminder rules, sessions, sample data |
+| Database | 57 | Duplicates, races, part payments, unmatched cases, manual entry, reminder stages and stopping, saving refunds, payments after exit, webhook and cron security, student search |
 
 Tests use the brief's own rows, so Aarav, Ishita and Mohit must produce exactly the brief's statuses. Main flows were also walked through in a real browser at 360px, in both languages.
 
@@ -283,7 +295,11 @@ The brief does not state these. Each one is my judgement.
 | Topic | Assumption | Reason |
 |---|---|---|
 | Refund formula | Pure pro-rata by days, as in section 6 | The brief requires pro-rata but gives no written policy |
-| Retained fee | None | The brief mentions no registration fee |
+| Retained fee | None, confirmed by the owner | The brief mentions no registration fee |
+| Refund saving | A future exit date is preview only. Saving is final, one per student, and keeps the figures used | Saving stops reminders, so it must mean the student has left |
+| After a refund is saved | The fee account closes. Late gateway money is queued and manual payments are refused | A later payment would make the saved refund wrong |
+| Unpaid fee used | Shown to staff, never collected automatically | The brief covers refunds, not recovering money from leavers |
+| Refund deadline | Counts from the exit date, even if saved late | The brief says within 10 days of the student leaving |
 | Academic term | 1 Jul 2026 to 30 Jun 2027 | No dates given. Instalments run to April |
 | Instalment plans | ₹1,20,000 as 4 × ₹30,000 or 3 × ₹40,000 | Fits the brief's average fee and sample rows |
 | Batch schedules | Due dates per programme, plus JEE 2028 and NEET 2028 | Only three due dates given |
@@ -318,7 +334,10 @@ The brief does not state these. Each one is my judgement.
 - Hindi text needs review by a native speaker before real use.
 - The mock gateway is available only when `DEMO_MODE=true`. A real gateway needs its own webhook format.
 - The phone field clears after a validation error.
+- A saved refund cannot be edited or reversed, so a wrong exit date needs a database fix. It needs a reversal entry, as manual payments do.
+- The app works out a refund but does not pay it. There is no "refund paid" step, and no list of refunds across students, so staff track the deadline from each ledger.
+- The refund policy wording is a sample built on assumed rules. Company A must confirm it before real use.
 
 **Cut from the core build:** bulk upload, parent attendance and test score pages, audit log.
 
-**Next, in order:** refund screen and policy page, dues dashboard with Tally export, risk flag, full polish pass, deployment.
+**Next, in order:** dues dashboard with Tally export, risk flag, full polish pass, deployment.

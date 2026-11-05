@@ -66,6 +66,10 @@ Label each of these in the Technical Design Document. Add new ones here as they 
 | Manual payments | Must fit the balance, or they are refused and nothing is saved. Dates cannot be in the future | A staff typing mistake is not money that arrived, so it should not enter the queue |
 | Parent home amount | Shows the oldest unpaid instalment, and mentions any other overdue amount | The pay link is per instalment, so the button must match the amount shown |
 | Pay links | Signed, valid for 7 days, and show no student data | Reminders will carry them, so they must be safe outside a signed-in session |
+| Refund saving | A future exit date can be previewed but not saved. Saving is final, one per student, and keeps the figures used | Saving stops reminders, so it must mean the student has really left |
+| After a refund is saved | The fee account closes. Parents see the refund instead of dues, pay links stop, gateway money goes to the queue, and manual payments are refused | A later payment would make the saved refund wrong |
+| Unpaid fee used | Shown to staff when paid is less than fee used, never collected automatically | The brief only covers refunds, not recovering money from leavers |
+| Refund deadline | Counts from the exit date, even if the refund is saved late, and shows as overdue if passed | The brief says within 10 days of the student leaving |
 
 ## Stack
 
