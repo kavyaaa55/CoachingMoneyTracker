@@ -7,7 +7,7 @@ Run these in order, one at a time. Each one ends with a working app and a commit
 ## Status
 
 - [x] 0. Setup: docs, scaffold, schema, sample data, refund and instalment rules
-- [ ] 1. Sample data
+- [x] 1. Sample data
 - [ ] 2. Sign-in and consent
 - [ ] 3. Parent home and payment
 - [ ] 4. Fee ledger
