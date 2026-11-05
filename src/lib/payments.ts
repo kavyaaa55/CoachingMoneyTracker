@@ -12,11 +12,19 @@ export const paymentEventSchema = z.object({
   paidAt: z.iso.datetime(),
 });
 
+export const MANUAL_METHODS = ["cash", "upi", "cheque", "bank_transfer"] as const;
+
 export type PaymentEvent = z.infer<typeof paymentEventSchema>;
 
+type ManualDetails = {
+  method: (typeof MANUAL_METHODS)[number];
+  externalRef: string | null;
+  recordedBy: string;
+};
+
 export type RecordedPayment = {
-  paymentId: string;
-  status: "matched" | "unmatched";
+  paymentId: string | null;
+  status: "matched" | "unmatched" | "rejected";
   duplicate: boolean;
   studentId: string | null;
 };
@@ -42,9 +50,15 @@ async function toResult(row: Row, duplicate: boolean): Promise<RecordedPayment> 
 /**
  * The only code that marks an instalment paid. Safe to call twice with the same event:
  * gateway_ref is unique, so a repeat returns the first result and changes nothing.
+ *
+ * Gateway money has really arrived, so a mismatch is kept in the queue. A manual entry
+ * that does not match is a typing mistake, so passing `manual` rejects it and saves nothing.
  */
-export async function recordPayment(event: PaymentEvent): Promise<RecordedPayment> {
-  const { row, duplicate } = await db.transaction(async (tx) => {
+export async function recordPayment(
+  event: PaymentEvent,
+  manual?: ManualDetails,
+): Promise<RecordedPayment> {
+  const outcome = await db.transaction(async (tx) => {
     const findExisting = () =>
       tx.select().from(payments).where(eq(payments.gatewayRef, event.gatewayRef));
 
@@ -70,6 +84,7 @@ export async function recordPayment(event: PaymentEvent): Promise<RecordedPaymen
 
     const match = matchPayment(balance, event.amountPaise);
     const matched = match.status === "matched";
+    if (!matched && manual) return null;
 
     const [inserted] = await tx
       .insert(payments)
@@ -78,6 +93,7 @@ export async function recordPayment(event: PaymentEvent): Promise<RecordedPaymen
         instalmentId: matched ? instalment.id : null,
         amountPaise: event.amountPaise,
         status: match.status,
+        ...manual,
         receiptNo: matched
           ? sql`'RCT-' || lpad(nextval('receipt_no_seq')::text, 6, '0')`
           : null,
@@ -94,5 +110,8 @@ export async function recordPayment(event: PaymentEvent): Promise<RecordedPaymen
     return { row: winner, duplicate: true };
   });
 
-  return toResult(row, duplicate);
+  if (!outcome) {
+    return { paymentId: null, status: "rejected", duplicate: false, studentId: null };
+  }
+  return toResult(outcome.row, outcome.duplicate);
 }

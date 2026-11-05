@@ -16,6 +16,13 @@ import {
 
 export const roleEnum = pgEnum("role", ["parent", "accounts"]);
 export const languageEnum = pgEnum("language", ["en", "hi"]);
+export const paymentMethodEnum = pgEnum("payment_method", [
+  "gateway",
+  "cash",
+  "upi",
+  "cheque",
+  "bank_transfer",
+]);
 export const paymentStatusEnum = pgEnum("payment_status", ["matched", "unmatched"]);
 export const reminderStatusEnum = pgEnum("reminder_status", ["queued", "sent", "stopped"]);
 export const riskBandEnum = pgEnum("risk_band", ["watch", "high"]);
@@ -138,6 +145,11 @@ export const payments = pgTable(
     instalmentId: uuid("instalment_id").references(() => instalments.id),
     amountPaise: integer("amount_paise").notNull(),
     status: paymentStatusEnum("status").notNull(),
+    method: paymentMethodEnum("method").notNull().default("gateway"),
+    /** A cheque, UPI or bank reference typed by staff. */
+    externalRef: text("external_ref"),
+    /** The staff member who entered it. Empty for gateway payments. */
+    recordedBy: uuid("recorded_by").references(() => users.id),
     receiptNo: text("receipt_no").unique(),
     /** What the gateway claimed, kept so staff can resolve an unmatched payment. */
     claimedRef: text("claimed_ref"),

@@ -1,4 +1,4 @@
-import { and, asc, eq, sql } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, sql, type SQL } from "drizzle-orm";
 import { db } from "@/db/client";
 import { batches, instalments, payments, students } from "@/db/schema";
 
@@ -52,17 +52,45 @@ export function matchedPaymentsOf(studentId: string) {
     .orderBy(asc(payments.paidAt));
 }
 
-/** Only returns the receipt if the student belongs to this parent. */
-export async function receiptFor(paymentId: string, parentId: string) {
+export function instalmentsOfMany(studentIds: string[]) {
+  return db
+    .select(instalmentFields)
+    .from(instalments)
+    .leftJoin(payments, eq(payments.instalmentId, instalments.id))
+    .where(inArray(instalments.studentId, studentIds))
+    .groupBy(instalments.id)
+    .orderBy(asc(instalments.sequence));
+}
+
+export function paymentHistoryOf(studentId: string) {
+  return db
+    .select({
+      id: payments.id,
+      sequence: instalments.sequence,
+      amount: payments.amountPaise,
+      method: payments.method,
+      reference: sql<string>`coalesce(${payments.externalRef}, ${payments.gatewayRef})`,
+      receiptNo: payments.receiptNo,
+      paidAt: payments.paidAt,
+    })
+    .from(payments)
+    .innerJoin(instalments, eq(instalments.id, payments.instalmentId))
+    .where(and(eq(instalments.studentId, studentId), eq(payments.status, "matched")))
+    .orderBy(desc(payments.paidAt));
+}
+
+async function findReceipt(paymentId: string, ownerCheck?: SQL) {
   if (!isUuid(paymentId)) return null;
 
   const [row] = await db
     .select({
       receiptNo: payments.receiptNo,
-      gatewayRef: payments.gatewayRef,
+      reference: sql<string>`coalesce(${payments.externalRef}, ${payments.gatewayRef})`,
+      method: payments.method,
       amount: payments.amountPaise,
       paidAt: payments.paidAt,
       sequence: instalments.sequence,
+      studentId: students.id,
       studentName: students.name,
       studentCode: students.code,
       batch: batches.name,
@@ -71,12 +99,15 @@ export async function receiptFor(paymentId: string, parentId: string) {
     .innerJoin(instalments, eq(instalments.id, payments.instalmentId))
     .innerJoin(students, eq(students.id, instalments.studentId))
     .innerJoin(batches, eq(batches.id, students.batchId))
-    .where(
-      and(
-        eq(payments.id, paymentId),
-        eq(payments.status, "matched"),
-        eq(students.parentId, parentId),
-      ),
-    );
+    .where(and(eq(payments.id, paymentId), eq(payments.status, "matched"), ownerCheck));
   return row ?? null;
 }
+
+export type Receipt = NonNullable<Awaited<ReturnType<typeof findReceipt>>>;
+
+/** Only returns the receipt if the student belongs to this parent. */
+export const receiptFor = (paymentId: string, parentId: string) =>
+  findReceipt(paymentId, eq(students.parentId, parentId));
+
+/** For accounts staff, who can see every receipt. Call only after requireUser("accounts"). */
+export const staffReceipt = (paymentId: string) => findReceipt(paymentId);

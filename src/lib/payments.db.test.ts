@@ -157,6 +157,60 @@ describe("recordPayment", () => {
   });
 });
 
+describe("manual entry", () => {
+  const manual = async () => {
+    const [staff] = await db
+      .insert(users)
+      .values({ phone: "+919000000100", name: "Accounts", role: "accounts" })
+      .returning();
+    return { method: "cheque" as const, externalRef: "CHQ-1", recordedBy: staff.id };
+  };
+
+  it("uses the same matching and keeps who entered it", async () => {
+    const details = await manual();
+    const result = await recordPayment(event(10000), details);
+
+    expect(result.status).toBe("matched");
+    expect(await balance()).toBe(rupees(20000));
+    const [payment] = await allPayments();
+    expect(payment).toMatchObject(details);
+    expect(payment.receiptNo).toMatch(/^RCT-/);
+  });
+
+  it("saves nothing when the amount is too high", async () => {
+    const result = await recordPayment(event(30001), await manual());
+
+    expect(result).toEqual({
+      paymentId: null,
+      status: "rejected",
+      duplicate: false,
+      studentId: null,
+    });
+    expect(await allPayments()).toHaveLength(0);
+  });
+
+  it("counts a double submit once", async () => {
+    const details = await manual();
+    const same = event(10000);
+    await recordPayment(same, details);
+    const second = await recordPayment(same, details);
+
+    expect(second.duplicate).toBe(true);
+    expect(await balance()).toBe(rupees(20000));
+  });
+
+  it("rejects a manual payment that races past the balance", async () => {
+    const details = await manual();
+    const results = await Promise.all([
+      recordPayment(event(20000), details),
+      recordPayment(event(20000), details),
+    ]);
+
+    expect(results.map((result) => result.status).sort()).toEqual(["matched", "rejected"]);
+    expect(await allPayments()).toHaveLength(1);
+  });
+});
+
 describe("payment webhook", () => {
   const post = (body: string, signature: string | null) =>
     POST(

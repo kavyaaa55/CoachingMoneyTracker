@@ -46,11 +46,10 @@ async function seed() {
       batchRows.map((row) => [`${centreName.get(row.centreId)}|${row.name}`, row.id]),
     );
 
-    await tx.insert(users).values({
-      phone: "+919000000100",
-      name: "Accounts Executive",
-      role: "accounts",
-    });
+    const [accountsUser] = await tx
+      .insert(users)
+      .values({ phone: "+919000000100", name: "Accounts Executive", role: "accounts" })
+      .returning();
 
     const parents = new Map(sample.students.map((s) => [s.parentPhone, s]));
     const parentRows = await tx
@@ -109,6 +108,9 @@ async function seed() {
             instalmentId: instalmentId.get(`${studentId.get(s.code)}|${index + 1}`)!,
             amountPaise: rupees(item.paid),
             status: "matched" as const,
+            // First instalments were paid at the counter, later ones online.
+            method: index === 0 ? ("cash" as const) : ("gateway" as const),
+            recordedBy: index === 0 ? accountsUser.id : null,
             receiptNo: `RCT-${reference}`,
             paidAt: paidAt(item.paidOn),
           },
