@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { balanceOf, instalmentStatus, nextToPay } from "./instalments";
+import { balanceOf, instalmentStatus, nextToPay, summariseLedger } from "./instalments";
 import { rupees } from "./money";
 
 const today = "2026-11-02";
@@ -58,5 +58,44 @@ describe("nextToPay", () => {
   it("returns null when everything is paid", () => {
     expect(nextToPay([paid], today)).toBeNull();
     expect(nextToPay([], today)).toBeNull();
+  });
+});
+
+describe("summariseLedger", () => {
+  const row = (dueDate: string, amount: number, paid: number) => ({
+    dueDate,
+    amount: rupees(amount),
+    paid: rupees(paid),
+  });
+
+  it("adds up Ishita's ledger", () => {
+    const ishita = [
+      row("2026-07-10", 30000, 30000),
+      row("2026-10-10", 30000, 15000),
+      row("2027-01-10", 30000, 0),
+      row("2027-04-10", 30000, 0),
+    ];
+    expect(summariseLedger(ishita, today)).toEqual({
+      paid: rupees(45000),
+      balance: rupees(75000),
+      overdue: rupees(15000),
+      daysOverdue: 23,
+    });
+  });
+
+  it("reports the oldest overdue days", () => {
+    const rows = [row("2026-07-10", 30000, 0), row("2026-10-10", 30000, 0)];
+    expect(summariseLedger(rows, today).daysOverdue).toBe(115);
+  });
+
+  it("has nothing overdue when only future instalments are unpaid", () => {
+    expect(summariseLedger([row("2027-01-10", 30000, 0)], today)).toMatchObject({
+      overdue: 0,
+      daysOverdue: 0,
+    });
+  });
+
+  it("handles a student with no instalments", () => {
+    expect(summariseLedger([], today)).toEqual({ paid: 0, balance: 0, overdue: 0, daysOverdue: 0 });
   });
 });

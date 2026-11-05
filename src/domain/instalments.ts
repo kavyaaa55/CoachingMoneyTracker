@@ -36,3 +36,16 @@ export function nextToPay<T extends Instalment>(instalments: T[], today: IsoDate
 
   return { next, otherOverdue };
 }
+
+export function summariseLedger(instalments: Instalment[], today: IsoDate) {
+  const late = instalments.filter(
+    (instalment) => balanceOf(instalment) > 0 && daysBetween(instalment.dueDate, today) > 0,
+  );
+
+  return {
+    paid: instalments.reduce((sum, instalment) => sum + instalment.paid, 0),
+    balance: instalments.reduce((sum, instalment) => sum + balanceOf(instalment), 0),
+    overdue: late.reduce((sum, instalment) => sum + balanceOf(instalment), 0),
+    daysOverdue: Math.max(0, ...late.map((item) => daysBetween(item.dueDate, today))),
+  };
+}
