@@ -1,122 +1,142 @@
 import { sql } from "drizzle-orm";
 import { rupees } from "@/domain/money";
 import { db, sqlClient } from "./client";
-import { batches, centres, instalments, payments, students, users } from "./schema";
+import { buildSampleData, CENTRES, PLAN_TOTAL } from "./sample-data";
+import {
+  attendance,
+  batches,
+  centres,
+  instalments,
+  payments,
+  students,
+  testScores,
+  users,
+} from "./schema";
 
-/** The three rows from the brief. All people and phone numbers are fictional. */
-const briefStudents = [
-  {
-    code: "STU-0412",
-    name: "Aarav Meena",
-    batch: "JEE 2027 Morning",
-    phone: "+919000000001",
-    language: "en",
-    plan: [
-      { dueDate: "2026-07-10", amount: 30000, paid: 30000 },
-      { dueDate: "2026-10-10", amount: 30000, paid: 30000 },
-      { dueDate: "2027-01-10", amount: 30000, paid: 0 },
-      { dueDate: "2027-04-10", amount: 30000, paid: 0 },
-    ],
-  },
-  {
-    code: "STU-0587",
-    name: "Ishita Sharma",
-    batch: "JEE 2027 Evening",
-    phone: "+919000000002",
-    language: "hi",
-    plan: [
-      { dueDate: "2026-07-10", amount: 30000, paid: 30000 },
-      { dueDate: "2026-10-10", amount: 30000, paid: 15000 },
-      { dueDate: "2027-01-10", amount: 30000, paid: 0 },
-      { dueDate: "2027-04-10", amount: 30000, paid: 0 },
-    ],
-  },
-  {
-    code: "STU-0219",
-    name: "Mohit Gurjar",
-    batch: "NEET 2027 Morning",
-    phone: "+919000000003",
-    language: "hi",
-    plan: [
-      { dueDate: "2026-07-15", amount: 40000, paid: 40000 },
-      { dueDate: "2026-11-15", amount: 40000, paid: 0 },
-      { dueDate: "2027-03-15", amount: 40000, paid: 0 },
-    ],
-  },
-] as const;
+const TERM = { termStart: "2026-07-01", termEnd: "2027-06-30" };
+const paidAt = (date: string) => new Date(`${date}T06:00:00Z`);
 
 async function seed() {
-  await db.execute(
-    sql`truncate table refunds, risk_flags, test_scores, attendance, reminders, payments,
-        instalments, consents, students, users, batches, centres cascade`,
-  );
+  const sample = buildSampleData();
 
-  const allCentres = await db
-    .insert(centres)
-    .values([1, 2, 3, 4].map((n) => ({ name: `Centre ${n}` })))
-    .returning();
+  await db.transaction(async (tx) => {
+    await tx.execute(
+      sql`truncate table refunds, risk_flags, test_scores, attendance, reminders, payments,
+          instalments, consents, students, users, batches, centres cascade`,
+    );
 
-  await db.insert(users).values({
-    phone: "+919000000100",
-    name: "Accounts Executive",
-    role: "accounts",
+    const centreRows = await tx
+      .insert(centres)
+      .values(CENTRES.map((name) => ({ name })))
+      .returning();
+    const centreId = new Map(centreRows.map((row) => [row.name, row.id]));
+
+    const batchKeys = [...new Set(sample.students.map((s) => `${s.centre}|${s.batch}`))];
+    const batchRows = await tx
+      .insert(batches)
+      .values(
+        batchKeys.map((key) => {
+          const [centre, name] = key.split("|");
+          return { name, centreId: centreId.get(centre)! };
+        }),
+      )
+      .returning();
+    const centreName = new Map(centreRows.map((row) => [row.id, row.name]));
+    const batchId = new Map(
+      batchRows.map((row) => [`${centreName.get(row.centreId)}|${row.name}`, row.id]),
+    );
+
+    await tx.insert(users).values({
+      phone: "+919000000100",
+      name: "Accounts Executive",
+      role: "accounts",
+    });
+
+    const parents = new Map(sample.students.map((s) => [s.parentPhone, s]));
+    const parentRows = await tx
+      .insert(users)
+      .values(
+        [...parents.values()].map((s) => ({
+          phone: s.parentPhone,
+          name: s.parentName,
+          role: "parent" as const,
+          language: s.language,
+        })),
+      )
+      .returning();
+    const parentId = new Map(parentRows.map((row) => [row.phone, row.id]));
+
+    const studentRows = await tx
+      .insert(students)
+      .values(
+        sample.students.map((s) => ({
+          ...TERM,
+          code: s.code,
+          name: s.name,
+          batchId: batchId.get(`${s.centre}|${s.batch}`)!,
+          parentId: parentId.get(s.parentPhone)!,
+          planTotalPaise: rupees(PLAN_TOTAL),
+          discountPaise: rupees(s.discount),
+        })),
+      )
+      .returning();
+    const studentId = new Map(studentRows.map((row) => [row.code, row.id]));
+
+    const instalmentRows = await tx
+      .insert(instalments)
+      .values(
+        sample.students.flatMap((s) =>
+          s.instalments.map((item, index) => ({
+            studentId: studentId.get(s.code)!,
+            sequence: index + 1,
+            dueDate: item.dueDate,
+            amountPaise: rupees(item.amount),
+          })),
+        ),
+      )
+      .returning();
+    const instalmentId = new Map(
+      instalmentRows.map((row) => [`${row.studentId}|${row.sequence}`, row.id]),
+    );
+
+    const matchedPayments = sample.students.flatMap((s) =>
+      s.instalments.flatMap((item, index) => {
+        if (item.paid === 0 || !item.paidOn) return [];
+        const reference = `${s.code}-${index + 1}`;
+        return [
+          {
+            gatewayRef: `SEED-${reference}`,
+            instalmentId: instalmentId.get(`${studentId.get(s.code)}|${index + 1}`)!,
+            amountPaise: rupees(item.paid),
+            status: "matched" as const,
+            receiptNo: `RCT-${reference}`,
+            paidAt: paidAt(item.paidOn),
+          },
+        ];
+      }),
+    );
+    const unmatchedPayments = sample.unmatchedPayments.map((item) => ({
+      gatewayRef: item.gatewayRef,
+      amountPaise: rupees(item.amount),
+      status: "unmatched" as const,
+      paidAt: paidAt(item.paidOn),
+    }));
+    await tx.insert(payments).values([...matchedPayments, ...unmatchedPayments]);
+
+    await tx.insert(attendance).values(
+      sample.students.flatMap((s) =>
+        s.attendance.map((row) => ({ ...row, studentId: studentId.get(s.code)! })),
+      ),
+    );
+
+    await tx.insert(testScores).values(
+      sample.students.flatMap((s) =>
+        s.scores.map((row) => ({ ...row, studentId: studentId.get(s.code)! })),
+      ),
+    );
   });
 
-  for (const row of briefStudents) {
-    const [batch] = await db
-      .insert(batches)
-      .values({ name: row.batch, centreId: allCentres[0].id })
-      .returning();
-
-    const [parent] = await db
-      .insert(users)
-      .values({
-        phone: row.phone,
-        name: `Parent of ${row.name}`,
-        role: "parent",
-        language: row.language,
-      })
-      .returning();
-
-    const [student] = await db
-      .insert(students)
-      .values({
-        code: row.code,
-        name: row.name,
-        batchId: batch.id,
-        parentId: parent.id,
-        planTotalPaise: rupees(row.plan.reduce((sum, item) => sum + item.amount, 0)),
-        termStart: "2026-07-01",
-        termEnd: "2027-06-30",
-      })
-      .returning();
-
-    for (const [index, item] of row.plan.entries()) {
-      const [instalment] = await db
-        .insert(instalments)
-        .values({
-          studentId: student.id,
-          sequence: index + 1,
-          dueDate: item.dueDate,
-          amountPaise: rupees(item.amount),
-        })
-        .returning();
-
-      if (item.paid > 0) {
-        const reference = `${row.code}-${index + 1}`;
-        await db.insert(payments).values({
-          gatewayRef: `SEED-${reference}`,
-          instalmentId: instalment.id,
-          amountPaise: rupees(item.paid),
-          status: "matched",
-          receiptNo: `RCT-${reference}`,
-          paidAt: new Date(`${item.dueDate}T06:00:00Z`),
-        });
-      }
-    }
-  }
-
-  console.log(`Seeded ${briefStudents.length} students.`);
+  console.log(`Seeded ${sample.students.length} students.`);
 }
 
 seed()
