@@ -75,7 +75,7 @@ src/
   db/        schema, client, seed
   i18n/      English and Hindi text
   lib/       env, clock, sessions and anything that needs cookies or the database
-docs/        brief and mockups
+docs/        brief, mockups and technical design
 ```
 
 - Money is integer paise. Format it only with `formatInr`.
@@ -102,7 +102,7 @@ Before each commit: `npm test`, `npm run test:db`, `npm run typecheck` and `npm 
 
 ## How to work
 
-Follow `prompt.md` in order, one prompt at a time. Update `prompt.md` when a step is finished or changes.
+Follow `prompt.md` in order, one prompt at a time. Update `prompt.md` when a step is finished or changes. Update `docs/TDD.md` and `deployment.md` in the same step, so their status and limits stay true.
 
 ## Design System
 
