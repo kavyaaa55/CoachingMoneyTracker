@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { balanceOf, instalmentStatus } from "./instalments";
+import { balanceOf, instalmentStatus, nextToPay } from "./instalments";
 import { rupees } from "./money";
 
 const today = "2026-11-02";
@@ -32,5 +32,31 @@ describe("instalmentStatus edge cases", () => {
     const row = { dueDate: today, amount: rupees(100), paid: rupees(150) };
     expect(instalmentStatus(row, today)).toEqual({ kind: "paid" });
     expect(balanceOf(row)).toBe(0);
+  });
+});
+
+describe("nextToPay", () => {
+  const paid = { dueDate: "2026-07-10", amount: rupees(30000), paid: rupees(30000) };
+  const late = { dueDate: "2026-10-10", amount: rupees(30000), paid: rupees(15000) };
+  const later = { dueDate: "2027-01-10", amount: rupees(30000), paid: 0 };
+
+  it("picks the oldest unpaid instalment, whatever the order", () => {
+    expect(nextToPay([later, paid, late], today)?.next).toBe(late);
+  });
+
+  it("does not count future instalments as overdue", () => {
+    expect(nextToPay([paid, late, later], today)?.otherOverdue).toBe(0);
+  });
+
+  it("adds up other overdue balances", () => {
+    const older = { dueDate: "2026-07-10", amount: rupees(30000), paid: 0 };
+    const result = nextToPay([older, late, later], today);
+    expect(result?.next).toBe(older);
+    expect(result?.otherOverdue).toBe(rupees(15000));
+  });
+
+  it("returns null when everything is paid", () => {
+    expect(nextToPay([paid], today)).toBeNull();
+    expect(nextToPay([], today)).toBeNull();
   });
 });

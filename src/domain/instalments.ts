@@ -21,3 +21,18 @@ export function instalmentStatus(instalment: Instalment, today: IsoDate): Instal
     ? { kind: "overdue", days: daysLate, partPaid }
     : { kind: "due", days: Math.abs(daysLate), partPaid };
 }
+
+/** The oldest unpaid instalment, plus anything else already overdue behind it. */
+export function nextToPay<T extends Instalment>(instalments: T[], today: IsoDate) {
+  const unpaid = instalments
+    .filter((instalment) => balanceOf(instalment) > 0)
+    .sort((a, b) => a.dueDate.localeCompare(b.dueDate));
+  if (unpaid.length === 0) return null;
+
+  const [next, ...rest] = unpaid;
+  const otherOverdue = rest
+    .filter((instalment) => daysBetween(instalment.dueDate, today) > 0)
+    .reduce((sum, instalment) => sum + balanceOf(instalment), 0);
+
+  return { next, otherOverdue };
+}
