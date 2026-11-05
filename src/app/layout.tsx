@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Noto_Sans } from "next/font/google";
+import { getLocale } from "@/lib/locale";
 import "./globals.css";
 
 const notoSans = Noto_Sans({
@@ -13,9 +14,9 @@ export const metadata: Metadata = {
   description: "Fees, dues and receipts for parents and accounts staff.",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={notoSans.variable}>
+    <html lang={await getLocale()} className={notoSans.variable}>
       <body>{children}</body>
     </html>
   );
