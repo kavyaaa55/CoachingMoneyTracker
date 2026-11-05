@@ -10,6 +10,7 @@ export function childrenOf(parentId: string) {
       name: students.name,
       batch: batches.name,
       centre: centres.name,
+      exitDate: students.exitDate,
     })
     .from(students)
     .innerJoin(batches, eq(batches.id, students.batchId))

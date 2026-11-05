@@ -246,6 +246,9 @@ export const refunds = pgTable(
       .notNull()
       .references(() => students.id),
     exitDate: date("exit_date").notNull(),
+    /** The figures used on the day, so the working stays true if anything changes later. */
+    netFeePaise: integer("net_fee_paise").notNull(),
+    paidPaise: integer("paid_paise").notNull(),
     termDays: integer("term_days").notNull(),
     daysUsed: integer("days_used").notNull(),
     feeUsedPaise: integer("fee_used_paise").notNull(),

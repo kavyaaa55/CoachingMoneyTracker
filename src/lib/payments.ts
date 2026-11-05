@@ -1,7 +1,7 @@
 import { and, eq, sql } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db/client";
-import { instalments, payments, reminders } from "@/db/schema";
+import { instalments, payments, reminders, students } from "@/db/schema";
 import { matchPayment } from "@/domain/payments";
 import { isUuid } from "./ledger";
 
@@ -74,15 +74,23 @@ export async function recordPayment(
       : [];
 
     let balance: number | null = null;
+    let studentHasLeft = false;
     if (instalment) {
       const [{ paid }] = await tx
         .select({ paid: sql<number>`coalesce(sum(${payments.amountPaise}), 0)::int` })
         .from(payments)
         .where(and(eq(payments.instalmentId, instalment.id), eq(payments.status, "matched")));
       balance = Math.max(0, instalment.amountPaise - paid);
+
+      // Read after the lock: saving a refund takes the same lock before it sets this.
+      const [student] = await tx
+        .select({ exitDate: students.exitDate })
+        .from(students)
+        .where(eq(students.id, instalment.studentId));
+      studentHasLeft = student.exitDate !== null;
     }
 
-    const match = matchPayment(balance, event.amountPaise);
+    const match = matchPayment(balance, event.amountPaise, studentHasLeft);
     const matched = match.status === "matched";
     if (!matched && manual) return null;
 

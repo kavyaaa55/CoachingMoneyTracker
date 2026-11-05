@@ -15,6 +15,9 @@ const studentFields = {
   centre: centres.name,
   planTotal: students.planTotalPaise,
   discount: students.discountPaise,
+  termStart: students.termStart,
+  termEnd: students.termEnd,
+  exitDate: students.exitDate,
   parentName: users.name,
   parentPhone: users.phone,
 };
