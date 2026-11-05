@@ -82,6 +82,18 @@ export const en = {
     receipt: (number: string) => `Receipt ${number}`,
     closed: "Closed",
   },
+  progress: {
+    title: "Attendance and test scores",
+    attendanceTitle: "Attendance",
+    recent: (weeks: number, present: number, total: number, percent: number) =>
+      `${weeks === 1 ? "Latest week" : `Last ${weeks} weeks`}: ${present} of ${total} classes (${percent}%)`,
+    weekOf: (date: string) => `Week of ${date}`,
+    classes: (present: number, total: number) => `${present} of ${total} classes`,
+    attendanceEmpty: "No attendance has been recorded yet. It will appear here once the centre adds it.",
+    testsTitle: "Test scores",
+    score: (score: number, max: number) => `${score} / ${max}`,
+    testsEmpty: "No test scores have been recorded yet. They will appear here once the centre adds them.",
+  },
   gateway: {
     title: "Test payment gateway",
     testMode: "Test mode. No real money moves.",

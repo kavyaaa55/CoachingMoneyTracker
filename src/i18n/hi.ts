@@ -84,6 +84,18 @@ export const hi: Messages = {
     receipt: (number) => `रसीद ${number}`,
     closed: "बंद",
   },
+  progress: {
+    title: "उपस्थिति और टेस्ट के अंक",
+    attendanceTitle: "उपस्थिति",
+    recent: (weeks, present, total, percent) =>
+      `${weeks === 1 ? "पिछला हफ़्ता" : `पिछले ${weeks} हफ़्ते`}: ${total} में से ${present} कक्षाएँ (${percent}%)`,
+    weekOf: (date) => `${date} से शुरू हफ़्ता`,
+    classes: (present, total) => `${total} में से ${present} कक्षाएँ`,
+    attendanceEmpty: "अभी कोई उपस्थिति दर्ज नहीं है। केंद्र द्वारा जोड़े जाने पर यह यहाँ दिखेगी।",
+    testsTitle: "टेस्ट के अंक",
+    score: (score, max) => `${score} / ${max}`,
+    testsEmpty: "अभी टेस्ट के कोई अंक दर्ज नहीं हैं। केंद्र द्वारा जोड़े जाने पर वे यहाँ दिखेंगे।",
+  },
   gateway: {
     title: "टेस्ट पेमेंट गेटवे",
     testMode: "टेस्ट मोड। कोई असली पैसा नहीं कटता।",

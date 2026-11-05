@@ -96,6 +96,14 @@ export default async function InstalmentsPage({
         </ul>
       )}
 
+      {child && (
+        <Link
+          href={`/parent/progress?student=${child.id}`}
+          className="block py-4 text-center font-medium underline underline-offset-4"
+        >
+          {t.progress.title}
+        </Link>
+      )}
       <Link
         href="/refund-policy"
         className="block py-4 text-center font-medium underline underline-offset-4"
