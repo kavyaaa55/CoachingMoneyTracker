@@ -60,15 +60,24 @@ export default async function StudentLedgerPage({ params, searchParams }: Props)
               {student.parentName} · {student.parentPhone}
             </p>
           </div>
-          {summary.balance > 0 && (
-            <div className="md:w-56">
+          <div className="flex flex-col gap-2 md:w-56">
+            {summary.balance > 0 && !student.exitDate && (
               <Link href={`/staff/students/${id}/payment`} className={buttonStyles.primary}>
                 {l.recordPayment}
               </Link>
-            </div>
-          )}
+            )}
+            <Link href={`/staff/students/${id}/refund`} className={buttonStyles.secondary}>
+              {student.exitDate ? l.viewRefund : l.workOutRefund}
+            </Link>
+          </div>
         </div>
       </div>
+
+      {student.exitDate && (
+        <p role="status" className="rounded-md bg-highlight px-4 py-3">
+          {l.left(formatDate(student.exitDate, locale))}
+        </p>
+      )}
 
       {recorded && (
         <p role="status" className="rounded-md bg-paid-tint px-4 py-3 text-paid">

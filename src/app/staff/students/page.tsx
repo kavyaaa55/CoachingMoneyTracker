@@ -149,7 +149,14 @@ export default async function StudentsPage({ searchParams }: { searchParams: Pro
             },
             {
               header: s.status,
-              cell: (row) => <StatusChip status={row.status ?? { kind: "paid" }} t={t} />,
+              cell: (row) =>
+                row.exitDate ? (
+                  <span className="inline-block rounded-sm bg-highlight px-2 py-0.5 text-[13px] font-medium">
+                    {s.left}
+                  </span>
+                ) : (
+                  <StatusChip status={row.status ?? { kind: "paid" }} t={t} />
+                ),
             },
           ]}
         />

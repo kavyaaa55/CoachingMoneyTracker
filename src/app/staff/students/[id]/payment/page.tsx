@@ -42,8 +42,10 @@ export default async function RecordPaymentPage({
         </p>
       </div>
 
-      {unpaid.length === 0 ? (
-        <p className="rounded-md border border-divider bg-surface p-6 text-muted">{p.nothingDue}</p>
+      {student.exitDate || unpaid.length === 0 ? (
+        <p className="rounded-md border border-divider bg-surface p-6 text-muted">
+          {student.exitDate ? p.studentLeft : p.nothingDue}
+        </p>
       ) : (
         <ActionForm action={recordManualPayment} label={p.save} pendingLabel={p.saving}>
           <input type="hidden" name="studentId" value={id} />

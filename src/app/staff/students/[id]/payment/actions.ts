@@ -10,6 +10,7 @@ import { today } from "@/lib/clock";
 import { instalmentById } from "@/lib/ledger";
 import { getLocale } from "@/lib/locale";
 import { MANUAL_METHODS, recordPayment } from "@/lib/payments";
+import { studentById } from "@/lib/staff-students";
 
 const formSchema = z.object({
   studentId: z.uuid(),
@@ -47,6 +48,9 @@ export async function recordManualPayment(_: FormState, formData: FormData): Pro
     { method, externalRef: reference || null, recordedBy: user.id },
   );
 
-  if (result.status !== "matched") return { error: t.tooHigh };
+  if (result.status !== "matched") {
+    const student = await studentById(studentId);
+    return { error: student?.exitDate ? t.studentLeft : t.tooHigh };
+  }
   redirect(`/staff/students/${studentId}?recorded=${result.paymentId}`);
 }
