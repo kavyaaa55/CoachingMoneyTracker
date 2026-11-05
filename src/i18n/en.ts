@@ -119,6 +119,7 @@ export const en = {
   staff: {
     signedInAs: (name: string) => `Signed in as ${name}`,
     navStudents: "Students",
+    navReminders: "Reminders",
     students: {
       title: "Students",
       searchLabel: "Search",
@@ -186,6 +187,52 @@ export const en = {
       invalidAmount: "Enter an amount above zero, such as 15000.",
       futureDate: "The payment date cannot be in the future.",
       tooHigh: "This is more than the balance on this instalment. Nothing was saved.",
+    },
+  },
+  reminders: {
+    title: "Reminders",
+    intro: "Sent 7 and 1 days before, on the due date, and 3 and 7 days after. They stop as soon as an instalment is paid.",
+    mocked: "Test mode: messages are saved here and not really sent.",
+    run: "Run reminders now",
+    running: "Running...",
+    result: (sent: number, stopped: number) => `Done. Sent ${sent}, stopped ${stopped}.`,
+    failed: (failed: number) => `${failed} could not be sent and will be tried again.`,
+    nothingDue: "Done. Nothing was due today.",
+    all: "All",
+    queued: "Queued",
+    sent: "Sent",
+    stopped: "Stopped",
+    searchLabel: "Search",
+    searchHint: "Student name or ID",
+    search: "Search",
+    empty: "No reminders here yet.",
+    noResults: "No reminders match this search.",
+    student: "Student",
+    instalment: "Instalment",
+    stage: "Stage",
+    sendOn: "Send date",
+    language: "Language",
+    status: "Status",
+    message: "Message",
+    viewMessage: "View message",
+    languages: { en: "English", hi: "Hindi" },
+    stages: {
+      before: (days: number) => `${days} ${days === 1 ? "day" : "days"} before`,
+      on: "On the due date",
+      after: (days: number) => `${days} ${days === 1 ? "day" : "days"} after`,
+    },
+    reasons: {
+      paid: "Paid",
+      superseded: "Replaced by a later reminder",
+      "student-left": "Student left",
+    },
+    text: {
+      before: (name: string, amount: string, date: string, link: string) =>
+        `Company A: ${name}'s fee of ${amount} is due on ${date}. Pay here: ${link}`,
+      on: (name: string, amount: string, _date: string, link: string) =>
+        `Company A: ${name}'s fee of ${amount} is due today. Pay here: ${link}`,
+      after: (name: string, amount: string, date: string, link: string) =>
+        `Company A: ${name}'s fee of ${amount} was due on ${date}. Pay here: ${link}`,
     },
   },
   paymentMethods: {

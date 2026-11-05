@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatDate, messages, statusLabel } from "./index";
+import { formatDate, messages, reminderMessage, stageLabel, statusLabel } from "./index";
 
 const en = messages("en");
 const hi = messages("hi");
@@ -28,5 +28,41 @@ describe("formatDate", () => {
     expect(formatDate("2026-10-10", "en")).toBe("10 Oct 2026");
     expect(formatDate("2026-10-10", "hi")).toMatch(/^10 \S+ 2026$/);
     expect(formatDate("2026-10-10", "hi")).not.toContain("॰");
+  });
+});
+
+describe("reminderMessage", () => {
+  const details = {
+    studentName: "Ishita Sharma",
+    amount: 1500000,
+    dueDate: "2026-10-10",
+    link: "https://example.test/pay",
+  };
+
+  it("has the amount and pay link at every stage, in both languages", () => {
+    for (const locale of ["en", "hi"] as const) {
+      for (const dayOffset of [-7, -1, 0, 3, 7]) {
+        const text = reminderMessage(locale, { ...details, dayOffset });
+        expect(text).toContain("₹15,000");
+        expect(text).toContain("Ishita Sharma");
+        expect(text).toContain(details.link);
+      }
+    }
+  });
+
+  it("changes tense with the stage", () => {
+    expect(reminderMessage("en", { ...details, dayOffset: -1 })).toContain("is due on 10 Oct 2026");
+    expect(reminderMessage("en", { ...details, dayOffset: 0 })).toContain("is due today");
+    expect(reminderMessage("en", { ...details, dayOffset: 3 })).toContain("was due on 10 Oct 2026");
+    expect(reminderMessage("hi", { ...details, dayOffset: 3 })).toContain("देय थी");
+  });
+});
+
+describe("stageLabel", () => {
+  it("names each stage", () => {
+    expect(stageLabel(-7, en)).toBe("7 days before");
+    expect(stageLabel(-1, en)).toBe("1 day before");
+    expect(stageLabel(0, en)).toBe("On the due date");
+    expect(stageLabel(3, en)).toBe("3 days after");
   });
 });

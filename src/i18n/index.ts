@@ -1,5 +1,7 @@
 import type { IsoDate } from "@/domain/dates";
 import type { InstalmentStatus } from "@/domain/instalments";
+import { formatInr, type Paise } from "@/domain/money";
+import { stageOf } from "@/domain/reminders";
 import { en, type Messages } from "./en";
 import { hi } from "./hi";
 
@@ -29,4 +31,24 @@ export function timingLabel(status: InstalmentStatus, t: Messages): string {
 export function statusLabel(status: InstalmentStatus, t: Messages): string {
   const timing = timingLabel(status, t);
   return status.kind !== "paid" && status.partPaid ? `${t.status.partPaid}, ${timing}` : timing;
+}
+
+type ReminderDetails = {
+  dayOffset: number;
+  studentName: string;
+  amount: Paise;
+  dueDate: IsoDate;
+  link: string;
+};
+
+export function reminderMessage(locale: Locale, details: ReminderDetails): string {
+  const { dayOffset, studentName, amount, dueDate, link } = details;
+  const write = messages(locale).reminders.text[stageOf(dayOffset)];
+  return write(studentName, formatInr(amount), formatDate(dueDate, locale), link);
+}
+
+export function stageLabel(dayOffset: number, t: Messages): string {
+  const stage = stageOf(dayOffset);
+  if (stage === "on") return t.reminders.stages.on;
+  return t.reminders.stages[stage](Math.abs(dayOffset));
 }

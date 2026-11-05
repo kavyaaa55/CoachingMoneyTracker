@@ -121,6 +121,7 @@ export const hi: Messages = {
   staff: {
     signedInAs: (name) => `${name} के रूप में साइन इन`,
     navStudents: "विद्यार्थी",
+    navReminders: "रिमाइंडर",
     students: {
       title: "विद्यार्थी",
       searchLabel: "खोजें",
@@ -187,6 +188,52 @@ export const hi: Messages = {
       invalidAmount: "शून्य से ज़्यादा राशि डालें, जैसे 15000।",
       futureDate: "भुगतान की तारीख़ भविष्य की नहीं हो सकती।",
       tooHigh: "यह इस किस्त की बाकी राशि से ज़्यादा है। कुछ भी नहीं सहेजा गया।",
+    },
+  },
+  reminders: {
+    title: "रिमाइंडर",
+    intro: "देय तिथि से 7 और 1 दिन पहले, देय तिथि पर, और 3 और 7 दिन बाद भेजे जाते हैं। किस्त का भुगतान होते ही बंद हो जाते हैं।",
+    mocked: "टेस्ट मोड: संदेश यहाँ सहेजे जाते हैं, असल में नहीं भेजे जाते।",
+    run: "अभी रिमाइंडर चलाएँ",
+    running: "चल रहा है...",
+    result: (sent, stopped) => `हो गया। ${sent} भेजे गए, ${stopped} रोके गए।`,
+    failed: (failed) => `${failed} नहीं भेजे जा सके, इन्हें दोबारा भेजा जाएगा।`,
+    nothingDue: "हो गया। आज कुछ भेजना नहीं था।",
+    all: "सभी",
+    queued: "कतार में",
+    sent: "भेजे गए",
+    stopped: "रोके गए",
+    searchLabel: "खोजें",
+    searchHint: "विद्यार्थी का नाम या आईडी",
+    search: "खोजें",
+    empty: "यहाँ अभी कोई रिमाइंडर नहीं है।",
+    noResults: "इस खोज से कोई रिमाइंडर नहीं मिला।",
+    student: "विद्यार्थी",
+    instalment: "किस्त",
+    stage: "चरण",
+    sendOn: "भेजने की तारीख़",
+    language: "भाषा",
+    status: "स्थिति",
+    message: "संदेश",
+    viewMessage: "संदेश देखें",
+    languages: { en: "अंग्रेज़ी", hi: "हिन्दी" },
+    stages: {
+      before: (days) => `${days} दिन पहले`,
+      on: "देय तिथि पर",
+      after: (days) => `${days} दिन बाद`,
+    },
+    reasons: {
+      paid: "भुगतान हो गया",
+      superseded: "बाद के रिमाइंडर से बदला गया",
+      "student-left": "विद्यार्थी ने छोड़ दिया",
+    },
+    text: {
+      before: (name, amount, date, link) =>
+        `Company A: ${name} की फ़ीस ${amount}, ${date} को देय है। भुगतान करें: ${link}`,
+      on: (name, amount, _date, link) =>
+        `Company A: ${name} की फ़ीस ${amount} आज देय है। भुगतान करें: ${link}`,
+      after: (name, amount, date, link) =>
+        `Company A: ${name} की फ़ीस ${amount}, ${date} को देय थी। भुगतान करें: ${link}`,
     },
   },
   paymentMethods: {
