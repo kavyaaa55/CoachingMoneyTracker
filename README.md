@@ -8,13 +8,13 @@ You need Node 22 or later and Postgres.
 
 ```
 npm install
-cp .env.example .env        # then set DATABASE_URL
+cp .env.example .env        # then set DATABASE_URL and SESSION_SECRET
 npm run db:migrate
 npm run db:seed
 npm run dev
 ```
 
-Open http://localhost:3000.
+Open http://localhost:3000. With `DEMO_MODE=true`, the sign-in page lists demo numbers and shows the code on screen.
 
 ## Docs
 

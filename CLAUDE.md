@@ -55,6 +55,9 @@ Label each of these in the Technical Design Document. Add new ones here as they 
 | Ageing buckets | 0–30, 31–60, 60+ days | The brief's success measure uses 60 days |
 | Centre names | Centre 1 to Centre 4 | The brief does not name them |
 | Counsellor | The accounts role handles call tasks | The brief lists only two roles |
+| OTP delivery | SMS is mocked. With `DEMO_MODE=true` the code shows on screen | The brief says to mock messages |
+| OTP limits | 5 minutes, 5 tries per code, 5 codes per number in 10 minutes | The brief asks for OTP login, not its limits |
+| Consent proof | OTP sign-in on the registered number, plus a stored, versioned record per child | The brief requires verifiable consent, not the method |
 | GST rate | Set in one place and stated as an assumption | The brief says receipts show GST, not the rate |
 
 ## Stack
@@ -64,15 +67,17 @@ Next.js (App Router, TypeScript), Postgres, Drizzle, Tailwind, Vitest. One app, 
 ```
 src/
   app/       routes only: thin pages and server actions
+  components/  small shared UI pieces
   domain/    pure business rules, no framework or database imports
   db/        schema, client, seed
   i18n/      English and Hindi text
-  lib/       env and clock
+  lib/       env, clock, sessions and anything that needs cookies or the database
 docs/        brief and mockups
 ```
 
 - Money is integer paise. Format it only with `formatInr`.
-- Dates are `YYYY-MM-DD` strings. Get today from `lib/clock`, never `new Date()`, so the demo date holds.
+- Dates are `YYYY-MM-DD` strings. Get today from `lib/clock`, never `new Date()`, so the demo date holds. Security timers such as OTP expiry use the real clock.
+- Call `requireUser` or `requireParent` from `lib/auth` first in every protected page and server action.
 - User-facing text comes from `src/i18n`, never hardcoded.
 - Every rule in `src/domain` has a test next to it, using the brief's sample data.
 
