@@ -139,6 +139,16 @@ function earliest(date: IsoDate): IsoDate {
   return daysBetween(date, SAMPLE_TODAY) < 0 ? SAMPLE_TODAY : date;
 }
 
+/** Individual payment plans, so a stage of every kind falls on the demo date. */
+const INDIVIDUAL_DUE_DATES = ["2026-11-09", "2026-11-03", "2026-11-02", "2026-10-30", "2026-10-26"];
+
+const individualPlan = (dueDate: IsoDate, paidOn?: IsoDate): SampleInstalment[] => [
+  { dueDate: "2026-07-10", amount: 30000, paid: 30000, paidOn: "2026-07-10" },
+  paidOn ? { dueDate, amount: 30000, paid: 30000, paidOn } : { dueDate, amount: 30000, paid: 0 },
+  { dueDate: "2027-01-10", amount: 30000, paid: 0 },
+  { dueDate: "2027-04-10", amount: 30000, paid: 0 },
+];
+
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
 function buildAttendance(trend: Trend, random: Random): SampleAttendance[] {
@@ -293,6 +303,19 @@ export function buildSampleData(): {
   addStudent(39, "missed-latest", "steady", {
     attendance: [{ weekStart: "2026-10-26", present: 4, total: 6 }],
     scores: [],
+  });
+
+  INDIVIDUAL_DUE_DATES.forEach((dueDate, index) => {
+    addStudent(40 + index, "paid-up", "steady", {
+      discount: 0,
+      instalments: individualPlan(dueDate),
+    });
+  });
+
+  // Paid early, so the reminders due today were stopped by the payment.
+  addStudent(45, "paid-up", "steady", {
+    discount: 0,
+    instalments: individualPlan("2026-11-02", "2026-10-30"),
   });
 
   return {

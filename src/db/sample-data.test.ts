@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { balanceOf, instalmentStatus } from "@/domain/instalments";
+import { reminderSchedule } from "@/domain/reminders";
 import { buildSampleData, CENTRES, PLAN_TOTAL, SAMPLE_TODAY } from "./sample-data";
 
 const { students, unmatchedPayments } = buildSampleData();
@@ -37,10 +38,10 @@ describe("sample data", () => {
     });
   });
 
-  it("has about 40 extra students with unique codes and names", () => {
-    expect(students).toHaveLength(43);
-    expect(new Set(students.map((student) => student.code)).size).toBe(43);
-    expect(new Set(students.map((student) => student.name)).size).toBe(43);
+  it("has unique codes and names", () => {
+    expect(students).toHaveLength(49);
+    expect(new Set(students.map((student) => student.code)).size).toBe(49);
+    expect(new Set(students.map((student) => student.name)).size).toBe(49);
   });
 
   it("covers all four centres", () => {
@@ -106,6 +107,17 @@ describe("sample data", () => {
     const thin = students.filter((student) => student.scores.length === 0);
     expect(thin).toHaveLength(1);
     expect(thin[0].attendance).toHaveLength(1);
+  });
+
+  it("has a reminder stage for every kind on the demo date", () => {
+    const offsets = students.flatMap((student) =>
+      student.instalments
+        .filter((item) => balanceOf(item) > 0)
+        .flatMap((item) => reminderSchedule(item.dueDate))
+        .filter((stage) => stage.sendOn === SAMPLE_TODAY)
+        .map((stage) => stage.dayOffset),
+    );
+    expect(new Set(offsets)).toEqual(new Set([-7, -1, 0, 3, 7]));
   });
 
   it("has one unmatched payment", () => {

@@ -1,13 +1,18 @@
 import { sql } from "drizzle-orm";
 import { rupees } from "@/domain/money";
+import { reminderSchedule, shouldPlan } from "@/domain/reminders";
+import { reminderMessage } from "@/i18n";
+import { env } from "@/lib/env";
+import { payLinkFor } from "@/lib/pay-links";
 import { db, sqlClient } from "./client";
-import { buildSampleData, CENTRES, PLAN_TOTAL } from "./sample-data";
+import { buildSampleData, CENTRES, PLAN_TOTAL, SAMPLE_TODAY } from "./sample-data";
 import {
   attendance,
   batches,
   centres,
   instalments,
   payments,
+  reminders,
   students,
   testScores,
   users,
@@ -124,6 +129,40 @@ async function seed() {
       paidAt: paidAt(item.paidOn),
     }));
     await tx.insert(payments).values([...matchedPayments, ...unmatchedPayments]);
+
+    // Rebuilds the history the daily job would have left behind by the demo date.
+    const reminderRows = sample.students.flatMap((s) =>
+      s.instalments.flatMap((item, index) => {
+        if (!shouldPlan(item.dueDate, SAMPLE_TODAY)) return [];
+        const id = instalmentId.get(`${studentId.get(s.code)}|${index + 1}`)!;
+
+        return reminderSchedule(item.dueDate).map(({ dayOffset, sendOn }) => {
+          const asOf = sendOn < SAMPLE_TODAY ? sendOn : SAMPLE_TODAY;
+          const paidSoFar = item.paidOn && item.paidOn <= asOf ? item.paid : 0;
+          const balance = item.amount - paidSoFar;
+          const row = { instalmentId: id, dayOffset, language: s.language, sendOn };
+
+          if (balance === 0) {
+            return { ...row, status: "stopped" as const, stoppedReason: "paid" };
+          }
+          if (sendOn >= SAMPLE_TODAY) return { ...row, status: "queued" as const };
+
+          return {
+            ...row,
+            status: "sent" as const,
+            sentAt: paidAt(sendOn),
+            message: reminderMessage(s.language, {
+              dayOffset,
+              studentName: s.name,
+              amount: rupees(balance),
+              dueDate: item.dueDate,
+              link: `${env.APP_URL}${payLinkFor(id)}`,
+            }),
+          };
+        });
+      }),
+    );
+    await tx.insert(reminders).values(reminderRows);
 
     await tx.insert(attendance).values(
       sample.students.flatMap((s) =>
