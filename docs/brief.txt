@@ -1,0 +1,127 @@
+﻿Brief
+Your task
+A client has sent us the brief you pick below. Build the product, end to end, with a great UI and UX.
+
+
+	
+
+	You submit
+	One ZIP file with two files: your Technical Design Document (TDD) and a deployment.md
+	Time
+	7 days from when this step opens
+	Work
+	Alone
+	Build a small part really well instead of the whole scope badly. The "CORE BUILD" paragraph in your problem statement says which slice must work end to end.
+Use AI, and use it well
+AI tools are highly recommended. Use them to draft faster, test ideas, find gaps and polish your work, so that what you hand in is a more finished, specific outcome for this client and not a generic one. The judgement, the numbers and the final choices must still be yours. You will explain them in the interview.
+What to do
+Pick one problem statement from the ones shown to you. Then build it.
+Must have
+* The main flows in the brief work, on realistic sample data you create. No dead buttons
+* Frontend, backend, a database and sign-in. Use roles if the brief has more than one kind of user
+* The AI or automation part actually works, including what happens when it is wrong or unsure
+* A polished UI: a consistent design, a layout that works on a phone, and loading, empty and error states
+* Tests for the most important logic, and basic security: no secrets in the repository, validated inputs, access control
+How to submit
+Put these two files in one .zip (up to 25 MB) and upload it.
+1. Technical Design Document (PDF or Word)
+* The GitHub URL of your project, at the top. Also add the link to the live app if you deployed it
+* The architecture and why you chose it
+* The data model, the main flows and how the AI part works
+* UI and design decisions: the key screens and why they look the way they do
+* What you cut, and what you would do next
+2. deployment.md
+* How to run it locally, step by step
+* How it is deployed, and the environment variables it needs (names only, never the values)
+* Demo login details for the reviewer
+Rules
+* Use only the information in the problem statement. Label every assumption in your TDD
+* Keep the commit history. We read it
+* Do not put secrets or real personal data in the repository
+* Keep the repository public until we have finished reviewing
+* You can resubmit until the deadline; we review your latest version
+What great looks like
+* A product a client could try today
+* Clean, readable code with a clear structure
+* A UI that feels designed, not default
+* Honest notes about the limits
+* Extra depth, well-judged features beyond the core and careful edge cases count in your favour
+Common mistakes
+* A beautiful front end with nothing behind it
+* Everything built, nothing working
+* No sample data, so the app looks empty
+* The AI part faked, or not handling mistakes
+* A TDD with no GitHub URL
+How you'll be scored
+Area
+	Weight
+	Quality of work
+	50%
+	Problem solving
+	30%
+	Communication
+	20%
+	
+
+
+
+Client
+Company A, Jaipur. Engineering and medical entrance coaching, 4 centres, 2,600 students, 140 staff, revenue ₹30–34 crore a year. Average fee ₹1.2 lakh a year, paid in 3 or 4 instalments.
+Today
+Centres record receipts in a desktop fee software and post totals to Tally. Due dates sit in an Excel sheet per centre. Staff phone parents to remind them, and parents call to ask balances. Test scores go out as PDFs in WhatsApp groups. Refunds are worked out by hand.
+The problem
+Assumptions: 2,600 × ₹1.2 lakh = ₹31.2 crore billed a year. 2% is never collected because follow-up is late and uneven: ₹62.4 lakh. 12% of instalment value arrives over 60 days late. 8 accounts staff spend half their time chasing dues: 4 full-time equivalents × ₹4.2 lakh = ₹16.8 lakh. Total ₹79.2 lakh a year.
+Users
+Parents (mobile), students, and centre accounts staff. The founder-director signs the deal.
+The ask
+Parents should know what they owe and when, without calling us. Reminders should go out on their own and stop the moment someone pays. I want one view of dues across all centres, by batch. Refunds must follow our written policy, not someone's calculator.
+Must have
+* Fee ledger per student: plan, instalments, discounts, payments, balance and days overdue
+* Parent portal with OTP login: dues, receipts, attendance and test scores
+* Automatic Hindi or English reminders before, on and after each due date, stopping on payment
+* Payment link per instalment (gateway test mode) that marks it paid
+* Pro-rata refund calculator, and an accounts dashboard by centre and batch with ageing and Tally export
+* Bulk upload of attendance and test scores per batch
+Core build
+Software Engineering candidates must ship this slice end to end, in about 6 to 8 screens: fee ledger, parent portal with dues and pay link, reminders that stop on payment, refund calculator, and dues dashboard. Roles: parent and accounts executive. AI: dropout-risk flag. Hard part: instalment and pro-rata refund rules. Mock payments, messages and outside systems, and seed from the sample data. The rest of MUST HAVE is optional depth.
+Out of scope
+* Video lectures or a learning platform
+* Timetables
+* Admissions CRM
+Ai or automation
+Reminders and payment matching are automated. An AI flag marks students at risk of dropping out from missed instalments, falling attendance and test trends. When it is wrong: the flag only creates a counsellor call task, never a fee action or parent message, and counsellors mark false flags. Unmatched payments go to an accounts queue instead of marking anything paid.
+Constraints
+The Ministry of Education's 2024 coaching guidelines require a published refund policy and a pro-rata refund within 10 days when a student leaves. Most students are minors, so the DPDP Act 2023 needs verifiable parental consent. Receipts must show GST. Parents use low-end phones; Hindi is required.
+Design
+The client values good, minimal design: clean layouts, white space, a restrained palette and clear type, with nothing on screen that lacks a purpose. Design counts as much as features. Parents should understand their dues in five seconds: amount, due date and a pay button, nothing more.
+Budget and time
+₹6 lakh, 6 weeks. Success: value over 60 days late from 12% to 6% in two terms; parent calls about dues down 70%; month-end reconciliation from 4 days to 1.
+Sample data
+Student ID
+	Name
+	Batch
+	Due Date
+	Amount ₹
+	Paid ₹
+	Status
+	STU-0412
+	Aarav Meena
+	JEE 2027 Morning
+	2026-10-10
+	30000
+	30000
+	Paid
+	STU-0587
+	Ishita Sharma
+	JEE 2027 Evening
+	2026-10-10
+	30000
+	15000
+	Part paid, 23 days overdue
+	STU-0219
+	Mohit Gurjar
+	NEET 2027 Morning
+	2026-11-15
+	40000
+	0
+	Due in 13 days
