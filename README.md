@@ -18,6 +18,7 @@ A fee portal for Company A, a Jaipur coaching institute with 4 centres and 2,600
 - OTP sign-in, with the language chosen first
 - Verifiable consent before any student data is shown
 - Amount, due date and a pay button, and nothing more
+- Attendance and test scores on their own page, away from the home screen
 - A test gateway with a signed webhook, and printable receipts showing GST
 
 **For accounts staff**
@@ -27,6 +28,7 @@ A fee portal for Company A, a Jaipur coaching institute with 4 centres and 2,600
 - Reminders in the parent's language, which stop the moment an instalment is paid
 - A pro-rata refund calculator with every working line and the 10-day deadline
 - Dropout-risk call tasks with plain reasons, false-flag marking and a visible false-flag rate
+- Bulk upload of attendance and test scores per batch, with a preview before anything is saved
 
 **Built to fail safely**
 
@@ -34,6 +36,7 @@ A fee portal for Company A, a Jaipur coaching institute with 4 centres and 2,600
 - A risk flag only ever creates a call task. It has no route to fees or parents
 - With too little data, the flag says so and creates no task
 - Reminders recheck the balance at the moment of sending
+- An upload with one bad row saves nothing, and a repeat upload changes nothing
 
 ## Screens
 
@@ -93,6 +96,7 @@ npm run lint
 
 | Document | What is in it |
 |---|---|
+| [Test guide](docs/demo.md) | Step-by-step missions for trying every workflow, with no technical knowledge needed |
 | [Technical design](docs/TDD.md) | Architecture, data model, flows, how the risk flag works, assumptions, limits |
 | [Brief check](docs/BRIEF-CHECK.md) | Every brief requirement, its status and where to find it |
 | [Deployment](deployment.md) | Local setup, AWS free tier guide, environment variables, demo logins |
@@ -102,4 +106,4 @@ npm run lint
 
 ## Limits
 
-Payments, SMS and Tally are mocked, as the brief allows. Parent attendance and test scores, and bulk upload, are optional depth and not built. The risk thresholds are judgement, tested only on invented data. The full list is in [the design document](docs/TDD.md#12-limits-cuts-and-next-steps).
+Payments, SMS and Tally are mocked, as the brief allows. The risk thresholds are judgement, tested only on invented data. The full list is in [the design document](docs/TDD.md#12-limits-cuts-and-next-steps).

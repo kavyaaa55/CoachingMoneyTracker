@@ -22,7 +22,7 @@ Roles: parent and accounts executive. About 6 to 8 screens, all working end to e
 5. **Dues dashboard** by centre and batch, with ageing and Tally export.
 6. **Dropout-risk flag.**
 
-Mock payments, messages and outside systems. Optional depth only after the core works: receipts list, attendance and scores for parents, bulk upload.
+Mock payments, messages and outside systems. Optional depth, built after the core worked: attendance and scores for parents, bulk upload. Still optional: a separate receipts list.
 
 Out of scope: video lectures or a learning platform, timetables, admissions CRM.
 
@@ -78,6 +78,13 @@ Label each of these in the Technical Design Document. Add new ones here as they 
 | Refund deadline | Counts from the exit date, even if the refund is saved late, and shows as overdue if passed | The brief says within 10 days of the student leaving |
 | Dues figures | Billed is every instalment for the term. Outstanding is all unpaid, overdue is the part past its due date. Students who have left are not counted | The brief asks for dues and ageing without defining them, and a closed account is not collectable |
 | Tally export | One CSV row per matched receipt, with fee, CGST and SGST split, and student ID but no name. Includes students who have left | The brief names no format. Centres post receipts to Tally, and the money was really received |
+| Upload format | CSV only, one batch and one kind per file, columns found by name, up to 200 KB and 2,000 rows. A template lists the batch's current students, with names | The brief names no format. Excel saves CSV, so no new dependency is needed |
+| Upload checks | All or nothing, with a preview before saving. Whole numbers, up to 50 classes a week and 1,000 marks. Week start must be a Monday. Dates cannot be in the future, before term or after the student left. Dates can be year first or day first | One bad row usually means a bad file. A wrong week or year would skew the risk flag without anyone noticing |
+| Negative marks | Refused. A test score must be 0 or more | The database keeps scores in range, and the brief does not mention negative marking |
+| Upload corrections | A row for a saved week or test replaces it, and the preview shows old and new. An identical row changes nothing. No history of replaced values is kept | Staff need to fix mistakes, and a repeat upload should be harmless |
+| Blank upload rows | A row with a student ID and no values is skipped and counted | A student absent from a test has nothing to record |
+| Upload and risk | Saving does not run the risk check. The daily job or the staff button does | One upload should not create call tasks before staff have finished entering data |
+| Parent progress page | Linked from the instalments page, never from parent home. Shows the latest 12 weeks and 12 tests as plain figures, with no trend or risk wording | The brief's home page is amount, due date and pay button, nothing more. Risk is for staff only |
 
 ## Stack
 

@@ -208,7 +208,14 @@ The mockups in `docs/mockups` are layout reference only. Their colours, font and
 | Refund calculator | 6.1, 6.2, 6.4 | One column of working lines, then the result and the 10-day deadline |
 | Reminders and tasks | 7.1, 7.2, 7.3 | Show sent, stopped on payment and queued. False-flag action on tasks |
 
-**Optional depth, only after the core works:** unmatched payments queue (8.2), bulk upload (8.1), parent attendance and scores (3.3, 3.4), audit log (8.3).
+**Optional depth, built after the core worked**
+
+| Screen | Base mockup | Change |
+|---|---|---|
+| Parent attendance and scores | 3.3, 3.4 | One page, not two. Plain figures, with no trend or risk wording. Reached from the instalments page, so parent home keeps its one link |
+| Bulk upload | 8.1 | One column of choices, then a preview before saving. Errors listed by line, and nothing saved until the whole file passes |
+
+**Still optional:** applying a payment from the unmatched queue (8.2), audit log (8.3).
 
 **Dropped:** 1.1 design sheet (this file replaces it), and 1.5 and 1.6 as separate screens (they become the two shared layouts).
 
@@ -221,3 +228,4 @@ The mockups in `docs/mockups` are layout reference only. Their colours, font and
 | 2026-11-05 | Overdue is amber, red is failures only | Parents should not feel chased |
 | 2026-11-05 | Parent home is not a dashboard | The brief's five-second test |
 | 2026-11-05 | Risk shown as a band, not a score | The flag is uncertain and should look uncertain |
+| 2026-11-05 | Parent attendance and scores sit behind the instalments page | Parent home keeps one link and passes the five-second test |

@@ -2,7 +2,7 @@
 
 **GitHub:** https://github.com/Siddhesh-source/coaching_institute
 **Live app:** not deployed yet (see [deployment.md](../deployment.md))
-**Version:** 1.0.0, 5 Nov 2026. The core slice works end to end. [docs/BRIEF-CHECK.md](BRIEF-CHECK.md) lists every brief requirement and its status.
+**Version:** 1.0.0 plus the unreleased changes in the [changelog](../CHANGELOG.md), 5 Nov 2026. The core slice works end to end, with two optional features added. [docs/BRIEF-CHECK.md](BRIEF-CHECK.md) lists every brief requirement and its status.
 
 ---
 
@@ -37,7 +37,8 @@ Fee Tracker gives parents their dues on a phone in five seconds, in Hindi or Eng
 | Reminders that stop on payment | Built | Hindi and English, before, on and after, continuing until paid, with a mock sender |
 | Dues dashboard, ageing, Tally export | Built | Filters by centre and batch. CSV of receipts with GST split |
 | AI dropout-risk flag | Built | Rule-based band with reasons. Call tasks only, with false-flag marking and rate |
-| Bulk upload, parent attendance and scores | Optional | Outside the core build |
+| Parent attendance and test scores | Built | Optional depth. Own page behind the instalments page, in Hindi and English |
+| Bulk upload of attendance and scores | Built | Optional depth. CSV per batch, with a preview and all-or-nothing saving |
 
 ## 3. Architecture
 
@@ -120,12 +121,15 @@ erDiagram
 
 `otp_codes` stands alone, keyed by phone number.
 
+Bulk upload needed no new table or migration. The existing unique keys, one attendance row per student and week and one score per student and test, are what make a repeat upload safe.
+
 Rules the database itself enforces:
 
 - `payments.gateway_ref` and `receipt_no` are unique.
 - A payment is `matched` only if it has an instalment, and the reverse.
 - Amounts must be positive, discounts cannot exceed the plan, and attendance and scores stay in range.
 - A student can have only one refund, and a reminder stage can exist only once per instalment.
+- A student has one attendance record per week and one score per test.
 - `risk_flags` has no link to fees or messages, so the flag has no route to a fee action.
 
 ## 6. Main Flows
@@ -256,6 +260,26 @@ flowchart TD
 - **Failures:** a failed send stays queued and is retried on the next run.
 - **Trigger:** a daily route protected by a secret, or the staff button. Both run the same job.
 
+### Bulk upload
+
+The risk flag reads attendance and test scores, so without this the flag could never change after the sample data was loaded.
+
+1. Staff choose a batch and a kind, and can download a template listing that batch's current students.
+2. The server reads the CSV and checks every row against that batch. It writes nothing at this step.
+3. If any row is wrong, every problem is listed by line and nothing can be saved.
+4. If the file passes, a preview marks each row new, changed or already saved, and shows the old value of anything changed.
+5. Saving reads and checks the file again, because the preview proves nothing. One statement saves every row or none.
+
+**Checks.** Student in this batch, no repeats in the file, real dates, nothing in the future, before term or after the student left, a Monday for week start, whole numbers in range, present within total and score within maximum.
+
+**What it reads.** Excel's byte order mark, Windows line ends, quoted cells, columns in any order and day-first dates, since Excel rewrites dates when it saves.
+
+**When it is wrong.** A repeat upload finds nothing to do. A correction replaces the saved value. Uploading writes only attendance and test scores, and a test confirms instalments, payments, reminders and call tasks do not change. It does not run the risk check, so a half-finished batch cannot create call tasks. The next daily run or the staff button picks it up.
+
+### Parent attendance and test scores
+
+A separate page reached from the instalments page. It shows classes attended in the last 4 weeks, then the latest 12 weeks and 12 tests. It goes through the same consent and ownership check as every parent page, and shows plain figures only. Nothing on it refers to risk.
+
 ## 7. AI and Automation
 
 | Automation | Status | When it is wrong or unsure |
@@ -312,6 +336,8 @@ The client asked for minimal design and that parents understand dues in five sec
 | Language before sign-in | A Hindi reader should never have to read English to begin |
 | Status always in words | Colour alone fails for some readers |
 | Flat, no shadows | Light on low-end phones, and nothing without a purpose |
+| Attendance and scores behind instalments | Parent home stays at one link, so the five-second test still holds |
+| Upload preview before saving | Staff see old and new values, because a wrong file affects what parents read |
 
 Fonts were tested, not assumed. Inter has no Hindi. Hind and Martel have uneven digits, which breaks ledger columns. Palanquin lacks the ₹ sign. All text passes contrast at 5.5:1 or better, up from 1.99:1 in the first mockups.
 
@@ -319,12 +345,12 @@ The 31 mockups are kept in `docs/mockups` as layout reference only. They contain
 
 ## 10. Testing
 
-226 tests pass, and CI runs lint, types, tests and a build on every push.
+263 tests pass, and CI runs lint, types, tests and a build on every push.
 
 | Suite | Tests | Covers |
 |---|---|---|
-| Unit | 142 | Fee, refund, exit dates, OTP, GST, matching, ledger totals, reminder rules, dues and ageing, Tally format, risk bands and missing data, sessions, sample data |
-| Database | 84 | Duplicates, races, part payments, unmatched cases, manual entry, reminder stages and stopping, saving refunds, payments after exit, dues filters, export dates, risk tasks and no side effects, webhook and cron security, student search |
+| Unit | 167 | Fee, refund, exit dates, OTP, GST, matching, ledger totals, reminder rules, dues and ageing, Tally format, risk bands and missing data, sessions, sample data, CSV reading, upload checks, attendance summary |
+| Database | 96 | Uploads with no side effects, repeat uploads, duplicates, races, part payments, unmatched cases, manual entry, reminder stages and stopping, saving refunds, payments after exit, dues filters, export dates, risk tasks and no side effects, webhook and cron security, student search |
 
 Tests use the brief's own rows, so Aarav, Ishita and Mohit must produce exactly the brief's statuses. Main flows were also walked through in a real browser at 360px, in both languages.
 
@@ -370,6 +396,12 @@ The brief does not state these. Each one is my judgement.
 | False flag note | Required | The reason helps tune the rule |
 | Unmatched queue | Read only, on the Dues page | The brief requires the queue. Applying money needs a reversal trail |
 | Sample data | All records beyond the 3 brief rows are invented | The brief asks for created sample data |
+| Upload format | CSV, one batch and one kind per file, up to 200 KB and 2,000 rows | The brief names no format, and Excel saves CSV with no new dependency |
+| Upload checks | All or nothing, with a preview. Up to 50 classes a week and 1,000 marks, week start a Monday | One bad row usually means a bad file, and a wrong week would skew the risk flag |
+| Negative marks | Refused | The database keeps scores in range, and the brief does not mention them |
+| Upload corrections | A row for a saved week or test replaces it, with no history kept | Staff need to fix mistakes, and a repeat upload should be harmless |
+| Upload and risk | Saving does not run the risk check | A half-finished batch should not create call tasks |
+| Parent progress page | Behind the instalments page. Latest 12 weeks and 12 tests, plain figures only | The brief's home page is amount, due date and pay button, and risk is for staff |
 
 ## 12. Limits, Cuts and Next Steps
 
@@ -395,16 +427,19 @@ The brief does not state these. Each one is my judgement.
 - The Tally columns are assumed, and refunds are not exported. The file needs a trial import before real use.
 - Receipt and export dates use UTC. A real payment just after midnight in India would show the day before, which matters at month end. The demo is not affected.
 - The risk thresholds are judgement, tested only on invented data. They need checking against real dropouts before anyone relies on them.
+- Upload replaces a saved value with no record of who changed it or what it was. That needs the audit log.
+- A test name must match exactly to correct a score. "Unit Test 7" and "unit test 7" would be saved as two tests.
+- Upload takes CSV only, so staff must save from Excel first. Reading .xlsx directly would need a new dependency.
+- Parents see the latest 12 weeks and tests. Older records are kept but not shown.
 - A student who stops being recorded altogether looks steady, because the flag reads the records it has. It does not notice that attendance has gone missing.
 - Call tasks can be seen by every accounts user, and a closed task cannot be reopened.
 - The dashboard shows what is late now. It does not yet track the brief's measure, the share of instalment value that arrives over 60 days late, which needs paid-late history too.
 
-**Cut from the core build:** bulk upload, parent attendance and test score pages, audit log.
+**Cut:** audit log, and a separate receipts list for parents. Parent attendance and scores and bulk upload were outside the core build, and were added afterwards as optional depth.
 
 **Next, in order:**
 
 1. Deploy, using the AWS guide in [deployment.md](../deployment.md), and have Company A confirm the refund policy and Tally format.
 2. Reversal entries for payments and refunds, then applying unmatched payments from the queue.
 3. A list of refunds due across students, with a "refund paid" step.
-4. Parent attendance and test scores, and bulk upload.
-5. A dashboard measure for the share of value arriving over 60 days late.
+4. A dashboard measure for the share of value arriving over 60 days late.

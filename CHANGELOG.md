@@ -1,5 +1,22 @@
 # Changelog
 
+## Unreleased
+
+### Parents
+
+- Attendance and test scores page in Hindi and English, reached from the instalments page. Parent home is unchanged
+
+### Accounts staff
+
+- Bulk upload of attendance and test scores per batch: CSV, a template per batch, a preview showing old and new values, and errors listed by line
+- All-or-nothing saving, and repeat uploads that change nothing
+- Uploaded records reach the risk check on its next run
+
+### Quality
+
+- 263 tests: 167 unit and 96 database
+- A hands-on test guide in [docs/demo.md](docs/demo.md), with sample files in `docs/samples`
+
 ## 1.0.0 (5 Nov 2026)
 
 The first complete version. The core slice from the brief works end to end on sample data.

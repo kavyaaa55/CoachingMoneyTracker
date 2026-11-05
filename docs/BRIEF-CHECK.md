@@ -1,12 +1,11 @@
 # Brief Check
 
-Every requirement in [the brief](brief.txt), its status in version 1.0.0, and where to find it. Checked line by line on 5 Nov 2026.
+Every requirement in [the brief](brief.txt), its status in version 1.0.0 plus the unreleased changes in the changelog, and where to find it. Checked line by line on 5 Nov 2026.
 
 | Status | Meaning |
 |---|---|
 | Met | Works, with a test or a browser check behind it |
 | Partial | Works, with a stated gap |
-| Optional | Not built. The brief says this is optional depth |
 | Pending | Waiting on an owner action, not on code |
 
 ## Core build
@@ -33,12 +32,12 @@ Every requirement in [the brief](brief.txt), its status in version 1.0.0, and wh
 | OTP login | Met | Hashed, 5 minute expiry, tries and resends limited |
 | Portal: dues | Met | |
 | Portal: receipts | Met | Reached from each instalment, with no separate list |
-| Portal: attendance and test scores | Optional | The data exists and feeds the risk flag. There is no parent page |
+| Portal: attendance and test scores | Met | Optional depth. `/parent/progress`, reached from the instalments page |
 | Hindi or English reminders before, on and after, stopping on payment | Met | Needs the daily job scheduled once deployed |
 | Payment link per instalment, in test mode, that marks it paid | Met | Signed link and signed webhook |
 | Pro-rata refund calculator | Met | |
 | Dashboard by centre and batch, with ageing and Tally export | Met | The Tally format is a labelled assumption |
-| Bulk upload of attendance and test scores | Optional | |
+| Bulk upload of attendance and test scores | Met | Optional depth. `/staff/upload`, `src/domain/upload.ts`. CSV per batch, with a preview and all-or-nothing saving |
 
 ## AI and automation
 
@@ -89,7 +88,7 @@ The client's measures need live use, so none can be shown yet. This is what supp
 | Requirement | Status | Notes |
 |---|---|---|
 | Frontend, backend, database, sign-in | Met | |
-| Tests for the important logic | Met | 226 tests |
+| Tests for the important logic | Met | 263 tests |
 | No secrets in the repository | Met | Full history checked |
 | Validated inputs and access control | Met | Checked on every read and write |
 | Sample data so it does not look empty | Met | 49 fictional students |

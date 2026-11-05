@@ -22,7 +22,7 @@ Pick a language, enter a number, and the 6-digit code appears on screen, because
 | `9000000003` | Parent | Mohit Gurjar: due in 13 days |
 | `9000000001` | Parent | Aarav Meena: up to date |
 | `9000001035` | Parent | Two children |
-| `9000000100` | Accounts staff | Dues, students, ledgers, reminders, call tasks and refunds |
+| `9000000100` | Accounts staff | Dues, students, ledgers, reminders, call tasks, uploads and refunds |
 
 **A short tour:**
 
@@ -30,8 +30,9 @@ Pick a language, enter a number, and the 6-digit code appears on screen, because
 2. Sign in as `9000000100`. Open Dues to see ageing, the unmatched queue and the Tally export.
 3. Open Students, then Ishita Sharma, then Work out refund. Leaving on 12 Oct 2026 gives ₹10,808.
 4. Open Reminders and press Run reminders now. Open Call tasks and mark a false flag.
+5. Open Upload, choose Centre 3 · JEE 2028 Morning and upload `docs/samples/attendance-centre-3.csv`. Save it, then press Run risk check now on Call tasks. Chirag Choudhary gets a new call task.
 
-The refund policy is public at `/refund-policy`.
+The refund policy is public at `/refund-policy`. For a full walkthrough, see [docs/demo.md](docs/demo.md).
 
 ## Run locally
 

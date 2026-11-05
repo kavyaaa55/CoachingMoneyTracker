@@ -17,6 +17,7 @@ Run these in order, one at a time. Each one ends with a working app and a commit
 - [x] 8. Dropout-risk flag
 - [x] 9. Polish check
 - [x] 10. Submission files (live link, PDF export and public repo are left to the owner)
+- [x] 11. Optional depth: parent attendance and scores, bulk upload
 
 ## 1. Sample data
 
@@ -57,3 +58,7 @@ Run these in order, one at a time. Each one ends with a working app and a commit
 ## 10. Submission files
 
 > Write `deployment.md`: run locally step by step, how it is deployed, environment variable names only, demo logins. Draft the Technical Design Document with the GitHub URL at the top, architecture and why, data model, main flows, how the AI part works, UI decisions, assumptions from CLAUDE.md, what was cut and what comes next. Keep the limits honest. Remind me to make the repo public.
+
+## 11. Optional depth
+
+> Add a parent page for attendance and test scores, linked from the instalments page so parent home stays as it is. Add bulk upload of attendance and test scores per batch: a CSV with a preview, all-or-nothing saving, a template per batch, and clear errors by line. A repeat upload must be harmless. Uploading must never touch fees, reminders or call tasks. Test every check, and update every document that says these are not built.

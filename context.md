@@ -40,8 +40,9 @@ Fee Tracker: a 7-day solo assessment build for Company A, a Jaipur coaching inst
 | 8. Dropout-risk flag | Done |
 | 9. Polish check | Done |
 | 10. Submission files | Done |
+| 11. Optional depth: parent attendance and scores, bulk upload | Done |
 
-Last verified: 226 tests pass (142 unit, 84 database), lint, types and build are clean, and CI passes on `main`. The working tree is clean.
+Last verified: 263 tests pass (167 unit, 96 database), and lint and types are clean.
 
 ## Run it
 
@@ -68,7 +69,7 @@ The OTP appears on screen in demo mode.
 
 ## Next step: owner actions
 
-Version 1.0.0 is tagged and released. All 10 prompts are done. What is left is the owner's:
+Version 1.0.0 is tagged and released, and prompt 11 is on top of it, unreleased. What is left is the owner's:
 
 1. **Deploy** using the AWS guide in `deployment.md`, then put the live link at the top of `docs/TDD.md`.
 2. **Export the TDD** to PDF. Check that the Mermaid diagrams survive.

@@ -4,7 +4,7 @@ Fee Tracker helps a coaching institute collect fees. Parents see what they owe a
 
 This guide walks you through everything the app does, one small mission at a time. You do not need to know how it is built. Each step tells you what to do and exactly what you should see.
 
-**Time needed:** about 15 minutes to set up, then about 45 minutes for the missions.
+**Time needed:** about 15 minutes to set up, then about an hour for the missions.
 
 ## How to use this guide
 
@@ -37,8 +37,10 @@ You sign in by typing one of these numbers.
 | `9000001035` | Parent of two children, **Aditi** and **Vidhi Jain** | Mission 3 |
 | `9000000001` | Parent of **Aarav Meena**, who is up to date | Mission 3 |
 | `9000001007` | Parent of **Rohan Saini**, who has paid the whole year | Mission 3 |
-| `9000000003` | Parent of **Mohit Gurjar**, who is going to leave | Missions 3 and 9 |
-| `9000000100` | **Accounts staff** at the institute | Missions 4 to 9 |
+| `9000000003` | Parent of **Mohit Gurjar**, who is going to leave | Missions 3 and 10 |
+| `9000001005` | Parent of **Chirag Choudhary**, whose attendance is about to drop | Mission 9 |
+| `9000001040` | Parent of **Manav Shekhawat**, who has very few records | Mission 9 |
+| `9000000100` | **Accounts staff** at the institute | Missions 4 to 10 |
 
 ## Your missions
 
@@ -51,8 +53,9 @@ You sign in by typing one of these numbers.
 - [ ] [Mission 6: Record a payment made at the counter](#mission-6-record-a-payment-made-at-the-counter)
 - [ ] [Mission 7: Send the day's reminders](#mission-7-send-the-days-reminders)
 - [ ] [Mission 8: Check on students who may drop out](#mission-8-check-on-students-who-may-drop-out)
-- [ ] [Mission 9: Refund a student who left](#mission-9-refund-a-student-who-left)
-- [ ] [Mission 10: Check it on a phone screen](#mission-10-check-it-on-a-phone-screen)
+- [ ] [Mission 9: Upload attendance and test scores](#mission-9-upload-attendance-and-test-scores)
+- [ ] [Mission 10: Refund a student who left](#mission-10-refund-a-student-who-left)
+- [ ] [Mission 11: Check it on a phone screen](#mission-11-check-it-on-a-phone-screen)
 
 ---
 
@@ -306,7 +309,7 @@ Sign in with each number and agree to the permission page. Sign out after each o
 
   **You should see:** **Next payment for Mohit Gurjar, ₹40,000, Due in 13 days**.
 
-  Mohit is going to leave in Mission 9, so we need something for later. Click **Pay ₹40,000**, copy the page address into your notepad and label it "Mohit". **Do not pay.** Go back to <http://localhost:3000> and sign out.
+  Mohit is going to leave in Mission 10, so we need something for later. Click **Pay ₹40,000**, copy the page address into your notepad and label it "Mohit". **Do not pay.** Go back to <http://localhost:3000> and sign out.
 
 ---
 
@@ -563,7 +566,104 @@ Tally is the accounting software the centres use. This export gives it a spreads
 
 ---
 
-## Mission 9: Refund a student who left
+## Mission 9: Upload attendance and test scores
+
+**You are:** still the accounts staff.
+
+**Why it matters:** each centre keeps attendance and test marks in its own spreadsheets. This brings them in one batch at a time. Parents can then see them, and the dropout check has real information to work with. One mistake in a file should never put wrong marks in front of a parent.
+
+The sample files for this mission are in the `docs/samples` folder of the app.
+
+**Try a file with mistakes:**
+
+- [ ] Click **Upload** in the menu.
+
+- [ ] For **Batch**, choose **Centre 3 · JEE 2028 Morning**. Leave **What is in the file** on **Attendance**.
+
+  **You should see:** a new link, **Download a template for this batch**.
+
+- [ ] Click that link and open the file.
+
+  **You should see:** a spreadsheet listing the 6 students in this batch, with empty columns to fill in.
+
+- [ ] Under **CSV file**, choose `attendance-with-mistakes.csv` and click **Check file**.
+
+  **You should see:** "4 problems found. Nothing was saved." Each one names its line in the file:
+
+  | Line | Problem |
+  |---|---|
+  | 2 | Present is more than total: 7 / 6 |
+  | 3 | STU-0412 is not in this batch |
+  | 4 | 2026-10-28 is not a Monday |
+  | 5 | 2026-11-09 is in the future |
+
+**Now a good file:**
+
+- [ ] Choose `attendance-centre-3.csv` and click **Check file**. This file says Chirag Choudhary has almost stopped coming to class.
+
+  **You should see:** **Check before saving**, with "1 new, 3 changed, 0 already saved". Changed rows show the old value, such as **1 of 6 classes (was 5 of 6 classes)**. Nothing is saved yet.
+
+- [ ] Click **Save 4 records**.
+
+  **You should see:** "Saved. 1 new, 3 changed."
+
+**See what it changes:**
+
+- [ ] Click **Call tasks**.
+
+  **You should see:** **Open (1)** and no task for Chirag Choudhary yet. Saving a file does not raise a flag by itself, so staff can finish entering a whole batch first.
+
+- [ ] Click **Run risk check now**.
+
+  **You should see:** "Checked 49 students. 1 new task." **Chirag Choudhary** now appears as **Watch**, with "Attendance fell from 91% to 8%" and "1 instalment overdue". In Mission 8, the same student showed no signs of risk.
+
+**Upload the same file twice:**
+
+- [ ] Click **Upload**, choose the same batch and `attendance-centre-3.csv`, and click **Check file**.
+
+  **You should see:** "Everything in this file is already saved, so there is nothing to do." There is no save button.
+
+- [ ] Click **Use a different file**.
+
+**Add a test score:**
+
+- [ ] Choose the same batch, set **What is in the file** to **Test scores**, choose `test-scores-centre-3.csv`, and click **Check file**.
+
+  **You should see:** **Unit Test 7, 1 Nov 2026: 195 of 300**, marked **New**. The file writes the date day first, the way Excel does, and it is still read correctly.
+
+- [ ] Click **Save 1 record**, then **Sign out**.
+
+**See it as a parent:**
+
+- [ ] Sign in with `9000001005` and agree to the permission page.
+
+  **You should see:** **Chirag Choudhary owes ₹30,000**. The home page has not changed, and nothing mentions the risk flag.
+
+- [ ] Click **See all instalments**, then **Attendance and test scores** near the bottom.
+
+  **You should see:** **Last 4 weeks: 2 of 24 classes (8%)**, then a list of weeks. Under **Test scores**, **Unit Test 7** is at the top with **195 / 300** and **65%**.
+
+- [ ] Click **हिन्दी** at the top right.
+
+  **You should see:** the same page in Hindi. Click **English** to switch back, then sign out.
+
+- [ ] Sign in with `9000001040` and agree to the permission page. Open **See all instalments**, then **Attendance and test scores**.
+
+  **You should see:** **Latest week: 4 of 6 classes (67%)**, and "No test scores have been recorded yet." The page says so plainly instead of looking broken.
+
+- [ ] Sign out, then sign in again as staff with `9000000100`.
+
+<details>
+<summary><strong>Stuck?</strong></summary>
+
+- **The file is refused for a reason not listed here:** check you chose **Centre 3 · JEE 2028 Morning**, because the app only accepts students from the chosen batch.
+- **"This is not a CSV file":** in Excel, choose **Save As**, then **CSV UTF-8**.
+
+</details>
+
+---
+
+## Mission 10: Refund a student who left
 
 **You are:** still the accounts staff.
 
@@ -662,7 +762,7 @@ The sum is:
 
 ---
 
-## Mission 10: Check it on a phone screen
+## Mission 11: Check it on a phone screen
 
 **Why it matters:** most parents will use a phone, so every page has to work on a small screen.
 
@@ -672,7 +772,7 @@ The sum is:
 
   **You should see:** everything fits, and the pay button is easy to tap.
 
-- [ ] Sign in as staff with `9000000100` and open **Dues**, **Students**, **Reminders** and **Call tasks**.
+- [ ] Sign in as staff with `9000000100` and open **Dues**, **Students**, **Reminders**, **Call tasks** and **Upload**.
 
   **You should see:** you never have to scroll sideways. Tables turn into stacked cards.
 
@@ -729,6 +829,7 @@ To restart the app, click its terminal, press `Ctrl + C`, and run `npm run dev` 
 | Unmatched payment | Money that arrived but could not be placed on a fee |
 | GST, CGST, SGST | Tax on the fee, split into a central share and a state share |
 | Tally | Accounting software used by the centres |
+| Template | A ready-made spreadsheet you fill in and upload |
 | CSV | A simple spreadsheet file |
 | Port | The number a program uses to talk on your computer, such as 3000 for this app |
 | Pro-rata | Charged fairly by the number of days used |
@@ -739,7 +840,6 @@ To restart the app, click its terminal, press `Ctrl + C`, and run `npm run dev` 
 
 - **Real payments and text messages.** Both are pretend for now.
 - **Moving an unmatched payment onto a fee.** Staff can see these payments but cannot apply them yet.
-- **Attendance and test scores for parents, and bulk upload of students.** These are optional extras that have not been built.
 - **Whether the risk flag predicts real dropouts.** Its rules have only been tried on made-up data.
 
 ## Scorecard
@@ -760,8 +860,9 @@ Setup                                 Pass / Fail:
 6  Counter payment                    Pass / Fail:
 7  Reminders                          Pass / Fail:
 8  Dropout risk                       Pass / Fail:
-9  Refund                             Pass / Fail:
-10 Phone screen                       Pass / Fail:
+9  Upload                             Pass / Fail:
+10 Refund                             Pass / Fail:
+11 Phone screen                       Pass / Fail:
 
 Problems (mission, step, what you expected, what you saw):
 ```
