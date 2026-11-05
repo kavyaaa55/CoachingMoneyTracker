@@ -2,7 +2,7 @@
 
 Read this first, then continue from **Next step**.
 
-**Last updated:** 5 Nov 2026, after prompt 9.
+**Last updated:** 5 Nov 2026, version 1.0.0.
 
 ## What this is
 
@@ -39,9 +39,9 @@ Fee Tracker: a 7-day solo assessment build for Company A, a Jaipur coaching inst
 | 7. Dues dashboard | Done |
 | 8. Dropout-risk flag | Done |
 | 9. Polish check | Done |
-| 10. Submission files | **Next** |
+| 10. Submission files | Done |
 
-Last verified: 220 tests pass (138 unit, 82 database), lint, types and build are clean, and CI passes on `main`. The working tree is clean.
+Last verified: 226 tests pass (142 unit, 84 database), lint, types and build are clean, and CI passes on `main`. The working tree is clean.
 
 ## Run it
 
@@ -66,20 +66,22 @@ Open http://localhost:3000. The server does not survive the session that started
 
 The OTP appears on screen in demo mode.
 
-## Next step: prompt 10
+## Next step: owner actions
 
-Write the submission files, using the text in `prompt.md`. Things to know:
+Version 1.0.0 is tagged and released. All 10 prompts are done. What is left is the owner's:
 
-- `docs/TDD.md` is nearly complete. Remove any *Planned* label that no longer applies, and add the GitHub URL at the top.
-- The app is not deployed yet. The brief wants a live link, so the owner needs to pick a host and provide a database.
-- `deployment.md` needs the demo logins for the live site once it exists.
-- Section **Before submission** below is the checklist.
+1. **Deploy** using the AWS guide in `deployment.md`, then put the live link at the top of `docs/TDD.md`.
+2. **Export the TDD** to PDF. Check that the Mermaid diagrams survive.
+3. **Make the repo public.** The brief requires it until review ends. Then check the CI badge in the README.
+4. **Zip** the TDD and `deployment.md`, up to 25 MB.
 
-## Decisions waiting on the owner
+`docs/BRIEF-CHECK.md` lists every requirement and its status.
 
-1. **Long-overdue reminders.** They end 7 days after the due date. The owner has not yet answered whether to repeat them weekly until paid.
-2. **Repo visibility.** It is private. The brief requires it to be public by submission. It is the owner's call when.
-3. **`CLAUDE.md`, `prompt.md` and this file** are committed, and their names will be visible once public. The owner has not yet said whether to keep them tracked.
+## Decisions made
+
+- **Refund rule:** pure pro-rata with no retained fee, confirmed by the owner.
+- **Long-overdue reminders:** they continue until paid, weekly to day 63, then every 4 weeks up to a year. Decided from the brief, see `docs/TDD.md`.
+- **`CLAUDE.md`, `prompt.md` and this file** stay tracked. The owner decided. The brief recommends AI tools and reads the commit history, so they are honest working records.
 
 ## How each prompt is done
 
@@ -132,7 +134,6 @@ Money is whole paise. Dates are `YYYY-MM-DD` strings.
 
 ## Before submission
 
-- Finish prompts 6 to 10, then remove every *Planned* label that no longer applies in `docs/TDD.md`.
 - Deploy, and put the live link at the top of the TDD.
 - Schedule the daily calls to `/api/cron/reminders` and `/api/cron/risk`.
 - Add the demo logins for the live site to `deployment.md`.
@@ -145,6 +146,6 @@ Not blocking, and listed in `docs/TDD.md` where they affect the client:
 
 - A saved manual payment cannot be reversed. If time allows, add a reversal entry, never a delete.
 - A saved refund cannot be reversed either, and there is no "refund paid" step or list of refunds across students.
-- Unmatched payments have no staff screen yet (optional depth).
+- The unmatched queue is read only.
 - The Tally columns are assumed. Receipt and export dates use UTC, which only matters for real payments just after midnight in India.
 - Hindi text needs review by a native speaker.

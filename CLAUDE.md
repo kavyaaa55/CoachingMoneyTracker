@@ -22,7 +22,7 @@ Roles: parent and accounts executive. About 6 to 8 screens, all working end to e
 5. **Dues dashboard** by centre and batch, with ageing and Tally export.
 6. **Dropout-risk flag.**
 
-Mock payments, messages and outside systems. Optional depth only after the core works: receipts list, attendance and scores for parents, bulk upload, unmatched queue screen.
+Mock payments, messages and outside systems. Optional depth only after the core works: receipts list, attendance and scores for parents, bulk upload.
 
 Out of scope: video lectures or a learning platform, timetables, admissions CRM.
 
@@ -51,7 +51,7 @@ Label each of these in the Technical Design Document. Add new ones here as they 
 | Batch schedules | Due dates are set per programme, and JEE 2028 and NEET 2028 batches exist | The brief gives only three sample due dates |
 | Sample data | 49 fictional students. Beyond the 3 brief rows, all fee records, attendance and scores are invented | The brief asks for realistic sample data you create |
 | Demo date | `APP_TODAY=2026-11-02` | The sample's "23 days overdue" and "Due in 13 days" both point to this date |
-| Reminder schedule | 7 and 1 days before, on the day, 3 and 7 days after | The brief says before, on and after, without days |
+| Reminder schedule | 7 and 1 days before, on the day, 3 days after, weekly from day 7 to day 63, then every 4 weeks up to a year, until paid | The brief says before, on and after, and to stop on payment, not after a set time. Its 60 day measure needs follow-up past 60 days, and thinning out keeps parents from feeling chased |
 | Reminder delivery | Sent to the registered number whether or not the parent has used the portal, and includes the student's name so a parent of two knows which child | Fee reminders are the service itself, and the brief wants them automatic |
 | Missed job days | Only the latest due stage goes out | A parent should never get several messages at once |
 | Individual due dates | 6 sample students have their own due dates, so every stage falls on the demo date | Otherwise nothing would be due on the fixed demo date |
@@ -62,6 +62,7 @@ Label each of these in the Technical Design Document. Add new ones here as they 
 | Late fees alone | Never flag a student, however many are missed | Reminders handle money, and being short of money is not a sign of leaving. Ishita's sample row shows this |
 | Too little data | Under 6 weeks of attendance, under 4 tests, or no fee plan | The brief says to say so, not how much is enough |
 | Repeat flags | One open task per student. After a review, no new task for 30 days | A counsellor should not be asked again the next morning |
+| Unmatched queue | Read only, on the Dues page. Staff can see it but not yet apply a payment to a fee | The brief requires the queue. Applying money by hand needs a reversal trail, which is not built |
 | False flag note | Required, so the reason is on record | The brief says counsellors mark false flags, and the reason helps tune the rule |
 | OTP delivery | SMS is mocked. With `DEMO_MODE=true` the code shows on screen | The brief says to mock messages |
 | OTP limits | 5 minutes, 5 tries per code, 5 codes per number in 10 minutes | The brief asks for OTP login, not its limits |

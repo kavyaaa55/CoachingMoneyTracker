@@ -16,7 +16,7 @@ Run these in order, one at a time. Each one ends with a working app and a commit
 - [x] 7. Dues dashboard
 - [x] 8. Dropout-risk flag
 - [x] 9. Polish check
-- [ ] 10. Submission files
+- [x] 10. Submission files (live link, PDF export and public repo are left to the owner)
 
 ## 1. Sample data
 

@@ -2,7 +2,7 @@
 
 **GitHub:** https://github.com/Siddhesh-source/coaching_institute
 **Live app:** not deployed yet (see [deployment.md](../deployment.md))
-**Status:** in progress, last updated 5 Nov 2026 (polish check done). Sections marked *Planned* are designed but not built.
+**Version:** 1.0.0, 5 Nov 2026. The core slice works end to end. [docs/BRIEF-CHECK.md](BRIEF-CHECK.md) lists every brief requirement and its status.
 
 ---
 
@@ -27,14 +27,14 @@ Fee Tracker gives parents their dues on a phone in five seconds, in Hindi or Eng
 | Hindi on parent screens | Built | Language chosen before sign-in |
 | Parent dues and pay link | Built | One pay link per instalment, test gateway |
 | Payment marks instalment paid | Built | Signed webhook only |
-| Unmatched payments never mark paid | Built | Stored for the queue. Staff screen is planned |
+| Unmatched payments never mark paid | Built | Accounts queue on the Dues page, read only. Applying a payment to a fee is not built |
 | Receipts show GST | Built | Printable, Hindi and English |
 | Realistic sample data | Built | 49 students, 4 centres, 9 batches |
 | Pro-rata refund calculator | Built | Every working line, 10 day deadline, saved once per student |
 | Published refund policy | Built | Public page in Hindi and English, printable |
 | Fee ledger for staff | Built | Search, plan, discount, instalments, payments, balance, days overdue |
 | Manual payments | Built | Same matching code as the webhook |
-| Reminders that stop on payment | Built | Hindi and English, before, on and after, with a mock sender |
+| Reminders that stop on payment | Built | Hindi and English, before, on and after, continuing until paid, with a mock sender |
 | Dues dashboard, ageing, Tally export | Built | Filters by centre and batch. CSV of receipts with GST split |
 | AI dropout-risk flag | Built | Rule-based band with reasons. Call tasks only, with false-flag marking and rate |
 | Bulk upload, parent attendance and scores | Optional | Outside the core build |
@@ -228,13 +228,15 @@ Students who have left are not counted, because their fee account is closed. The
 | Course Fee, CGST, SGST | 12711.86, 1144.07, 1144.07 | The fee before tax and the 9% + 9% split |
 | Total | 15000.00 | The three parts always add up to this |
 
+**Unmatched queue.** The Dues page lists money that arrived but could not be applied, with the reason and the student it was meant for when known. It is read only. Applying a payment by hand needs a reversal trail, so it comes with that work.
+
 The file holds matched receipts in the chosen dates, within the chosen centre and batch. It includes students who have since left, because that money was received. Unmatched payments stay out until staff resolve them. Text that could run as a spreadsheet formula is made safe, since staff type the reference. The route checks the role and the dates first.
 
 ### Reminders
 
 ```mermaid
 flowchart TD
-  J[Daily cron or Run reminders button] --> Q[Queue stages for instalments due within 14 days]
+  J[Daily cron or Run reminders button] --> Q[Queue stages coming up in the next 14 days]
   Q --> L[Lock each instalment with a reminder due]
   L --> B{Balance left?}
   B -- No --> S[Stop: paid]
@@ -246,7 +248,8 @@ flowchart TD
   R -- No --> K[Stays queued, retried next run]
 ```
 
-- **Stages:** 7 and 1 days before, on the due date, and 3 and 7 days after.
+- **Stages:** 7 and 1 days before, on the due date, and 3 days after. Then weekly from day 7 to day 63, and every 4 weeks after that for up to a year.
+- **Why they continue:** the client asked for reminders to stop when someone pays, not after a set time. The brief blames late and uneven follow-up for ₹62.4 lakh a year, and its measure is value over 60 days late, so going quiet after a week would leave that window to staff. The pace slows after 9 weeks so a parent never feels chased.
 - **Stopping:** a full payment stops queued reminders in the same database step. The job also rechecks the balance at send time.
 - **Part payments:** reminders continue, for the amount still left.
 - **Missed days:** only the latest stage goes out, and older ones are marked replaced.
@@ -316,12 +319,12 @@ The 31 mockups are kept in `docs/mockups` as layout reference only. They contain
 
 ## 10. Testing
 
-220 tests pass, and CI runs lint, types, tests and a build on every push.
+226 tests pass, and CI runs lint, types, tests and a build on every push.
 
 | Suite | Tests | Covers |
 |---|---|---|
-| Unit | 138 | Fee, refund, exit dates, OTP, GST, matching, ledger totals, reminder rules, dues and ageing, Tally format, risk bands and missing data, sessions, sample data |
-| Database | 82 | Duplicates, races, part payments, unmatched cases, manual entry, reminder stages and stopping, saving refunds, payments after exit, dues filters, export dates, risk tasks and no side effects, webhook and cron security, student search |
+| Unit | 142 | Fee, refund, exit dates, OTP, GST, matching, ledger totals, reminder rules, dues and ageing, Tally format, risk bands and missing data, sessions, sample data |
+| Database | 84 | Duplicates, races, part payments, unmatched cases, manual entry, reminder stages and stopping, saving refunds, payments after exit, dues filters, export dates, risk tasks and no side effects, webhook and cron security, student search |
 
 Tests use the brief's own rows, so Aarav, Ishita and Mohit must produce exactly the brief's statuses. Main flows were also walked through in a real browser at 360px, in both languages.
 
@@ -348,13 +351,14 @@ The brief does not state these. Each one is my judgement.
 | Manual payments | Must fit the balance or are refused. Dates cannot be in the future | A typing mistake is not money that arrived |
 | Parent home amount | Oldest unpaid instalment, other overdue amounts on one line | Pay links are per instalment |
 | GST | 18% inside the fee, 9% CGST and 9% SGST, sample GSTIN | No rate or number given |
-| Reminder days | 7 and 1 before, on the day, 3 and 7 after | The brief says before, on and after |
+| Reminder schedule | 7 and 1 before, on the day, 3 after, weekly from day 7 to 63, then every 4 weeks up to a year, until paid | The brief says before, on and after, and to stop on payment. Its 60 day measure needs follow-up past 60 days |
 | Reminder delivery | Sent to the registered number whether or not the parent has used the portal, with the student's name | Reminders are the service itself, and a parent of two needs to know which child |
 | Missed job days | Only the latest due stage goes out | A parent should not get several messages at once |
 | Individual due dates | 6 sample students have their own due dates | So every stage falls on the fixed demo date |
 | Ageing buckets | 0–30, 31–60, 60+ days | The success measure uses 60 days |
 | Dues figures | Defined in section 6. Students who have left are not counted | The brief does not define them, and a closed account is not collectable |
 | Tally export | One row per matched receipt, columns as in section 6 | The brief names no format |
+| OTP delivery | SMS is mocked. In demo mode the code shows on screen | The brief says to mock messages |
 | OTP limits | 5 minutes, 5 tries, 5 codes per 10 minutes | Not specified |
 | Consent proof | OTP on the registered number, plus a stored record | Method not specified |
 | Centre names | Centre 1 to Centre 4 | Not named |
@@ -364,6 +368,7 @@ The brief does not state these. Each one is my judgement.
 | Too little data | Under 6 weeks of attendance, under 4 tests, or no fee plan | The brief does not say how much is enough |
 | Repeat flags | One open task per student, then 30 days after a review | A counsellor should not be asked again the next morning |
 | False flag note | Required | The reason helps tune the rule |
+| Unmatched queue | Read only, on the Dues page | The brief requires the queue. Applying money needs a reversal trail |
 | Sample data | All records beyond the 3 brief rows are invented | The brief asks for created sample data |
 
 ## 12. Limits, Cuts and Next Steps
@@ -374,7 +379,8 @@ The brief does not state these. Each one is my judgement.
 - Consent withdrawal goes through the centre's office. There is no in-app button.
 - A saved manual payment cannot be edited or reversed yet. That needs a reversal entry, not a delete.
 - Every accounts user can see all centres. There is no per-centre access yet.
-- Reminders end after the 7 days after stage. A long-overdue account gets no further messages, so it needs staff follow-up.
+- Reminders stop a year after the due date. An account that old needs a person, not another message.
+- Staff can see the unmatched queue but cannot apply a payment to a fee from it yet.
 - Pay links are about 230 characters. Real SMS needs a short link service.
 - The job holds the instalment lock while sending. That is fine for a mock, but a real provider should be called with a timeout.
 - OTP limits are per phone number, with no limit per IP address.
@@ -395,4 +401,10 @@ The brief does not state these. Each one is my judgement.
 
 **Cut from the core build:** bulk upload, parent attendance and test score pages, audit log.
 
-**Next, in order:** deployment and the submission files.
+**Next, in order:**
+
+1. Deploy, using the AWS guide in [deployment.md](../deployment.md), and have Company A confirm the refund policy and Tally format.
+2. Reversal entries for payments and refunds, then applying unmatched payments from the queue.
+3. A list of refunds due across students, with a "refund paid" step.
+4. Parent attendance and test scores, and bulk upload.
+5. A dashboard measure for the share of value arriving over 60 days late.
