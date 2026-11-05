@@ -5,6 +5,9 @@ coverage/
 *.tsbuildinfo
 next-env.d.ts
 
+# Written by next dev
+AGENTS.md
+
 # Secrets stay local. Only .env.example is committed.
 .env
 .env.*
