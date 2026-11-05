@@ -2,7 +2,7 @@
 
 **GitHub:** https://github.com/Siddhesh-source/coaching_institute
 **Live app:** not deployed yet (see [deployment.md](../deployment.md))
-**Status:** in progress, last updated 5 Nov 2026 (dues dashboard added). Sections marked *Planned* are designed but not built.
+**Status:** in progress, last updated 5 Nov 2026 (risk flag added). Sections marked *Planned* are designed but not built.
 
 ---
 
@@ -36,7 +36,7 @@ Fee Tracker gives parents their dues on a phone in five seconds, in Hindi or Eng
 | Manual payments | Built | Same matching code as the webhook |
 | Reminders that stop on payment | Built | Hindi and English, before, on and after, with a mock sender |
 | Dues dashboard, ageing, Tally export | Built | Filters by centre and batch. CSV of receipts with GST split |
-| AI dropout-risk flag | Planned | Input data seeded, including test cases |
+| AI dropout-risk flag | Built | Rule-based band with reasons. Call tasks only, with false-flag marking and rate |
 | Bulk upload, parent attendance and scores | Optional | Outside the core build |
 
 ## 3. Architecture
@@ -259,17 +259,23 @@ flowchart TD
 |---|---|---|
 | Payment matching | Built | Unmatched payments go to a queue and mark nothing paid |
 | Reminders | Built | Balance rechecked at send time. Failed sends are retried |
-| Dropout-risk flag | Planned | Creates a call task only. Counsellors mark false flags |
+| Dropout-risk flag | Built | Creates a call task only. Counsellors mark false flags. Too little data creates no task |
 
-**Dropout-risk flag (planned design).** It combines missed instalments, attendance trend and test trend into a band: none, watch or high.
+**Dropout-risk flag.** It runs daily from a protected route or a staff button, and reads missed instalments, attendance and test scores.
 
-- **Method:** a transparent weighted score. There is no real outcome data to train a model on, and a counsellor must be able to see why a student was flagged.
-- **Output:** a band with plain reasons, not a score like 72/100. A precise number would overstate what the data can show.
-- **Unsure:** with too little data it says so and creates no task.
-- **Limits by design:** it never triggers a fee action or a parent message.
-- **Learning from mistakes:** false flags are counted, so the rate is visible.
+- **Method:** transparent points in `src/domain/risk.ts`, not a trained model. There is no real dropout history to train on, and a counsellor must be able to see why a student was flagged. So this is a rule-based flag in the place the brief calls AI. The review data it collects is what a trained model would need later.
+- **Attendance:** the last 4 weeks against earlier weeks. A fall of 15 points scores 1, and 30 points scores 2.
+- **Tests:** the last 2 tests against earlier tests. A fall of 10 points scores 1, and 20 points scores 2.
+- **Missed instalments:** 1 overdue scores 1, and 2 or more scores 2.
+- **Bands:** 2 points is watch and 4 is high, but only with an attendance or test sign. Late fees alone never flag anyone, however many, because reminders handle money and being short of money is not a sign of leaving.
+- **Output:** a band with plain reasons, such as "Attendance fell from 83% to 42%". Never a score like 72/100, because a precise number would overstate what the data can show. Reasons are stored as facts and worded on screen in either language.
+- **Unsure:** under 6 weeks of attendance, under 4 tests, or no fee plan gives "not enough data". The ledger says so and no task is created.
 
-The seed already holds three students who should trigger the flag, one with too little data, and Ishita, who has a late fee but steady attendance and scores, so one late fee alone should not flag her.
+**When it is wrong.** The job writes to one table, `risk_flags`, which has no link to fees or messages. A test takes a full copy of instalments, payments, reminders, refunds, students, consents and users, runs the job and a review, and confirms nothing changed. Parents never see a flag. Counsellors mark each task "called" or "false flag", a false flag needs a note, and the screen shows the false-flag rate from real reviews. The rate is shown rather than fed back automatically, so a person decides when to change the thresholds.
+
+**Repeat flags.** A student has at most one open task, enforced by a database index, and the job refreshes its reasons as data changes. After a review the job leaves that student alone for 30 days. Students who have left are skipped, and their open tasks drop off the list.
+
+The thresholds were set by judgement against sample data I wrote myself, so passing here shows the logic works, not that it predicts dropouts. In the sample it flags exactly the three students built to trigger it, says Manav has too little data, and leaves Ishita alone despite her late fee.
 
 ## 8. Security and Compliance
 
@@ -282,7 +288,7 @@ The seed already holds three students who should trigger the flag, one with too 
 | OTP abuse | Hashed, 5 minute expiry, 5 tries per code, 5 codes per 10 minutes |
 | Parallel guessing | Attempts are counted in one statement. 12 parallel guesses stopped at exactly 5 |
 | Session theft | httpOnly, SameSite=Lax, secure in production, signed, 7 day limit |
-| Scheduled job | The reminders route refuses any call without the secret |
+| Scheduled jobs | The reminders and risk routes refuse any call without the secret |
 | Forged webhooks | Signature checked in constant time. Changed bodies are refused |
 | Token reuse | Session and pay link tokens use separate signing keys |
 | DPDP Act 2023 | Consent recorded per child with a notice version. A new version asks again |
@@ -310,12 +316,12 @@ The 31 mockups are kept in `docs/mockups` as layout reference only. They contain
 
 ## 10. Testing
 
-179 tests pass, and CI runs lint, types, tests and a build on every push.
+220 tests pass, and CI runs lint, types, tests and a build on every push.
 
 | Suite | Tests | Covers |
 |---|---|---|
-| Unit | 112 | Fee, refund, exit dates, OTP, GST, matching, ledger totals, reminder rules, dues and ageing, Tally format, sessions, sample data |
-| Database | 67 | Duplicates, races, part payments, unmatched cases, manual entry, reminder stages and stopping, saving refunds, payments after exit, dues filters, export dates, webhook and cron security, student search |
+| Unit | 138 | Fee, refund, exit dates, OTP, GST, matching, ledger totals, reminder rules, dues and ageing, Tally format, risk bands and missing data, sessions, sample data |
+| Database | 82 | Duplicates, races, part payments, unmatched cases, manual entry, reminder stages and stopping, saving refunds, payments after exit, dues filters, export dates, risk tasks and no side effects, webhook and cron security, student search |
 
 Tests use the brief's own rows, so Aarav, Ishita and Mohit must produce exactly the brief's statuses. Main flows were also walked through in a real browser at 360px, in both languages.
 
@@ -351,6 +357,11 @@ The brief does not state these. Each one is my judgement.
 | Consent proof | OTP on the registered number, plus a stored record | Method not specified |
 | Centre names | Centre 1 to Centre 4 | Not named |
 | Counsellor | The accounts role handles call tasks | Only two roles in the core build |
+| Risk method and thresholds | Points as in section 7 | No real dropout history to train on |
+| Late fees alone | Never flag a student | Reminders handle money, and it is not a sign of leaving |
+| Too little data | Under 6 weeks of attendance, under 4 tests, or no fee plan | The brief does not say how much is enough |
+| Repeat flags | One open task per student, then 30 days after a review | A counsellor should not be asked again the next morning |
+| False flag note | Required | The reason helps tune the rule |
 | Sample data | All records beyond the 3 brief rows are invented | The brief asks for created sample data |
 
 ## 12. Limits, Cuts and Next Steps
@@ -374,8 +385,11 @@ The brief does not state these. Each one is my judgement.
 - The refund policy wording is a sample built on assumed rules. Company A must confirm it before real use.
 - The Tally columns are assumed, and refunds are not exported. The file needs a trial import before real use.
 - Receipt and export dates use UTC. A real payment just after midnight in India would show the day before, which matters at month end. The demo is not affected.
+- The risk thresholds are judgement, tested only on invented data. They need checking against real dropouts before anyone relies on them.
+- A student who stops being recorded altogether looks steady, because the flag reads the records it has. It does not notice that attendance has gone missing.
+- Call tasks can be seen by every accounts user, and a closed task cannot be reopened.
 - The dashboard shows what is late now. It does not yet track the brief's measure, the share of instalment value that arrives over 60 days late, which needs paid-late history too.
 
 **Cut from the core build:** bulk upload, parent attendance and test score pages, audit log.
 
-**Next, in order:** risk flag, full polish pass, deployment.
+**Next, in order:** full polish pass, deployment.

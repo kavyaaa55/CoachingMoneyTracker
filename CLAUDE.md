@@ -58,6 +58,11 @@ Label each of these in the Technical Design Document. Add new ones here as they 
 | Ageing buckets | 0–30, 31–60, 60+ days | The brief's success measure uses 60 days |
 | Centre names | Centre 1 to Centre 4 | The brief does not name them |
 | Counsellor | The accounts role handles call tasks | The brief lists only two roles |
+| Risk method | Transparent points, not a trained model. Attendance compares the last 4 weeks with earlier weeks, tests the last 2 with earlier tests. A fall of 15 or 30 points in attendance, or 10 or 20 in tests, scores 1 or 2. Missed instalments score 1 or 2. 2 points is watch, 4 is high | There is no real dropout history to train on, and a counsellor must see why |
+| Late fees alone | Never flag a student, however many are missed | Reminders handle money, and being short of money is not a sign of leaving. Ishita's sample row shows this |
+| Too little data | Under 6 weeks of attendance, under 4 tests, or no fee plan | The brief says to say so, not how much is enough |
+| Repeat flags | One open task per student. After a review, no new task for 30 days | A counsellor should not be asked again the next morning |
+| False flag note | Required, so the reason is on record | The brief says counsellors mark false flags, and the reason helps tune the rule |
 | OTP delivery | SMS is mocked. With `DEMO_MODE=true` the code shows on screen | The brief says to mock messages |
 | OTP limits | 5 minutes, 5 tries per code, 5 codes per number in 10 minutes | The brief asks for OTP login, not its limits |
 | Consent proof | OTP sign-in on the registered number, plus a stored, versioned record per child | The brief requires verifiable consent, not the method |
