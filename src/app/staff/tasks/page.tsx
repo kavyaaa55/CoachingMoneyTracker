@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { RiskChip } from "@/components/risk-chip";
 import { SubmitButton } from "@/components/submit-button";
 import { TaskReviewForm } from "@/components/task-review-form";
@@ -40,6 +41,7 @@ export default async function TasksPage({ searchParams }: { searchParams: Promis
   const saved = query.saved === "called" || query.saved === "false_flag" ? query.saved : null;
 
   const pageHref = (target: number) => `/staff/tasks?status=${filter}&page=${target}`;
+  if (rows.length === 0 && counts[filter] > 0) redirect(pageHref(pages));
 
   return (
     <>

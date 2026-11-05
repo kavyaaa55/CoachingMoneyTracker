@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { buttonStyles } from "@/components/button-styles";
 import { DataTable } from "@/components/data-table";
 import { StatusChip } from "@/components/status-chip";
@@ -59,6 +60,7 @@ export default async function StudentsPage({ searchParams }: { searchParams: Pro
     if (centreId) params.set("centre", centreId);
     return `/staff/students?${params}`;
   };
+  if (rows.length === 0 && total > 0) redirect(pageHref(pages));
 
   return (
     <>

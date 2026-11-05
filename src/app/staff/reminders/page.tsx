@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { buttonStyles } from "@/components/button-styles";
 import { DataTable } from "@/components/data-table";
 import { SubmitButton } from "@/components/submit-button";
@@ -52,6 +53,7 @@ export default async function RemindersPage({ searchParams }: { searchParams: Pr
     if (changes.page) params.set("page", String(changes.page));
     return `/staff/reminders?${params}`;
   };
+  if (rows.length === 0 && counts[filter] > 0) redirect(href({ page: pages }));
 
   const ran = query.sent !== undefined;
   const sent = Number(query.sent) || 0;
