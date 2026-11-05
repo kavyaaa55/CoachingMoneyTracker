@@ -1,16 +1,42 @@
 import { describe, expect, it } from "vitest";
 import { rupees } from "./money";
-import { decideReminders, reminderSchedule, shouldPlan, stageOf } from "./reminders";
+import {
+  decideReminders,
+  REMINDER_OFFSETS,
+  reminderSchedule,
+  shouldPlan,
+  stageOf,
+} from "./reminders";
 
 describe("reminderSchedule", () => {
   it("covers before, on and after the due date", () => {
-    expect(reminderSchedule("2026-10-10")).toEqual([
+    expect(reminderSchedule("2026-10-10", "2026-10-03")).toEqual([
       { dayOffset: -7, sendOn: "2026-10-03" },
       { dayOffset: -1, sendOn: "2026-10-09" },
       { dayOffset: 0, sendOn: "2026-10-10" },
       { dayOffset: 3, sendOn: "2026-10-13" },
       { dayOffset: 7, sendOn: "2026-10-17" },
     ]);
+  });
+
+  it("keeps going after the first week, weekly past 60 days", () => {
+    expect(REMINDER_OFFSETS.slice(0, 13)).toEqual([-7, -1, 0, 3, 7, 14, 21, 28, 35, 42, 49, 56, 63]);
+  });
+
+  it("then slows to every 4 weeks and ends after a year", () => {
+    expect(REMINDER_OFFSETS.slice(13, 16)).toEqual([91, 119, 147]);
+    expect(REMINDER_OFFSETS.at(-1)).toBe(343);
+  });
+
+  it("never has more than one reminder in the same week once overdue", () => {
+    const after = REMINDER_OFFSETS.filter((offset) => offset >= 7);
+    const gaps = after.slice(1).map((offset, index) => offset - after[index]);
+    expect(Math.min(...gaps)).toBe(7);
+  });
+
+  it("only returns stages up to 14 days ahead, so the queue stays short", () => {
+    const stages = reminderSchedule("2026-10-10", "2026-11-02");
+    expect(stages.at(-1)).toEqual({ dayOffset: 35, sendOn: "2026-11-14" });
   });
 });
 

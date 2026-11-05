@@ -75,13 +75,13 @@ beforeEach(async () => {
 afterAll(() => sqlClient.end());
 
 describe("runReminders", () => {
-  it("queues all stages ahead of time and sends nothing early", async () => {
+  it("queues the stages coming up and sends nothing early", async () => {
     const send = sender();
     const result = await runReminders("2026-11-02", send);
 
     expect(result).toEqual({ sent: 0, stopped: 0, failed: 0 });
     expect(send).not.toHaveBeenCalled();
-    expect((await rows()).map((row) => row.status)).toEqual(Array(5).fill("queued"));
+    expect((await rows()).map((row) => row.status)).toEqual(Array(3).fill("queued"));
   });
 
   it("sends every stage on its own day, once", async () => {
@@ -93,8 +93,23 @@ describe("runReminders", () => {
       expect((await byOffset(offset)).status).toBe("sent");
     }
 
-    expect(send).toHaveBeenCalledTimes(5);
+    expect(send).toHaveBeenCalledTimes(REMINDER_OFFSETS.length);
     expect((await rows()).every((row) => row.status === "sent")).toBe(true);
+  });
+
+  it("keeps reminding long after the due date, and stops the moment it is paid", async () => {
+    const send = sender();
+    const late = addDays(DUE, 63);
+    await runReminders(late, send);
+    expect(send).toHaveBeenCalledTimes(1);
+    expect((await byOffset(63)).status).toBe("sent");
+
+    await pay(40000);
+
+    const after = sender();
+    await runReminders(addDays(DUE, 91), after);
+    expect(after).not.toHaveBeenCalled();
+    expect((await rows()).filter((row) => row.status === "queued")).toHaveLength(0);
   });
 
   it("does not send the same reminder twice on one day", async () => {

@@ -1,6 +1,7 @@
 import { sql } from "drizzle-orm";
 import { rupees } from "@/domain/money";
-import { reminderSchedule, shouldPlan } from "@/domain/reminders";
+import { addDays } from "@/domain/dates";
+import { PLAN_AHEAD_DAYS, reminderSchedule, shouldPlan } from "@/domain/reminders";
 import { reminderMessage } from "@/i18n";
 import { env } from "@/lib/env";
 import { payLinkFor } from "@/lib/pay-links";
@@ -127,6 +128,7 @@ async function seed() {
       gatewayRef: item.gatewayRef,
       amountPaise: rupees(item.amount),
       status: "unmatched" as const,
+      unmatchedReason: "no-instalment",
       paidAt: paidAt(item.paidOn),
     }));
     await tx.insert(payments).values([...matchedPayments, ...unmatchedPayments]);
@@ -137,7 +139,13 @@ async function seed() {
         if (!shouldPlan(item.dueDate, SAMPLE_TODAY)) return [];
         const id = instalmentId.get(`${studentId.get(s.code)}|${index + 1}`)!;
 
-        return reminderSchedule(item.dueDate).map(({ dayOffset, sendOn }) => {
+        // The job stops planning once an instalment is paid, so later stages never exist.
+        const stages = reminderSchedule(item.dueDate, SAMPLE_TODAY).filter(
+          ({ sendOn }) =>
+            item.paid < item.amount || !item.paidOn || sendOn <= addDays(item.paidOn, PLAN_AHEAD_DAYS),
+        );
+
+        return stages.map(({ dayOffset, sendOn }) => {
           const asOf = sendOn < SAMPLE_TODAY ? sendOn : SAMPLE_TODAY;
           const paidSoFar = item.paidOn && item.paidOn <= asOf ? item.paid : 0;
           const balance = item.amount - paidSoFar;

@@ -44,7 +44,7 @@ async function planReminders(date: IsoDate) {
   const values = rows
     .filter((row) => row.amount > row.paid)
     .flatMap((row) =>
-      reminderSchedule(row.dueDate).map(({ dayOffset, sendOn }) => ({
+      reminderSchedule(row.dueDate, date).map(({ dayOffset, sendOn }) => ({
         instalmentId: row.id,
         dayOffset,
         sendOn,
