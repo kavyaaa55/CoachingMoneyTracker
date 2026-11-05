@@ -6,4 +6,7 @@ export const buttonStyles = {
   link: "min-h-12 px-2 font-medium underline underline-offset-4 disabled:text-muted",
 };
 
+/** A 48px tap target that does not make its table row or line any taller. */
+export const rowLink = "-my-3 inline-flex min-h-12 items-center font-medium underline underline-offset-4";
+
 export type ButtonVariant = keyof typeof buttonStyles;

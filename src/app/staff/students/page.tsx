@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { buttonStyles } from "@/components/button-styles";
+import { buttonStyles, rowLink } from "@/components/button-styles";
 import { DataTable } from "@/components/data-table";
 import { StatusChip } from "@/components/status-chip";
 import {
@@ -128,10 +128,7 @@ export default async function StudentsPage({ searchParams }: { searchParams: Pro
             {
               header: s.student,
               cell: (row) => (
-                <Link
-                  href={`/staff/students/${row.id}`}
-                  className="font-medium underline underline-offset-4"
-                >
+                <Link href={`/staff/students/${row.id}`} className={rowLink}>
                   {row.name}
                 </Link>
               ),

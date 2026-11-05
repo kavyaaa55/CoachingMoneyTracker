@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { buttonStyles } from "@/components/button-styles";
+import { buttonStyles, rowLink } from "@/components/button-styles";
 import { DataTable } from "@/components/data-table";
 import { SubmitButton } from "@/components/submit-button";
 import type { StopReason } from "@/domain/reminders";
@@ -129,10 +129,7 @@ export default async function RemindersPage({ searchParams }: { searchParams: Pr
             {
               header: r.student,
               cell: (row) => (
-                <Link
-                  href={`/staff/students/${row.studentId}`}
-                  className="font-medium underline underline-offset-4"
-                >
+                <Link href={`/staff/students/${row.studentId}`} className={rowLink}>
                   {row.studentName}
                 </Link>
               ),

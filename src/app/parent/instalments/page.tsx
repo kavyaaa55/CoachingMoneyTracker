@@ -77,7 +77,7 @@ export default async function InstalmentsPage({
                   <Link
                     key={item.id}
                     href={`/parent/receipts/${item.id}`}
-                    className="inline-block py-2 text-sm font-medium underline underline-offset-4"
+                    className="inline-block py-3.5 text-sm font-medium underline underline-offset-4"
                   >
                     {t.instalments.receipt(item.receiptNo ?? "")}
                   </Link>

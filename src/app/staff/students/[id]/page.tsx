@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { buttonStyles } from "@/components/button-styles";
+import { buttonStyles, rowLink } from "@/components/button-styles";
 import { DataTable } from "@/components/data-table";
 import { RiskChip } from "@/components/risk-chip";
 import { StatusChip } from "@/components/status-chip";
@@ -188,10 +188,7 @@ export default async function StudentLedgerPage({ params, searchParams }: Props)
               {
                 header: l.receipt,
                 cell: (row) => (
-                  <Link
-                    href={`/staff/receipts/${row.id}`}
-                    className="font-medium whitespace-nowrap underline underline-offset-4"
-                  >
+                  <Link href={`/staff/receipts/${row.id}`} className={`${rowLink} whitespace-nowrap`}>
                     {row.receiptNo}
                   </Link>
                 ),

@@ -9,7 +9,7 @@ export default async function NotFound() {
     <main className="mx-auto flex max-w-[480px] flex-col gap-4 px-4 py-12">
       <h1 className="text-xl font-medium">{t.errors.notFoundTitle}</h1>
       <p className="text-muted">{t.errors.notFoundBody}</p>
-      <Link href="/" className="font-medium underline underline-offset-4">
+      <Link href="/" className="py-3 font-medium underline underline-offset-4">
         {t.errors.goHome}
       </Link>
     </main>

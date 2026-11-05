@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { rowLink } from "@/components/button-styles";
 import { RiskChip } from "@/components/risk-chip";
 import { SubmitButton } from "@/components/submit-button";
 import { TaskReviewForm } from "@/components/task-review-form";
@@ -99,10 +100,7 @@ export default async function TasksPage({ searchParams }: { searchParams: Promis
             <li key={task.id} className="flex flex-col gap-3 rounded-md border border-divider bg-surface p-6">
               <div className="flex items-start justify-between gap-4">
                 <div className="min-w-0">
-                  <Link
-                    href={`/staff/students/${task.studentId}`}
-                    className="text-lg font-medium underline underline-offset-4"
-                  >
+                  <Link href={`/staff/students/${task.studentId}`} className={`${rowLink} text-lg`}>
                     {task.studentName}
                   </Link>
                   <p className="text-sm text-muted">
@@ -120,7 +118,7 @@ export default async function TasksPage({ searchParams }: { searchParams: Promis
 
               <p>
                 {k.call(task.parentName)} ·{" "}
-                <a href={`tel:${task.parentPhone}`} className="font-medium underline underline-offset-4">
+                <a href={`tel:${task.parentPhone}`} className={rowLink}>
                   {task.parentPhone}
                 </a>
               </p>
