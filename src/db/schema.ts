@@ -24,6 +24,21 @@ export const refundStatusEnum = pgEnum("refund_status", ["calculated", "approved
 const id = () => uuid("id").primaryKey().defaultRandom();
 const createdAt = () => timestamp("created_at", { withTimezone: true }).notNull().defaultNow();
 
+/** Only a hash of the code is stored. */
+export const otpCodes = pgTable(
+  "otp_codes",
+  {
+    id: id(),
+    phone: text("phone").notNull(),
+    codeHash: text("code_hash").notNull(),
+    attempts: integer("attempts").notNull().default(0),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    consumedAt: timestamp("consumed_at", { withTimezone: true }),
+    createdAt: createdAt(),
+  },
+  (t) => [index().on(t.phone, t.createdAt)],
+);
+
 export const centres = pgTable("centres", {
   id: id(),
   name: text("name").notNull().unique(),

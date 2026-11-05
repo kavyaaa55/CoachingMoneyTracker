@@ -21,7 +21,7 @@ async function seed() {
 
   await db.transaction(async (tx) => {
     await tx.execute(
-      sql`truncate table refunds, risk_flags, test_scores, attendance, reminders, payments,
+      sql`truncate table otp_codes, refunds, risk_flags, test_scores, attendance, reminders, payments,
           instalments, consents, students, users, batches, centres cascade`,
     );
 

@@ -8,6 +8,10 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
+    env:
+      # Placeholders so the build can load. CI never connects or signs anything real.
+      DATABASE_URL: postgres://ci:ci@localhost:5432/ci
+      SESSION_SECRET: ci-placeholder-not-used-for-anything-real
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
