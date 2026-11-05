@@ -2,7 +2,7 @@
 
 **GitHub:** https://github.com/Siddhesh-source/coaching_institute
 **Live app:** not deployed yet (see [deployment.md](../deployment.md))
-**Status:** in progress, last updated 5 Nov 2026 (refunds added). Sections marked *Planned* are designed but not built.
+**Status:** in progress, last updated 5 Nov 2026 (dues dashboard added). Sections marked *Planned* are designed but not built.
 
 ---
 
@@ -35,7 +35,7 @@ Fee Tracker gives parents their dues on a phone in five seconds, in Hindi or Eng
 | Fee ledger for staff | Built | Search, plan, discount, instalments, payments, balance, days overdue |
 | Manual payments | Built | Same matching code as the webhook |
 | Reminders that stop on payment | Built | Hindi and English, before, on and after, with a mock sender |
-| Dues dashboard, ageing, Tally export | Planned | |
+| Dues dashboard, ageing, Tally export | Built | Filters by centre and batch. CSV of receipts with GST split |
 | AI dropout-risk flag | Planned | Input data seeded, including test cases |
 | Bulk upload, parent attendance and scores | Optional | Outside the core build |
 
@@ -197,6 +197,39 @@ Tests also cover discounts, exit before term, exit after term, and a parent who 
 
 **After saving,** the fee account is closed, because a later payment would make the saved refund wrong. Parents see the refund and no pay buttons. Old pay links stop working. Gateway money that still arrives goes to the unmatched queue, and manual payments are refused. The policy lives at `/refund-policy`, with no sign-in, and its example is worked through the real rule.
 
+### Dues dashboard and Tally export
+
+Staff land here after sign-in. Every figure is worked out on each page load from instalments and matched payments, by pure functions in `src/domain/dues.ts`. Nothing is stored or typed in.
+
+| Figure | Meaning |
+|---|---|
+| Billed | Every instalment for the term |
+| Collected | Matched payments only |
+| Outstanding | All unpaid, including instalments not yet due |
+| Overdue | The part of outstanding past its due date |
+| Ageing | Overdue split by days late: up to 30, 31 to 60, over 60 |
+
+Billed always equals collected plus outstanding, and the buckets always add up to overdue. Tests hold both true. A student with two late instalments can appear in two buckets, so bucket student counts can add up to more than the number of students.
+
+Students who have left are not counted, because their fee account is closed. The page says how many were left out. The batch filter works by name, because the same batch name runs at several centres. The table keeps one row per batch at each centre.
+
+**Tally export (assumed format).** The brief names no format, and Tally has no single standard CSV, so these columns are a proposal to map in Company A's import tool. It needs checking against their Tally setup before real use.
+
+| Column | Example | Notes |
+|---|---|---|
+| Voucher Date | 05-10-2026 | Day first |
+| Voucher Type | Receipt | Always Receipt |
+| Voucher Number | RCT-000123 | The receipt number |
+| Centre, Batch | Centre 1, JEE 2027 Evening | |
+| Student ID | STU-0587 | No student name, because the ID is enough and most students are minors |
+| Narration | Instalment 2, STU-0587 | |
+| Debit Ledger | Bank | Cash for cash, Bank for everything else |
+| Reference | UPI123 | Staff reference, or the gateway reference |
+| Course Fee, CGST, SGST | 12711.86, 1144.07, 1144.07 | The fee before tax and the 9% + 9% split |
+| Total | 15000.00 | The three parts always add up to this |
+
+The file holds matched receipts in the chosen dates, within the chosen centre and batch. It includes students who have since left, because that money was received. Unmatched payments stay out until staff resolve them. Text that could run as a spreadsheet formula is made safe, since staff type the reference. The route checks the role and the dates first.
+
 ### Reminders
 
 ```mermaid
@@ -277,12 +310,12 @@ The 31 mockups are kept in `docs/mockups` as layout reference only. They contain
 
 ## 10. Testing
 
-150 tests pass, and CI runs lint, types, tests and a build on every push.
+179 tests pass, and CI runs lint, types, tests and a build on every push.
 
 | Suite | Tests | Covers |
 |---|---|---|
-| Unit | 93 | Fee, refund, exit dates, OTP, GST, matching, ledger totals, reminder rules, sessions, sample data |
-| Database | 57 | Duplicates, races, part payments, unmatched cases, manual entry, reminder stages and stopping, saving refunds, payments after exit, webhook and cron security, student search |
+| Unit | 112 | Fee, refund, exit dates, OTP, GST, matching, ledger totals, reminder rules, dues and ageing, Tally format, sessions, sample data |
+| Database | 67 | Duplicates, races, part payments, unmatched cases, manual entry, reminder stages and stopping, saving refunds, payments after exit, dues filters, export dates, webhook and cron security, student search |
 
 Tests use the brief's own rows, so Aarav, Ishita and Mohit must produce exactly the brief's statuses. Main flows were also walked through in a real browser at 360px, in both languages.
 
@@ -312,6 +345,8 @@ The brief does not state these. Each one is my judgement.
 | Missed job days | Only the latest due stage goes out | A parent should not get several messages at once |
 | Individual due dates | 6 sample students have their own due dates | So every stage falls on the fixed demo date |
 | Ageing buckets | 0–30, 31–60, 60+ days | The success measure uses 60 days |
+| Dues figures | Defined in section 6. Students who have left are not counted | The brief does not define them, and a closed account is not collectable |
+| Tally export | One row per matched receipt, columns as in section 6 | The brief names no format |
 | OTP limits | 5 minutes, 5 tries, 5 codes per 10 minutes | Not specified |
 | Consent proof | OTP on the registered number, plus a stored record | Method not specified |
 | Centre names | Centre 1 to Centre 4 | Not named |
@@ -337,7 +372,10 @@ The brief does not state these. Each one is my judgement.
 - A saved refund cannot be edited or reversed, so a wrong exit date needs a database fix. It needs a reversal entry, as manual payments do.
 - The app works out a refund but does not pay it. There is no "refund paid" step, and no list of refunds across students, so staff track the deadline from each ledger.
 - The refund policy wording is a sample built on assumed rules. Company A must confirm it before real use.
+- The Tally columns are assumed, and refunds are not exported. The file needs a trial import before real use.
+- Receipt and export dates use UTC. A real payment just after midnight in India would show the day before, which matters at month end. The demo is not affected.
+- The dashboard shows what is late now. It does not yet track the brief's measure, the share of instalment value that arrives over 60 days late, which needs paid-late history too.
 
 **Cut from the core build:** bulk upload, parent attendance and test score pages, audit log.
 
-**Next, in order:** dues dashboard with Tally export, risk flag, full polish pass, deployment.
+**Next, in order:** risk flag, full polish pass, deployment.

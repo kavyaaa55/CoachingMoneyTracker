@@ -2,7 +2,7 @@
 
 Read this first, then continue from **Next step**.
 
-**Last updated:** 5 Nov 2026, after prompt 6.
+**Last updated:** 5 Nov 2026, after prompt 7.
 
 ## What this is
 
@@ -36,12 +36,12 @@ Fee Tracker: a 7-day solo assessment build for Company A, a Jaipur coaching inst
 | 4. Fee ledger | Done |
 | 5. Reminders | Done |
 | 6. Refund calculator | Done |
-| 7. Dues dashboard | **Next** |
-| 8. Dropout-risk flag | To do |
+| 7. Dues dashboard | Done |
+| 8. Dropout-risk flag | **Next** |
 | 9. Polish check | To do |
 | 10. Submission files | To do |
 
-Last verified: 150 tests pass (93 unit, 57 database), lint, types and build are clean, and CI passes on `main`. The working tree is clean.
+Last verified: 179 tests pass (112 unit, 67 database), lint, types and build are clean, and CI passes on `main`. The working tree is clean.
 
 ## Run it
 
@@ -66,12 +66,14 @@ Open http://localhost:3000. The server does not survive the session that started
 
 The OTP appears on screen in demo mode.
 
-## Next step: prompt 7
+## Next step: prompt 8
 
-Build the dues dashboard, using the text in `prompt.md`. Things to know from prompt 6:
+Build the dropout-risk flag, using the text in `prompt.md` and the hard rule in `CLAUDE.md`. Things to know:
 
-- A student with `exit_date` set has a closed fee account, so their unpaid instalments are not collectable. Leave them out of dues totals and ageing, and label the assumption in `CLAUDE.md` and `docs/TDD.md`.
-- `refundOf` in `src/lib/refunds.ts` reads a saved refund. The seed has none, so save one in the app to test this.
+- The `risk_flags` table is ready, with `band`, `reasons`, `task_status` and `review_note`.
+- A student with `exit_date` set has already left, so the job should skip them.
+- The expected results for the seeded students are under **Sample data for later prompts** below.
+- Add the tasks screen to the staff nav in `src/app/staff/layout.tsx`.
 
 ## Decisions waiting on the owner
 
@@ -92,11 +94,12 @@ Build the dues dashboard, using the text in `prompt.md`. Things to know from pro
 
 | Path | Job |
 |---|---|
-| `src/domain/` | Pure rules: money, dates, instalments, refund, payments, reminders, gst, otp, access |
+| `src/domain/` | Pure rules: money, dates, instalments, refund, payments, reminders, dues, tally, gst, otp, access |
 | `src/lib/payments.ts` | `recordPayment`, the only code that marks an instalment paid |
 | `src/lib/reminders.ts` | The reminder job and list query |
 | `src/lib/auth.ts` | `requireUser`, `requireParent`. Call first in every protected page and action |
 | `src/lib/refunds.ts` | `saveRefund`, which also stops reminders and closes the fee account, and `refundOf` |
+| `src/lib/dues.ts` | Dues and Tally export queries, with centre and batch filters |
 | `src/lib/ledger.ts` | Instalment, payment and receipt queries |
 | `src/lib/staff-students.ts` | Student search and lookup |
 | `src/lib/clock.ts` | `today()`. Never use `new Date()` for business dates |
@@ -141,4 +144,5 @@ Not blocking, and listed in `docs/TDD.md` where they affect the client:
 - A saved refund cannot be reversed either, and there is no "refund paid" step or list of refunds across students.
 - Unmatched payments have no staff screen yet (optional depth).
 - The phone field clears after a validation error. Fix in prompt 9.
+- The Tally columns are assumed. Receipt and export dates use UTC, which only matters for real payments just after midnight in India.
 - Hindi text needs review by a native speaker.

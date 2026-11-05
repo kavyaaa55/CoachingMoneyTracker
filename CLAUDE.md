@@ -70,6 +70,8 @@ Label each of these in the Technical Design Document. Add new ones here as they 
 | After a refund is saved | The fee account closes. Parents see the refund instead of dues, pay links stop, gateway money goes to the queue, and manual payments are refused | A later payment would make the saved refund wrong |
 | Unpaid fee used | Shown to staff when paid is less than fee used, never collected automatically | The brief only covers refunds, not recovering money from leavers |
 | Refund deadline | Counts from the exit date, even if the refund is saved late, and shows as overdue if passed | The brief says within 10 days of the student leaving |
+| Dues figures | Billed is every instalment for the term. Outstanding is all unpaid, overdue is the part past its due date. Students who have left are not counted | The brief asks for dues and ageing without defining them, and a closed account is not collectable |
+| Tally export | One CSV row per matched receipt, with fee, CGST and SGST split, and student ID but no name. Includes students who have left | The brief names no format. Centres post receipts to Tally, and the money was really received |
 
 ## Stack
 
