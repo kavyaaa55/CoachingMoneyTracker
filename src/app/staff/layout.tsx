@@ -20,6 +20,7 @@ export default async function StaffLayout({ children }: { children: React.ReactN
             { href: "/staff/students", label: t.staff.navStudents },
             { href: "/staff/reminders", label: t.staff.navReminders },
             { href: "/staff/tasks", label: t.staff.navTasks },
+            { href: "/staff/upload", label: t.staff.navUpload },
           ]}
         />
       </aside>

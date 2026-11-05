@@ -19,3 +19,5 @@ export function daysBetween(from: IsoDate, to: IsoDate): number {
 export function addDays(date: IsoDate, days: number): IsoDate {
   return new Date(toUtc(date) + days * DAY_MS).toISOString().slice(0, 10);
 }
+
+export const isMonday = (date: IsoDate) => new Date(toUtc(date)).getUTCDay() === 1;

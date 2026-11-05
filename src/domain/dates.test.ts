@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { addDays, daysBetween } from "./dates";
+import { addDays, daysBetween, isMonday } from "./dates";
 
 describe("dates", () => {
   it("counts days across months", () => {
@@ -9,6 +9,11 @@ describe("dates", () => {
 
   it("adds days across a year end", () => {
     expect(addDays("2026-12-28", 10)).toBe("2027-01-07");
+  });
+
+  it("knows a Monday", () => {
+    expect(isMonday("2026-11-02")).toBe(true);
+    expect(isMonday("2026-11-03")).toBe(false);
   });
 
   it("rejects bad dates", () => {

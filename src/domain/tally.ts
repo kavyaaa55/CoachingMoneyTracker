@@ -41,7 +41,7 @@ const toRupees = (paise: Paise) => (paise / 100).toFixed(2);
 const toVoucherDate = (date: IsoDate) => date.split("-").reverse().join("-");
 
 /** Stops a typed reference running as a formula when the file opens in a spreadsheet. */
-function csvCell(value: string): string {
+export function csvCell(value: string): string {
   const safe = /^[=+\-@\t\r]/.test(value) ? `'${value}` : value;
   return /[",\r\n]/.test(safe) ? `"${safe.replaceAll('"', '""')}"` : safe;
 }
