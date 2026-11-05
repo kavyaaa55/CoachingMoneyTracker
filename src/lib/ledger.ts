@@ -8,7 +8,7 @@ export const isUuid = (value: string) => UUID.test(value);
 
 const paidSum = sql<number>`coalesce(sum(${payments.amountPaise}) filter (where ${payments.status} = 'matched'), 0)::int`;
 
-const instalmentFields = {
+export const instalmentFields = {
   id: instalments.id,
   studentId: instalments.studentId,
   sequence: instalments.sequence,
