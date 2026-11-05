@@ -6,3 +6,8 @@ export function today(): IsoDate {
   if (fixed) return fixed;
   return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata" }).format(new Date());
 }
+
+/** The current time on the app's date, so demo payments land on the demo day. */
+export function nowOnAppDate(): Date {
+  return new Date(`${today()}T${new Date().toISOString().slice(11)}`);
+}

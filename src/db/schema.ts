@@ -6,6 +6,7 @@ import {
   integer,
   jsonb,
   pgEnum,
+  pgSequence,
   pgTable,
   text,
   timestamp,
@@ -20,6 +21,9 @@ export const reminderStatusEnum = pgEnum("reminder_status", ["queued", "sent", "
 export const riskBandEnum = pgEnum("risk_band", ["watch", "high"]);
 export const taskStatusEnum = pgEnum("task_status", ["open", "called", "false_flag"]);
 export const refundStatusEnum = pgEnum("refund_status", ["calculated", "approved", "paid"]);
+
+/** One unbroken series of receipt numbers. */
+export const receiptNoSeq = pgSequence("receipt_no_seq");
 
 const id = () => uuid("id").primaryKey().defaultRandom();
 const createdAt = () => timestamp("created_at", { withTimezone: true }).notNull().defaultNow();
@@ -135,6 +139,9 @@ export const payments = pgTable(
     amountPaise: integer("amount_paise").notNull(),
     status: paymentStatusEnum("status").notNull(),
     receiptNo: text("receipt_no").unique(),
+    /** What the gateway claimed, kept so staff can resolve an unmatched payment. */
+    claimedRef: text("claimed_ref"),
+    unmatchedReason: text("unmatched_reason"),
     paidAt: timestamp("paid_at", { withTimezone: true }).notNull(),
   },
   (t) => [
