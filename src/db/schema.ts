@@ -11,8 +11,10 @@ import {
   text,
   timestamp,
   unique,
+  uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
+import type { RiskReason } from "@/domain/risk";
 
 export const roleEnum = pgEnum("role", ["parent", "accounts"]);
 export const languageEnum = pgEnum("language", ["en", "hi"]);
@@ -230,12 +232,21 @@ export const riskFlags = pgTable(
       .notNull()
       .references(() => students.id),
     band: riskBandEnum("band").notNull(),
-    reasons: jsonb("reasons").$type<string[]>().notNull(),
+    /** Stored as facts, so each language can word them on screen. */
+    reasons: jsonb("reasons").$type<RiskReason[]>().notNull(),
     taskStatus: taskStatusEnum("task_status").notNull().default("open"),
     reviewNote: text("review_note"),
+    flaggedOn: date("flagged_on").notNull(),
+    reviewedOn: date("reviewed_on"),
+    reviewedBy: uuid("reviewed_by").references(() => users.id),
     createdAt: createdAt(),
   },
-  (t) => [index().on(t.studentId), index().on(t.taskStatus)],
+  (t) => [
+    index().on(t.studentId),
+    index().on(t.taskStatus),
+    // One open task per student, even if two runs overlap.
+    uniqueIndex("risk_flags_one_open_task").on(t.studentId).where(sql`${t.taskStatus} = 'open'`),
+  ],
 );
 
 export const refunds = pgTable(

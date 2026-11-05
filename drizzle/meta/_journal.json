@@ -43,6 +43,13 @@
       "when": 1793876040558,
       "tag": "0005_refund_working",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1793878770670,
+      "tag": "0006_risk_task_review",
+      "breakpoints": true
     }
   ]
 }

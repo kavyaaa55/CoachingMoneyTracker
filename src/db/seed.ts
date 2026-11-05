@@ -4,6 +4,7 @@ import { reminderSchedule, shouldPlan } from "@/domain/reminders";
 import { reminderMessage } from "@/i18n";
 import { env } from "@/lib/env";
 import { payLinkFor } from "@/lib/pay-links";
+import { runRiskCheck } from "@/lib/risk";
 import { db, sqlClient } from "./client";
 import { buildSampleData, CENTRES, PLAN_TOTAL, SAMPLE_TODAY } from "./sample-data";
 import {
@@ -177,7 +178,9 @@ async function seed() {
     );
   });
 
-  console.log(`Seeded ${sample.students.length} students.`);
+  const risk = await runRiskCheck(SAMPLE_TODAY);
+
+  console.log(`Seeded ${sample.students.length} students, ${risk.flagged} call tasks.`);
 }
 
 seed()
