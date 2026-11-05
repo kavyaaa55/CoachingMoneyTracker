@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { setLanguage } from "@/app/actions";
 import { ActionForm } from "@/components/action-form";
@@ -77,6 +78,12 @@ export default async function LoginPage() {
           </dl>
         </section>
       )}
+      <Link
+        href="/refund-policy"
+        className="mt-auto block py-4 text-center font-medium underline underline-offset-4"
+      >
+        {t.refundPolicy.link}
+      </Link>
     </main>
   );
 }
