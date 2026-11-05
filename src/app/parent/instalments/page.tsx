@@ -62,9 +62,15 @@ export default async function InstalmentsPage({
                   {t.instalments.dueOn(formatDate(instalment.dueDate, locale))}
                 </p>
                 <div>
-                  <StatusChip status={status} t={t} />
+                  {child?.exitDate && balance > 0 ? (
+                    <span className="inline-block rounded-sm bg-highlight px-2 py-0.5 text-[13px] font-medium">
+                      {t.instalments.closed}
+                    </span>
+                  ) : (
+                    <StatusChip status={status} t={t} />
+                  )}
                 </div>
-                {instalment.paid > 0 && balance > 0 && (
+                {!child?.exitDate && instalment.paid > 0 && balance > 0 && (
                   <p className="text-sm">{t.instalments.balance(formatInr(balance))}</p>
                 )}
                 {own.map((item) => (
@@ -76,7 +82,7 @@ export default async function InstalmentsPage({
                     {t.instalments.receipt(item.receiptNo ?? "")}
                   </Link>
                 ))}
-                {balance > 0 && (
+                {!child?.exitDate && balance > 0 && (
                   <Link
                     href={payLinkFor(instalment.id)}
                     className={buttonStyles.secondary}
@@ -89,6 +95,13 @@ export default async function InstalmentsPage({
           })}
         </ul>
       )}
+
+      <Link
+        href="/refund-policy"
+        className="block py-4 text-center font-medium underline underline-offset-4"
+      >
+        {t.refundPolicy.link}
+      </Link>
     </main>
   );
 }

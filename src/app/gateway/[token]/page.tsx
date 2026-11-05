@@ -10,6 +10,7 @@ import { env } from "@/lib/env";
 import { instalmentById } from "@/lib/ledger";
 import { getLocale } from "@/lib/locale";
 import { instalmentIdFromToken } from "@/lib/pay-links";
+import { hasLeft } from "@/lib/students";
 import { payAtGateway } from "./actions";
 
 type Props = {
@@ -27,14 +28,21 @@ export default async function GatewayPage({ params, searchParams }: Props) {
   const instalmentId = instalmentIdFromToken(token);
   const instalment = instalmentId ? await instalmentById(instalmentId) : null;
   const balance = instalment ? balanceOf(instalment) : 0;
+  const studentLeft = instalment ? await hasLeft(instalment.studentId) : false;
 
   const shell = "mx-auto flex min-h-dvh max-w-[480px] flex-col gap-6 px-4 py-6";
 
-  if (!instalment || balance === 0) {
+  if (!instalment || balance === 0 || studentLeft) {
     return (
       <main className={shell}>
         <h1 className="text-xl leading-7 font-medium">{t.gateway.title}</h1>
-        <p>{instalment ? t.gateway.alreadyPaid : t.gateway.invalidLink}</p>
+        <p>
+          {!instalment
+            ? t.gateway.invalidLink
+            : studentLeft
+              ? t.gateway.studentLeft
+              : t.gateway.alreadyPaid}
+        </p>
         <Link href="/parent" className={buttonStyles.primary}>
           {t.gateway.goToDues}
         </Link>

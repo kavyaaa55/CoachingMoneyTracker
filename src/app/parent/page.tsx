@@ -9,6 +9,7 @@ import { today } from "@/lib/clock";
 import { instalmentsOf } from "@/lib/ledger";
 import { getLocale } from "@/lib/locale";
 import { payLinkFor } from "@/lib/pay-links";
+import { refundOf } from "@/lib/refunds";
 
 type Query = { student?: string; payment?: string; receipt?: string };
 
@@ -28,7 +29,7 @@ export default async function ParentHome({ searchParams }: { searchParams: Promi
   }
 
   const child = children.find((item) => item.id === query.student) ?? children[0];
-  const instalments = await instalmentsOf(child.id);
+  const [instalments, refund] = await Promise.all([instalmentsOf(child.id), refundOf(child.id)]);
   const date = today();
   const dues = nextToPay(instalments, date);
   const listHref = `/parent/instalments?student=${child.id}`;
@@ -74,7 +75,25 @@ export default async function ParentHome({ searchParams }: { searchParams: Promi
         </p>
       )}
 
-      {instalments.length === 0 ? (
+      {refund ? (
+        <>
+          <section className="mt-10">
+            <p>{t.home.refundFor(child.name)}</p>
+            <p className="mt-2 text-amount font-medium">{formatInr(refund.refundPaise)}</p>
+            <p className="mt-2 text-lg leading-7 text-muted">
+              {refund.refundPaise > 0
+                ? t.home.refundDueBy(formatDate(refund.dueBy, locale))
+                : t.home.noRefund}
+            </p>
+            <p className="mt-1 text-muted">{t.home.leftOn(formatDate(refund.exitDate, locale))}</p>
+          </section>
+          <div className="mt-auto pt-10">
+            <Link href={listHref} className="block py-4 text-center font-medium underline underline-offset-4">
+              {t.home.seeReceipts}
+            </Link>
+          </div>
+        </>
+      ) : instalments.length === 0 ? (
         <p className="mt-10 text-muted">{t.home.noPlan}</p>
       ) : dues && status ? (
         <>

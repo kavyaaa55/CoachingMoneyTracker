@@ -19,6 +19,14 @@ export function childrenOf(parentId: string) {
     .orderBy(students.name);
 }
 
+export async function hasLeft(studentId: string): Promise<boolean> {
+  const [row] = await db
+    .select({ exitDate: students.exitDate })
+    .from(students)
+    .where(eq(students.id, studentId));
+  return Boolean(row?.exitDate);
+}
+
 export async function consentedStudentIds(parentId: string): Promise<string[]> {
   const rows = await db
     .select({ studentId: consents.studentId })
