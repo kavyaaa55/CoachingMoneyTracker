@@ -16,6 +16,7 @@ export default async function StaffLayout({ children }: { children: React.ReactN
         <p className="mt-1 text-sm text-muted">{t.staff.signedInAs(user.name)}</p>
         <StaffNav
           links={[
+            { href: "/staff/dues", label: t.staff.navDues },
             { href: "/staff/students", label: t.staff.navStudents },
             { href: "/staff/reminders", label: t.staff.navReminders },
           ]}

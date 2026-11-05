@@ -3,5 +3,5 @@ import { requireUser } from "@/lib/auth";
 
 export default async function StaffHome() {
   await requireUser("accounts");
-  redirect("/staff/students");
+  redirect("/staff/dues");
 }
