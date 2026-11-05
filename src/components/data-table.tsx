@@ -10,10 +10,13 @@ type Props<T> = {
   rowKey: (row: T) => string;
 };
 
-/** A table on wide screens. On a phone, each row becomes a stack of labelled lines. */
+/**
+ * A table on wide screens, which scrolls inside its box if the columns do not fit beside
+ * the sidebar. On a phone, each row becomes a stack of labelled lines.
+ */
 export function DataTable<T>({ columns, rows, rowKey }: Props<T>) {
   return (
-    <div className="rounded-md border border-divider bg-surface">
+    <div className="overflow-x-auto rounded-md border border-divider bg-surface">
       <table className="block w-full md:table">
         <thead className="hidden md:table-header-group">
           <tr>
