@@ -45,3 +45,13 @@ body {
     transition: none !important;
   }
 }
+
+@media print {
+  .no-print {
+    display: none;
+  }
+
+  body {
+    background: white;
+  }
+}

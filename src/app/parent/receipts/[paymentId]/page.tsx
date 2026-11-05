@@ -1,0 +1,90 @@
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { PrintButton } from "@/components/print-button";
+import { GST_RATE_PERCENT, SAMPLE_GSTIN, splitGst } from "@/domain/gst";
+import { formatInr } from "@/domain/money";
+import { formatDate, messages } from "@/i18n";
+import { requireParent } from "@/lib/auth";
+import { receiptFor } from "@/lib/ledger";
+import { getLocale } from "@/lib/locale";
+
+export default async function ReceiptPage({
+  params,
+}: {
+  params: Promise<{ paymentId: string }>;
+}) {
+  const { user } = await requireParent();
+  const { paymentId } = await params;
+
+  const receipt = await receiptFor(paymentId, user.id);
+  if (!receipt) notFound();
+
+  const locale = await getLocale();
+  const t = messages(locale);
+  const { taxable, cgst, sgst } = splitGst(receipt.amount);
+  const halfRate = String(GST_RATE_PERCENT / 2);
+  const paidOn = receipt.paidAt.toISOString().slice(0, 10);
+
+  const details = [
+    [t.receipt.number, receipt.receiptNo],
+    [t.receipt.date, formatDate(paidOn, locale)],
+    [t.receipt.student, receipt.studentName],
+    [t.receipt.studentId, receipt.studentCode],
+    [t.receipt.batch, receipt.batch],
+    [t.receipt.paidFor, t.receipt.instalment(receipt.sequence)],
+    [t.receipt.reference, receipt.gatewayRef],
+  ];
+  const amounts = [
+    [t.receipt.taxable, formatInr(taxable)],
+    [t.receipt.cgst(halfRate), formatInr(cgst)],
+    [t.receipt.sgst(halfRate), formatInr(sgst)],
+  ];
+
+  return (
+    <main className="mx-auto flex min-h-dvh max-w-[640px] flex-col gap-6 px-4 py-4">
+      <Link
+        href="/parent"
+        className="no-print inline-block min-h-12 py-3 font-medium underline underline-offset-4"
+      >
+        {t.receipt.back}
+      </Link>
+
+      <article className="rounded-md border border-divider bg-surface p-6">
+        <header>
+          <p className="text-sm text-muted">
+            {t.institute}, Jaipur · {t.receipt.gstin} {SAMPLE_GSTIN}
+          </p>
+          <h1 className="mt-1 text-[32px] leading-10 font-medium">{t.receipt.title}</h1>
+        </header>
+
+        <dl className="mt-6">
+          {details.map(([label, value]) => (
+            <div key={label} className="flex justify-between gap-4 py-1.5">
+              <dt className="text-muted">{label}</dt>
+              <dd className="text-right break-all">{value}</dd>
+            </div>
+          ))}
+        </dl>
+
+        <dl className="mt-4 border-t border-divider pt-4">
+          {amounts.map(([label, value]) => (
+            <div key={label} className="flex justify-between gap-4 py-1.5">
+              <dt className="text-muted">{label}</dt>
+              <dd>{value}</dd>
+            </div>
+          ))}
+          <div className="mt-2 flex justify-between gap-4 border-t border-divider pt-3 text-lg font-medium">
+            <dt>{t.receipt.total}</dt>
+            <dd>{formatInr(receipt.amount)}</dd>
+          </div>
+        </dl>
+
+        <p className="mt-6 text-sm text-muted">{t.receipt.sampleNote}</p>
+      </article>
+
+      <div className="no-print">
+        <PrintButton label={t.receipt.print} />
+      </div>
+    </main>
+  );
+}
