@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "on-primary-fixed": "#141a32",
+          "on-secondary-container": "#59666f",
+          "error-container": "#ffdad6",
+          "tertiary": "#25220f",
+          "on-primary": "#ffffff",
+          "on-tertiary-fixed-variant": "#4b4731",
+          "tertiary-fixed-dim": "#cec7aa",
+          "on-error": "#ffffff",
+          "surface-container": "#efefda",
+          "inverse-on-surface": "#f2f2dd",
+          "surface-container-lowest": "#ffffff",
+          "secondary-container": "#d6e4ef",
+          "outline-variant": "#c7c6ce",
+          "surface-container-highest": "#e4e4cf",
+          "error": "#ba1a1a",
+          "primary-fixed": "#dce1ff",
+          "inverse-primary": "#c0c5e4",
+          "on-error-container": "#93000a",
+          "on-primary-container": "#999fbd",
+          "on-background": "#1b1d10",
+          "surface": "#fbfbe5",
+          "on-primary-fixed-variant": "#40465f",
+          "on-tertiary-container": "#a7a085",
+          "outline": "#76767e",
+          "secondary-fixed": "#d6e4ef",
+          "tertiary-fixed": "#ebe2c5",
+          "surface-tint": "#575d78",
+          "on-secondary": "#ffffff",
+          "tertiary-container": "#3b3723",
+          "background": "#fbfbe5",
+          "primary": "#1a2138",
+          "on-secondary-fixed-variant": "#3b4951",
+          "surface-container-low": "#f5f5e0",
+          "surface-container-high": "#e9e9d5",
+          "surface-variant": "#e4e4cf",
+          "surface-bright": "#fbfbe5",
+          "on-surface-variant": "#46464d",
+          "inverse-surface": "#303224",
+          "secondary-fixed-dim": "#bac8d3",
+          "on-surface": "#1b1d10",
+          "on-tertiary": "#ffffff",
+          "surface-dim": "#dbdbc7",
+          "primary-fixed-dim": "#c0c5e4",
+          "secondary": "#536069",
+          "primary-container": "#30364f",
+          "on-secondary-fixed": "#101d25",
+          "on-tertiary-fixed": "#1f1c0a"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "gutter": "1.5rem",
+          "space-sm": "0.5rem",
+          "space-xs": "0.25rem",
+          "margin": "2rem",
+          "space-xl": "2rem",
+          "space-lg": "1.5rem",
+          "space-md": "1rem"
+        },
+        "fontFamily": {
+          "label-md": [
+            "Inter"
+          ],
+          "body-sm": [
+            "Inter"
+          ],
+          "display": [
+            "Inter"
+          ],
+          "label-sm": [
+            "Inter"
+          ],
+          "headline-lg": [
+            "Inter"
+          ],
+          "body-lg": [
+            "Inter"
+          ],
+          "headline-sm": [
+            "Inter"
+          ],
+          "tabular-num": [
+            "Inter"
+          ],
+          "body-md": [
+            "Inter"
+          ]
+        },
+        "fontSize": {
+          "label-md": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "500"
+            }
+          ],
+          "body-sm": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "fontWeight": "400"
+            }
+          ],
+          "display": [
+            "40px",
+            {
+              "lineHeight": "48px",
+              "letterSpacing": "-0.02em",
+              "fontWeight": "600"
+            }
+          ],
+          "label-sm": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "letterSpacing": "0.02em",
+              "fontWeight": "500"
+            }
+          ],
+          "headline-lg": [
+            "28px",
+            {
+              "lineHeight": "36px",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "600"
+            }
+          ],
+          "body-lg": [
+            "16px",
+            {
+              "lineHeight": "24px",
+              "fontWeight": "400"
+            }
+          ],
+          "headline-sm": [
+            "20px",
+            {
+              "lineHeight": "28px",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "600"
+            }
+          ],
+          "tabular-num": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "500"
+            }
+          ],
+          "body-md": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "400"
+            }
+          ]
+        }
+      },
+    },
+  }</script></head><body class="bg-background font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-60 bg-primary-container z-50 flex flex-col justify-between select-none"><div class="flex flex-col"><div class="h-16 px-space-md flex items-center justify-between bg-primary"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-secondary-fixed text-[20px]">account_balance_wallet</span><span class="font-headline-sm text-headline-sm text-on-primary tracking-tight">Fee Tracker</span></div><span class="px-space-xs py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm uppercase tracking-wider font-semibold">JAIPUR</span></div><nav class="flex flex-col gap-0.5 px-space-xs py-space-sm" data-active-classes="bg-primary text-on-primary font-medium"><a class="flex items-center justify-between px-space-md py-2.5 rounded text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors" data-path="dashboard" href="/dashboard"><span class="font-label-md text-label-md">Dashboard</span></a><a class="flex items-center justify-between px-space-md py-2.5 rounded text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors" data-path="students" href="/students"><span class="font-label-md text-label-md">Students</span></a><a class="flex items-center justify-between px-space-md py-2.5 rounded text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors" data-path="reminders" href="/reminders"><span class="font-label-md text-label-md">Reminders</span></a><a class="flex items-center justify-between px-space-md py-2.5 rounded text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors" data-path="counsellor-tasks" href="/counsellor-tasks"><span class="font-label-md text-label-md">Counsellor tasks</span><span class="px-1.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-tabular-num text-tabular-num text-xs font-semibold">4</span></a><a aria-current="page" class="flex items-center justify-between px-space-md py-2.5 rounded transition-colors bg-primary text-on-primary font-medium" data-path="bulk-upload" href="/bulk-upload"><span class="font-label-md text-label-md">Uploads</span></a><a class="flex items-center justify-between px-space-md py-2.5 rounded text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors" data-path="unmatched-payments" href="/unmatched-payments"><span class="font-label-md text-label-md">Unmatched payments</span><span class="px-1.5 py-0.5 rounded-full bg-error-container text-on-error-container font-tabular-num text-tabular-num text-xs font-semibold">3</span></a><a class="flex items-center justify-between px-space-md py-2.5 rounded text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors" data-path="audit-log" href="/audit-log"><span class="font-label-md text-label-md">Audit log</span></a></nav></div><div class="p-space-md bg-primary flex items-center justify-between"><div class="flex flex-col"><span class="font-label-sm text-label-sm text-on-primary-container">Admin Ledger v2.4</span><span class="font-body-sm text-body-sm text-secondary-fixed-dim">Jaipur Main Campus</span></div><a class="text-on-primary-container hover:text-on-primary transition-colors" data-path="settings" href="/settings"><span class="material-symbols-outlined text-[20px]">settings</span></a></div></aside><div class="pl-60"><header class="fixed top-0 left-60 right-0 h-16 bg-surface-container-lowest z-40 px-space-margin flex items-center justify-between shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-secondary text-[18px]">location_city</span><label class="font-label-sm text-label-sm text-secondary uppercase font-semibold">Centre:</label><select class="bg-surface-container-low text-on-surface font-label-md text-label-md rounded px-space-sm py-1 focus:outline-none"><option>All centres</option><option>Malviya Nagar</option><option>Vaishali Nagar</option><option>Raja Park</option><option>Mansarovar</option></select></div><div class="h-4 w-px bg-outline-variant"></div><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-secondary text-[18px]">event_available</span><label class="font-label-sm text-label-sm text-secondary uppercase font-semibold">Session:</label><span class="px-space-sm py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-md text-label-md font-semibold">FY 2026-27</span></div></div><div class="flex items-center gap-space-lg"><button class="text-secondary hover:text-primary transition-colors flex items-center" type="button"><span class="material-symbols-outlined text-[20px]">search</span></button><button class="relative text-secondary hover:text-primary transition-colors flex items-center" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-0 right-0 w-2 h-2 rounded-full bg-error ring-2 ring-surface-container-lowest"></span></button><div class="h-6 w-px bg-outline-variant"></div><div class="flex items-center gap-space-sm"><div class="flex flex-col text-right"><span class="font-label-md text-label-md text-on-surface font-semibold leading-tight">Rajesh Sharma</span><span class="font-body-sm text-body-sm text-secondary leading-tight">Senior Accounts Officer</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-16 bg-surface"><div class="flex flex-col w-full">
+<div class="max-w-[1180px] w-full mx-auto px-space-margin py-space-xl flex flex-col gap-space-xl">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md border-b border-[#ACBAC4]/40 pb-space-lg">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-space-xs text-[#536069] font-label-sm text-label-sm uppercase tracking-wider font-semibold">
+<span>Academic Ledger</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span>Batch Data Operations</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-[#30364F]">Ingestion Engine</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-[#30364F] tracking-tight">Upload attendance and scores</h1>
+<p class="font-body-md text-body-md text-[#536069]">Process high-density biometric punch files or standardized weekend exam marks for enrolled Jaipur batches.</p>
+</div>
+<div class="flex items-center gap-space-sm">
+<a class="inline-flex items-center gap-2 px-space-md py-2.5 rounded bg-white text-[#30364F] border border-[#ACBAC4] font-label-md text-label-md hover:bg-[#F0F0DB] transition-colors shadow-sm" href="#template-modal">
+<span class="material-symbols-outlined text-[18px]">download_for_offline</span>
+<span>CSV Templates spec</span>
+</a>
+<button class="inline-flex items-center gap-2 px-space-md py-2.5 rounded bg-white text-[#30364F] border border-[#ACBAC4] font-label-md text-label-md hover:bg-[#F0F0DB] transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">history</span>
+<span>Batch logs</span>
+</button>
+</div>
+</div>
+<!-- Active Ingestion Wizard (Steps 1-3) -->
+<div class="bg-white rounded-lg border border-[#ACBAC4] shadow-sm flex flex-col">
+<div class="px-space-lg py-space-md bg-[#F0F0DB] border-b border-[#ACBAC4] flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="w-6 h-6 rounded-full bg-[#30364F] text-[#F0F0DB] font-label-sm text-label-sm font-semibold flex items-center justify-center">1</span>
+<span class="font-headline-sm text-headline-sm text-[#30364F] text-base">File Preparation &amp; Staging</span>
+</div>
+<span class="px-2 py-0.5 rounded bg-[#E1D9BC] text-[#30364F] font-label-sm text-label-sm font-medium">Session: FY 2026-27</span>
+</div>
+<div class="p-space-lg grid grid-cols-1 lg:grid-cols-12 gap-space-lg">
+<!-- Step 1: Configuration -->
+<div class="lg:col-span-4 flex flex-col gap-space-md pr-0 lg:pr-space-md lg:border-r lg:border-[#ACBAC4]/40">
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm uppercase font-semibold text-[#536069] tracking-wider">Step 1</span>
+<span class="font-label-md text-label-md font-semibold text-[#30364F]">Target Batch &amp; Data Stream</span>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="font-label-sm text-label-sm text-[#30364F] font-semibold">Select Classroom Batch</label>
+<div class="relative">
+<select class="w-full h-10 px-3 pr-8 rounded border border-[#ACBAC4] bg-white text-[#30364F] font-label-md text-label-md focus:border-[#30364F] focus:outline-none transition-colors appearance-none">
+<option selected="">JEE 2027 Evening (PH-2) - Malviya Nagar</option>
+<option>NEET 2027 Morning - Malviya Nagar</option>
+<option>JEE 2026 Advanced Intensive - Vaishali Nagar</option>
+<option>Foundation 10th Weekend - Raja Park</option>
+<option>NEET 2026 Repeater Alpha - Mansarovar</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 text-[#536069] pointer-events-none text-[20px]">arrow_drop_down</span>
+</div>
+<p class="font-body-sm text-body-sm text-[#536069]">Active roster: 128 enrolled students in ledger registry.</p>
+</div>
+<div class="flex flex-col gap-1.5 mt-1">
+<label class="font-label-sm text-label-sm text-[#30364F] font-semibold">Data Payload Type</label>
+<div class="grid grid-cols-2 p-1 bg-[#F0F0DB] rounded border border-[#ACBAC4]">
+<button class="py-1.5 rounded bg-[#30364F] text-[#F0F0DB] font-label-sm text-label-sm font-semibold text-center transition-all" type="button">Attendance</button>
+<button class="py-1.5 rounded text-[#30364F] hover:bg-white/60 font-label-sm text-label-sm font-medium text-center transition-all" type="button">Test scores</button>
+</div>
+<span class="font-body-sm text-body-sm text-[#536069] flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">info</span>
+              Accepts 4 status codes: P, A, M (Medical), L (Leave).
+            </span>
+</div>
+</div>
+<!-- Step 2: Upload dropzone & file status -->
+<div class="lg:col-span-5 flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm uppercase font-semibold text-[#536069] tracking-wider">Step 2</span>
+<span class="font-label-md text-label-md font-semibold text-[#30364F]">Staged Biometric / CSV Payload</span>
+</div>
+<a class="font-label-sm text-label-sm text-[#30364F] hover:underline flex items-center gap-1 font-semibold" href="#">
+<span class="material-symbols-outlined text-[14px]">description</span>
+              Download template
+            </a>
+</div>
+<!-- Staged file active state card -->
+<div class="p-3.5 rounded bg-[#F0F0DB]/60 border border-[#ACBAC4] flex items-center justify-between">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-9 h-9 rounded bg-[#3E7B55]/10 text-[#3E7B55] flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-[#30364F] font-semibold truncate">attendance_jee2027_oct2026.csv</span>
+<span class="font-body-sm text-body-sm text-[#536069] font-tabular-num text-tabular-num">42 KB · 128 rows parsed · UTF-8 formatted</span>
+</div>
+</div>
+<button class="text-xs font-label-sm text-[#B4432F] hover:underline shrink-0 ml-2 font-semibold" type="button">Remove / Replace</button>
+</div>
+<!-- Drag and drop zone -->
+<div class="border-2 border-dashed border-[#ACBAC4] rounded-lg p-5 flex flex-col items-center justify-center text-center bg-white hover:bg-[#F0F0DB]/20 transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-[#30364F] text-[32px] mb-1">cloud_upload</span>
+<p class="font-label-md text-label-md text-[#30364F] font-semibold">Drop alternative CSV here or browse files</p>
+<p class="font-body-sm text-body-sm text-[#536069] mt-0.5">Strict CSV UTF-8 RFC 4180 format up to 10MB</p>
+</div>
+</div>
+<!-- Step 3: Action Execution Area -->
+<div class="lg:col-span-3 flex flex-col justify-between pl-0 lg:pl-space-md lg:border-l lg:border-[#ACBAC4]/40">
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm uppercase font-semibold text-[#536069] tracking-wider">Step 3</span>
+<span class="font-label-md text-label-md font-semibold text-[#30364F]">Dry-Run Integrity</span>
+</div>
+<p class="font-body-sm text-body-sm text-[#536069]">Files must execute structural syntax, student registry foreign keys, and roll-range verification before database ledger write.</p>
+<div class="p-2.5 bg-[#F0F0DB] rounded text-[#30364F] text-xs font-body-sm space-y-1">
+<div class="flex items-center justify-between">
+<span class="text-[#536069]">Active Batch ID:</span>
+<span class="font-tabular-num font-semibold">JPR-MN-2027-E2</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-[#536069]">Strict Validation:</span>
+<span class="text-[#3E7B55] font-semibold">Enabled</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-2 pt-4">
+<button class="w-full h-10 px-4 rounded bg-[#30364F] text-[#F0F0DB] font-label-md text-label-md font-semibold hover:bg-[#232738] active:bg-[#1A1D2B] transition-colors flex items-center justify-center gap-2 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">rule</span>
+<span>Validate first</span>
+</button>
+<span class="text-center font-body-sm text-[11px] text-[#536069]">Zero modifications will occur during dry-run validation.</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Section Divider & Educational Meta -->
+<div class="flex items-center justify-between pt-2">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm text-[#30364F]">Lifecycle State Manifest</span>
+<span class="px-2 py-0.5 rounded bg-[#E1D9BC] text-[#30364F] font-label-sm text-label-sm font-semibold">Visual Specification</span>
+</div>
+<span class="font-body-sm text-body-sm text-[#536069]">Live demonstration of all 4 ingestion validation states</span>
+</div>
+<!-- STATE (b): VALIDATING PROGRESS STATE -->
+<div class="bg-white rounded-lg border border-[#ACBAC4] p-space-lg shadow-sm flex flex-col gap-space-md">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-[#30364F] text-[#F0F0DB] flex items-center justify-center animate-spin">
+<span class="material-symbols-outlined text-[18px]">sync</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded bg-[#E1D9BC] text-[#30364F] font-label-sm text-[11px] uppercase font-bold tracking-wider">State (b)</span>
+<h2 class="font-headline-sm text-headline-sm text-[#30364F] text-lg">Validating CSV structure and constraints...</h2>
+</div>
+<p class="font-body-sm text-body-sm text-[#536069]">Checking biometric row syntax, student roll integrity, and timestamp parity against ledger.</p>
+</div>
+</div>
+<span class="font-tabular-num text-tabular-num font-bold text-lg text-[#30364F]">68%</span>
+</div>
+<!-- Linear progress bar -->
+<div class="w-full bg-[#F0F0DB] h-2.5 rounded-full overflow-hidden border border-[#ACBAC4]/40">
+<div class="bg-[#30364F] h-full transition-all duration-300 rounded-full" style="width: 68%;"></div>
+</div>
+<!-- Audit checklist grid -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-3 pt-1">
+<div class="p-3 bg-[#F0F0DB]/50 rounded border border-[#ACBAC4]/60 flex items-center gap-2.5">
+<span class="material-symbols-outlined text-[#3E7B55] text-[18px]">check_circle</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-[#30364F] font-semibold">Columns Scheme</span>
+<span class="font-body-sm text-[11px] text-[#536069]">4/4 headers verified</span>
+</div>
+</div>
+<div class="p-3 bg-[#F0F0DB]/50 rounded border border-[#ACBAC4]/60 flex items-center gap-2.5">
+<span class="material-symbols-outlined text-[#3E7B55] text-[18px]">check_circle</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-[#30364F] font-semibold">Student IDs (STU-*)</span>
+<span class="font-body-sm text-[11px] text-[#536069]">Pattern syntax checked</span>
+</div>
+</div>
+<div class="p-3 bg-white rounded border border-[#30364F] flex items-center gap-2.5 shadow-sm">
+<span class="material-symbols-outlined text-[#30364F] text-[18px] animate-pulse">pending</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-[#30364F] font-semibold">Date format sanity</span>
+<span class="font-body-sm text-[11px] text-[#30364F] font-semibold">Row 87 of 128</span>
+</div>
+</div>
+<div class="p-3 bg-[#F0F0DB]/30 rounded border border-[#ACBAC4]/40 flex items-center gap-2.5 opacity-60">
+<span class="material-symbols-outlined text-[#536069] text-[18px]">hourglass_empty</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-[#536069] font-medium">Status flags (P,A,M,L)</span>
+<span class="font-body-sm text-[11px] text-[#536069]">Queued for analysis</span>
+</div>
+</div>
+</div>
+</div>
+<!-- STATE (c): DRY-RUN RESULT WITH ERRORS -->
+<div class="bg-white rounded-lg border border-[#B4432F] shadow-sm overflow-hidden flex flex-col">
+<!-- Error notification bar -->
+<div class="p-space-lg bg-[#B4432F]/10 border-b border-[#B4432F]/30 flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div class="flex items-start gap-3">
+<div class="w-9 h-9 rounded bg-[#B4432F] text-white flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[20px]">warning</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded bg-[#B4432F] text-white font-label-sm text-[11px] uppercase font-bold tracking-wider">State (c) Dry-Run Invalidation</span>
+<span class="font-label-md text-label-md font-semibold text-[#B4432F]">128 rows checked, 3 blocking errors found</span>
+</div>
+<p class="font-body-md text-body-md text-[#30364F] font-medium mt-0.5">Fix errors in your CSV and re-upload before confirming import. Database writes are currently prohibited.</p>
+</div>
+</div>
+<div class="flex items-center gap-2 self-start md:self-auto shrink-0">
+<button class="px-space-md py-2 rounded bg-white text-[#30364F] border border-[#ACBAC4] font-label-sm text-label-sm font-semibold hover:bg-[#F0F0DB] flex items-center gap-1.5 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[16px]">file_download</span>
+<span>Download Error Log</span>
+</button>
+</div>
+</div>
+<!-- Structured Error Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-[#F0F0DB] text-[#30364F] border-b border-[#ACBAC4]">
+<th class="py-3 px-4 font-label-sm text-label-sm uppercase font-bold tracking-wider w-24">Row #</th>
+<th class="py-3 px-4 font-label-sm text-label-sm uppercase font-bold tracking-wider w-36">Column</th>
+<th class="py-3 px-4 font-label-sm text-label-sm uppercase font-bold tracking-wider">Problem Description</th>
+<th class="py-3 px-4 font-label-sm text-label-sm uppercase font-bold tracking-wider text-right w-64">Example Value Found</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-[#ACBAC4]/40 font-body-md text-body-md text-[#30364F]">
+<tr class="hover:bg-[#E1D9BC]/20 transition-colors">
+<td class="py-3 px-4 font-tabular-num text-tabular-num font-semibold text-[#B4432F]">Row 14</td>
+<td class="py-3 px-4">
+<span class="px-2 py-0.5 rounded bg-[#F0F0DB] font-label-sm text-label-sm font-mono text-[#30364F] border border-[#ACBAC4]/60">date</span>
+</td>
+<td class="py-3 px-4">
+<div class="flex flex-col">
+<span class="font-semibold text-[#30364F]">Invalid ISO date format</span>
+<span class="font-body-sm text-body-sm text-[#536069]">Expected format YYYY-MM-DD. Gregorian bounds exceeded on month component.</span>
+</div>
+</td>
+<td class="py-3 px-4 text-right">
+<code class="px-2 py-1 rounded bg-[#B4432F]/10 text-[#B4432F] font-tabular-num text-tabular-num font-semibold border border-[#B4432F]/30">24/13/2026</code>
+</td>
+</tr>
+<tr class="hover:bg-[#E1D9BC]/20 transition-colors">
+<td class="py-3 px-4 font-tabular-num text-tabular-num font-semibold text-[#B4432F]">Row 52</td>
+<td class="py-3 px-4">
+<span class="px-2 py-0.5 rounded bg-[#F0F0DB] font-label-sm text-label-sm font-mono text-[#30364F] border border-[#ACBAC4]/60">student_id</span>
+</td>
+<td class="py-3 px-4">
+<div class="flex flex-col">
+<span class="font-semibold text-[#30364F]">Batch enrollment mismatch</span>
+<span class="font-body-sm text-body-sm text-[#536069]">Student exists in system but is not enrolled in JEE 2027 Evening (PH-2). Active in Raja Park branch.</span>
+</div>
+</td>
+<td class="py-3 px-4 text-right">
+<code class="px-2 py-1 rounded bg-[#B4432F]/10 text-[#B4432F] font-tabular-num text-tabular-num font-semibold border border-[#B4432F]/30">STU-9941</code>
+</td>
+</tr>
+<tr class="hover:bg-[#E1D9BC]/20 transition-colors">
+<td class="py-3 px-4 font-tabular-num text-tabular-num font-semibold text-[#B4432F]">Row 89</td>
+<td class="py-3 px-4">
+<span class="px-2 py-0.5 rounded bg-[#F0F0DB] font-label-sm text-label-sm font-mono text-[#30364F] border border-[#ACBAC4]/60">status</span>
+</td>
+<td class="py-3 px-4">
+<div class="flex flex-col">
+<span class="font-semibold text-[#30364F]">Unrecognized enum status token</span>
+<span class="font-body-sm text-body-sm text-[#536069]">Only strict biometric flags accepted: (P: Present, A: Absent, M: Medical, L: Leave).</span>
+</div>
+</td>
+<td class="py-3 px-4 text-right">
+<code class="px-2 py-1 rounded bg-[#B4432F]/10 text-[#B4432F] font-tabular-num text-tabular-num font-semibold border border-[#B4432F]/30">'LATE'</code>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- State (c) Action footer with locked CTA -->
+<div class="p-space-md bg-[#F0F0DB] border-t border-[#ACBAC4] flex flex-col sm:flex-row items-center justify-between gap-space-sm">
+<div class="flex items-center gap-2 text-xs font-body-sm text-[#536069]">
+<span class="material-symbols-outlined text-[18px] text-[#B4432F]">lock</span>
+<span>Commit disabled until 100% of rows conform to validation schema.</span>
+</div>
+<div class="flex items-center gap-space-sm w-full sm:w-auto">
+<button class="flex-1 sm:flex-none px-space-md py-2.5 rounded bg-white text-[#30364F] border border-[#ACBAC4] font-label-md text-label-md font-semibold hover:bg-[#F0F0DB] transition-colors flex items-center justify-center gap-1.5 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">replay</span>
+<span>Re-upload CSV</span>
+</button>
+<div class="relative group flex-1 sm:flex-none">
+<button class="w-full sm:w-auto px-space-md py-2.5 rounded bg-[#ACBAC4]/40 text-[#536069] border border-[#ACBAC4] font-label-md text-label-md font-semibold cursor-not-allowed flex items-center justify-center gap-1.5 select-none" disabled="" type="button">
+<span class="material-symbols-outlined text-[18px]">lock</span>
+<span>Confirm import</span>
+</button>
+<div class="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:flex px-2 py-1 bg-[#30364F] text-[#F0F0DB] text-xs font-label-sm rounded whitespace-nowrap shadow-md pointer-events-none z-10">
+              Resolved errors required before commit
+            </div>
+</div>
+</div>
+</div>
+</div>
+<!-- STATE (d): DRY-RUN CLEAN & READY -->
+<div class="bg-white rounded-lg border border-[#3E7B55] shadow-sm flex flex-col overflow-hidden">
+<div class="p-space-lg bg-[#3E7B55]/10 flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div class="flex items-start gap-3">
+<div class="w-9 h-9 rounded bg-[#3E7B55] text-white flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[22px]">check</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded bg-[#3E7B55] text-white font-label-sm text-[11px] uppercase font-bold tracking-wider">State (d) Validation Passed</span>
+<span class="font-label-md text-label-md font-semibold text-[#3E7B55]">128 rows ready for import</span>
+</div>
+<p class="font-body-md text-body-md text-[#30364F] font-medium mt-0.5">No syntax or enrolment errors detected. 128 biometric records successfully mapped to active students in JEE 2027 Evening.</p>
+</div>
+</div>
+<div class="flex items-center gap-space-sm shrink-0">
+<button class="px-space-md py-2.5 rounded bg-white text-[#30364F] border border-[#ACBAC4] font-label-md text-label-md font-semibold hover:bg-[#F0F0DB] transition-colors shadow-sm" type="button">
+            View pre-flight table
+          </button>
+<button class="px-space-lg py-2.5 rounded bg-[#30364F] text-[#F0F0DB] font-label-md text-label-md font-semibold hover:bg-[#232738] active:bg-[#1A1D2B] transition-colors flex items-center gap-2 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">publish</span>
+<span>Confirm import</span>
+<span class="px-1.5 py-0.5 rounded-full bg-[#E1D9BC] text-[#30364F] font-tabular-num text-xs font-bold">128</span>
+</button>
+</div>
+</div>
+<!-- Quick payload pre-flight breakdown -->
+<div class="px-space-lg py-3 bg-white border-t border-[#3E7B55]/20 grid grid-cols-2 md:grid-cols-4 gap-4 text-xs font-body-md text-[#536069]">
+<div><strong class="text-[#30364F]">Batch:</strong> JEE 2027 Evening</div>
+<div><strong class="text-[#30364F]">Date Range:</strong> 01 Oct 2026 – 31 Oct 2026</div>
+<div><strong class="text-[#30364F]">Present/Absent ratio:</strong> 94.2% attendance</div>
+<div><strong class="text-[#30364F]">Checksum:</strong> SHA-256 e3b0c442...</div>
+</div>
+</div>
+<!-- STATE (e): IMPORT SUCCESS SUMMARY TOAST & BANNER -->
+<div class="bg-white rounded-lg border border-[#ACBAC4] p-space-lg shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded bg-[#E1D9BC] text-[#30364F] font-label-sm text-[11px] uppercase font-bold tracking-wider">State (e) Execution Success</span>
+<span class="font-label-md text-label-md font-semibold text-[#30364F]">Ledger Mutation Complete</span>
+</div>
+<div class="p-space-lg rounded-lg bg-[#3E7B55]/10 border border-[#3E7B55]/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
+<div class="flex items-start gap-4">
+<div class="w-10 h-10 rounded-full bg-[#3E7B55] text-white flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[24px]">verified</span>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="font-headline-sm text-headline-sm text-[#30364F] text-lg font-semibold">128 records successfully imported into academic ledger</h3>
+<p class="font-body-md text-body-md text-[#30364F]">Batch logs updated for <strong>JEE 2027 Evening (PH-2)</strong>. All student dashboards and counsellor attendance alerts refreshed.</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="font-label-sm text-label-sm text-[#536069]">Audit Hash:</span>
+<span class="px-2 py-0.5 rounded bg-white text-[#30364F] font-mono text-xs font-semibold border border-[#ACBAC4]/60">#IMP-2026-8819</span>
+<span class="text-xs text-[#536069]">· Committed by Rajesh Sharma at 14:32 IST</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-space-sm w-full md:w-auto shrink-0">
+<button class="flex-1 md:flex-none px-space-md py-2.5 rounded bg-[#30364F] text-[#F0F0DB] font-label-md text-label-md font-semibold hover:bg-[#232738] transition-colors flex items-center justify-center gap-2 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">table_chart</span>
+<span>View Attendance Register</span>
+</button>
+<button class="flex-1 md:flex-none px-space-md py-2.5 rounded bg-white text-[#30364F] border border-[#ACBAC4] font-label-md text-label-md font-semibold hover:bg-[#F0F0DB] transition-colors flex items-center justify-center gap-1.5 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">add_circle</span>
+<span>Upload Another File</span>
+</button>
+</div>
+</div>
+<!-- Compact ledger audit trail table -->
+<div class="p-3 bg-[#F0F0DB]/60 rounded border border-[#ACBAC4]/40 flex flex-col md:flex-row md:items-center justify-between gap-2 text-xs font-body-sm text-[#536069]">
+<div class="flex items-center gap-4">
+<span class="flex items-center gap-1 font-semibold text-[#30364F]">
+<span class="material-symbols-outlined text-[16px] text-[#3E7B55]">done_all</span>
+            128 Students Updated
+          </span>
+<span>0 Duplicates Skipped</span>
+<span>0 Rolled Back</span>
+</div>
+<div class="flex items-center gap-3">
+<a class="text-[#30364F] hover:underline font-semibold flex items-center gap-1" href="#">
+<span>Download ledger receipt (PDF)</span>
+<span class="material-symbols-outlined text-[14px]">open_in_new</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</div></main><footer class="w-full bg-surface-container-low py-space-md"><div class="max-w-7xl mx-auto px-space-margin flex flex-col md:flex-row items-center justify-between gap-space-xs text-on-surface-variant font-body-sm text-body-sm"><p>Fee Tracker Coaching Institute • Jaipur Regional Administrative Office</p><p>Helpline: +91 141 2780000 | accounts@feetracker-jaipur.edu.in</p></div></footer></div></body></html>

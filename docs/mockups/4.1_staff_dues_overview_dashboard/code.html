@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "outline-variant": "#c7c6ce", "surface-dim": "#dbdbc7", "background": "#fbfbe5", "tertiary": "#25220f", "on-tertiary": "#ffffff", "surface-variant": "#e4e4cf", "tertiary-fixed-dim": "#cec7aa", "surface-container-high": "#e9e9d5", "secondary-container": "#d6e4ef", "inverse-primary": "#c0c5e4", "on-tertiary-fixed-variant": "#4b4731", "on-primary-container": "#999fbd", "error-container": "#ffdad6", "inverse-surface": "#303224", "surface-tint": "#575d78", "on-secondary-fixed-variant": "#3b4951", "inverse-on-surface": "#f2f2dd", "on-surface-variant": "#46464d", "on-primary-fixed": "#141a32", "outline": "#76767e", "surface-container-lowest": "#ffffff", "on-tertiary-fixed": "#1f1c0a", "primary-fixed": "#dce1ff", "tertiary-container": "#3b3723", "on-background": "#1b1d10", "on-surface": "#1b1d10", "secondary": "#536069", "on-primary": "#ffffff", "surface-container-low": "#f5f5e0", "error": "#ba1a1a", "on-secondary": "#ffffff", "on-secondary-fixed": "#101d25", "surface-container-highest": "#e4e4cf", "primary-fixed-dim": "#c0c5e4", "on-error-container": "#93000a", "secondary-fixed-dim": "#bac8d3", "surface-bright": "#fbfbe5", "primary": "#1a2138", "primary-container": "#30364f", "tertiary-fixed": "#ebe2c5", "on-secondary-container": "#59666f", "surface-container": "#efefda", "on-tertiary-container": "#a7a085", "surface": "#fbfbe5", "on-primary-fixed-variant": "#40465f", "secondary-fixed": "#d6e4ef", "on-error": "#ffffff" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-lg": "1.5rem", "space-xs": "0.25rem", "space-xl": "2rem", "space-sm": "0.5rem", "space-md": "1rem", "margin": "2rem", "gutter": "1.5rem" }, "fontFamily": { "body-sm": ["Inter"], "headline-lg": ["Inter"], "headline-sm": ["Inter"], "label-md": ["Inter"], "body-lg": ["Inter"], "label-sm": ["Inter"], "tabular-num": ["Inter"], "display": ["Inter"], "body-md": ["Inter"] }, "fontSize": { "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }], "headline-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "headline-sm": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }], "tabular-num": ["14px", { "lineHeight": "20px", "fontWeight": "500" }], "display": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-[240px] bg-primary-container z-50 flex flex-col justify-between py-space-md"><div class="flex flex-col"><div class="px-space-md pb-space-lg pt-space-xs flex items-center justify-between border-b border-outline/30"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-tertiary-fixed text-[22px]">account_balance</span><span class="font-headline-sm text-headline-sm text-surface-container-lowest tracking-tight">Fee Tracker</span></div><span class="bg-tertiary-fixed/20 text-tertiary-fixed border border-tertiary-fixed/40 font-label-sm text-label-sm px-1.5 py-0.5 rounded-[4px] tracking-wide">JAIPUR</span></div><nav class="flex flex-col gap-1 px-space-sm mt-space-md" data-active-classes="bg-surface-variant text-primary-container font-label-md rounded-[6px]"><a aria-current="page" class="flex items-center gap-space-sm px-space-sm py-2 transition-colors bg-surface-variant text-primary-container font-label-md rounded-[6px]" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[20px]">dashboard</span><span>Dashboard</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-[6px] text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="students" href="#"><span class="material-symbols-outlined text-[20px]">school</span><span>Students</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-[6px] text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="reminders" href="#"><span class="material-symbols-outlined text-[20px]">notifications_active</span><span>Reminders</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-[6px] text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="counsellor-tasks" href="#"><span class="material-symbols-outlined text-[20px]">assignment</span><span>Counsellor tasks</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-[6px] text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="uploads" href="#"><span class="material-symbols-outlined text-[20px]">upload_file</span><span>Uploads</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-[6px] text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="unmatched-payments" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">receipt_long</span><span>Unmatched payments</span></div><span class="bg-error text-on-error font-label-sm text-label-sm px-1.5 py-0.5 rounded-full">3</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-[6px] text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="audit-log" href="#"><span class="material-symbols-outlined text-[20px]">history_edu</span><span>Audit log</span></a></nav></div><div class="px-space-sm border-t border-outline/30 pt-space-md"><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-[6px] text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="design-system-sheet" href="#"><span class="material-symbols-outlined text-[20px]">palette</span><span>Design System Sheet</span></a></div></aside><div class="pl-[240px]"><header class="fixed top-0 left-[240px] right-0 h-16 bg-surface-container-lowest border-b border-outline-variant z-40 flex items-center justify-between px-space-lg"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-secondary text-[18px]">store</span><select class="bg-surface-container-lowest border border-outline-variant rounded-[6px] px-2.5 py-1 font-body-md text-body-md text-primary-container focus:outline-none focus:border-primary-container"><option value="all">All centres</option><option value="malviya-nagar">Malviya Nagar</option><option value="vaishali-nagar">Vaishali Nagar</option><option value="raja-park">Raja Park</option></select></div><div class="flex items-center gap-1.5 bg-surface-variant border border-outline-variant px-2.5 py-1 rounded-[6px]"><span class="material-symbols-outlined text-primary-container text-[16px]">date_range</span><span class="font-label-sm text-label-sm text-primary-container font-semibold">FY 2026-27</span></div></div><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-md border-r border-outline-variant pr-space-lg"><button aria-label="Search" class="text-secondary hover:text-primary-container flex items-center justify-center p-1 rounded transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">search</span></button><button aria-label="Notifications" class="relative text-secondary hover:text-primary-container flex items-center justify-center p-1 rounded transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full ring-2 ring-surface-container-lowest"></span></button></div><div class="flex items-center gap-space-sm"><div class="text-right leading-tight hidden sm:block"><div class="font-label-md text-label-md text-on-surface font-semibold">Rajesh Sharma</div><div class="font-label-sm text-label-sm text-secondary">Senior Accounts Officer</div></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="relative pt-16 bg-surface min-h-screen"><div class="max-w-[1440px] mx-auto p-space-lg lg:p-space-xl"><div class="flex flex-col w-full gap-space-lg">
+<!-- Top Operational Control & View Header -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs text-secondary font-label-sm text-label-sm uppercase tracking-wider">
+<span>Receivables Ledger</span>
+<span>/</span>
+<span>Jaipur Division</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-primary-container tracking-tight mt-0.5">Dues overview</h1>
+</div>
+<!-- Right-aligned action buttons -->
+<div class="flex items-center gap-space-sm self-start lg:self-auto">
+<button class="inline-flex items-center gap-2 bg-surface-container-lowest text-primary-container hover:bg-surface-variant transition-colors px-4 py-2.5 rounded-[6px] font-label-md text-label-md shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">send_time_extension</span>
+<span>Run reminders now</span>
+</button>
+<button class="inline-flex items-center gap-2 bg-primary-container text-surface hover:bg-primary transition-colors px-4 py-2.5 rounded-[6px] font-label-md text-label-md shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">download</span>
+<span>Export Tally CSV</span>
+</button>
+</div>
+</div>
+<!-- Filters Ribbon -->
+<div class="bg-surface-container-lowest rounded-lg p-space-md flex flex-wrap items-center justify-between gap-space-md shadow-sm">
+<div class="flex flex-wrap items-center gap-space-md">
+<div class="flex items-center gap-2">
+<label class="font-label-sm text-label-sm text-secondary uppercase tracking-wider" for="centre-select">Centre</label>
+<div class="relative">
+<select class="appearance-none bg-surface-container-low text-primary-container font-label-md text-label-md pl-3 pr-8 py-1.5 rounded-[6px] focus:outline-none focus:bg-surface-container-high transition-colors cursor-pointer" id="centre-select">
+<option value="all">All centres (Jaipur)</option>
+<option value="malviya">Malviya Nagar</option>
+<option value="vaishali">Vaishali Nagar</option>
+<option value="raja">Raja Park</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-[18px] text-secondary pointer-events-none">expand_more</span>
+</div>
+</div>
+<div class="h-4 w-px bg-outline-variant hidden sm:block"></div>
+<div class="flex items-center gap-2">
+<label class="font-label-sm text-label-sm text-secondary uppercase tracking-wider" for="batch-select">Batch Group</label>
+<div class="relative">
+<select class="appearance-none bg-surface-container-low text-primary-container font-label-md text-label-md pl-3 pr-8 py-1.5 rounded-[6px] focus:outline-none focus:bg-surface-container-high transition-colors cursor-pointer" id="batch-select">
+<option value="all">All active batches</option>
+<option value="jee-2027">JEE 2027</option>
+<option value="neet-2027">NEET 2027</option>
+<option value="foundation-10">Foundation 10th</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-[18px] text-secondary pointer-events-none">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Session Quarter Tag & Metadata -->
+<div class="flex items-center gap-space-sm ml-auto">
+<span class="font-label-sm text-label-sm text-secondary">Reporting cycle:</span>
+<div class="inline-flex items-center gap-1.5 bg-surface-container-high px-2.5 py-1 rounded-[6px] text-primary-container font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[16px] text-secondary">calendar_today</span>
+<span>FY 2026-27 Q3</span>
+</div>
+<button class="p-1 text-secondary hover:text-primary-container rounded transition-colors" title="Refresh metrics" type="button">
+<span class="material-symbols-outlined text-[18px]">refresh</span>
+</button>
+</div>
+</div>
+<!-- KPI Cards (3-Column Architecture) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-lg">
+<!-- Card 1: Billed -->
+<div class="bg-surface-container-lowest rounded-lg p-space-lg flex flex-col justify-between shadow-sm relative overflow-hidden">
+<div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary">Billed</span>
+<span class="material-symbols-outlined text-secondary text-[20px]">receipt</span>
+</div>
+<div class="mt-space-sm">
+<span class="font-display text-display text-primary-container font-semibold tracking-tight">₹31.2 Cr</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm">
+<p class="font-body-sm text-body-sm text-secondary">Total institutional dues assessed for current fiscal run</p>
+</div>
+</div>
+<!-- Card 2: Collected -->
+<div class="bg-surface-container-lowest rounded-lg p-space-lg flex flex-col justify-between shadow-sm relative overflow-hidden">
+<div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary">Collected</span>
+<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[4px] bg-[#3E7B55]/10 text-[#3E7B55] font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[14px]">trending_up</span>
+            89.4%
+          </span>
+</div>
+<div class="mt-space-sm">
+<span class="font-display text-display text-primary-container font-semibold tracking-tight">₹27.9 Cr</span>
+</div>
+</div>
+<div class="mt-space-md flex flex-col gap-2">
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-[#3E7B55] h-full rounded-full transition-all duration-500" style="width: 89.4%;"></div>
+</div>
+<div class="flex justify-between items-center text-secondary font-body-sm text-body-sm">
+<span>89.4% collection velocity</span>
+<span class="font-tabular-num text-tabular-num text-primary-container">₹27,90,00,000</span>
+</div>
+</div>
+</div>
+<!-- Card 3: Outstanding -->
+<div class="bg-surface-container-lowest rounded-lg p-space-lg flex flex-col justify-between shadow-sm relative overflow-hidden">
+<div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary">Outstanding</span>
+<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[4px] bg-[#B4432F]/10 text-[#B4432F] font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[14px]">warning</span>
+            10.6%
+          </span>
+</div>
+<div class="mt-space-sm">
+<span class="font-display text-display text-primary-container font-semibold tracking-tight">₹3.3 Cr</span>
+</div>
+</div>
+<div class="mt-space-md flex flex-col gap-2">
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-[#B4432F] h-full rounded-full transition-all duration-500" style="width: 10.6%;"></div>
+</div>
+<div class="flex justify-between items-center text-secondary font-body-sm text-body-sm">
+<span>10.6% pending recovery</span>
+<span class="font-tabular-num text-tabular-num text-primary-container">₹3,30,00,000</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Ageing of Overdue Amounts -->
+<div class="bg-surface-container-lowest rounded-lg p-space-lg shadow-sm flex flex-col gap-space-md">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-1">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-primary-container font-semibold">Ageing of overdue amounts</h2>
+<p class="font-body-sm text-body-sm text-secondary mt-0.5">Distribution of ₹3.3 Cr outstanding receivables segmented by delinquency aging bucket</p>
+</div>
+<div class="flex items-center gap-1 text-secondary font-label-sm text-label-sm self-start md:self-auto">
+<span class="material-symbols-outlined text-[16px]">info</span>
+<span>Refreshed at today 06:00 AM IST</span>
+</div>
+</div>
+<!-- 3 Bucket Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md mt-space-xs">
+<!-- 0-30 Days Bucket -->
+<div class="group bg-surface-container-low hover:bg-surface-variant transition-colors p-space-md rounded-[6px] cursor-pointer flex flex-col justify-between">
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-label-sm text-label-sm font-semibold text-secondary tracking-wide uppercase">0–30 Days</span>
+<span class="material-symbols-outlined text-[18px] text-secondary opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+</div>
+<div>
+<div class="font-headline-sm text-headline-sm text-primary-container font-semibold font-tabular-num">₹82,40,000</div>
+<div class="flex items-center gap-1.5 mt-1 font-body-sm text-body-sm text-secondary">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span>214 students</span>
+<span>·</span>
+<span>Current installment run</span>
+</div>
+</div>
+</div>
+<!-- 31-60 Days Bucket -->
+<div class="group bg-surface-container-low hover:bg-surface-variant transition-colors p-space-md rounded-[6px] cursor-pointer flex flex-col justify-between">
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-label-sm text-label-sm font-semibold text-secondary tracking-wide uppercase">31–60 Days</span>
+<span class="material-symbols-outlined text-[18px] text-secondary opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+</div>
+<div>
+<div class="font-headline-sm text-headline-sm text-primary-container font-semibold font-tabular-num">₹46,10,000</div>
+<div class="flex items-center gap-1.5 mt-1 font-body-sm text-body-sm text-secondary">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span>118 students</span>
+<span>·</span>
+<span>Follow-up triggered</span>
+</div>
+</div>
+</div>
+<!-- 60+ Days Bucket (Escalation alert styling) -->
+<div class="group bg-surface-container-low hover:bg-surface-variant transition-colors p-space-md rounded-[6px] cursor-pointer flex flex-col justify-between relative pl-space-md">
+<!-- Colored left anchor marker -->
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-[#B4432F] rounded-l-[6px]"></div>
+<div class="flex items-center justify-between mb-space-sm">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-[#B4432F]"></span>
+<span class="font-label-sm text-label-sm font-semibold text-[#B4432F] tracking-wide uppercase">60+ Days Critical</span>
+</div>
+<span class="bg-[#B4432F]/10 text-[#B4432F] px-1.5 py-0.5 rounded-[4px] font-label-sm text-label-sm font-semibold">Action Required</span>
+</div>
+<div>
+<div class="font-headline-sm text-headline-sm text-[#B4432F] font-semibold font-tabular-num">₹38,25,000</div>
+<div class="flex items-center gap-1.5 mt-1 font-body-sm text-body-sm text-[#B4432F]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#B4432F]"></span>
+<span>96 students</span>
+<span>·</span>
+<span>Legal notice pending</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Master Batch Breakdown Table -->
+<div class="bg-surface-container-lowest rounded-lg p-space-lg shadow-sm flex flex-col gap-space-md overflow-hidden">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-md">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-primary-container font-semibold">By batch</h2>
+<p class="font-body-sm text-body-sm text-secondary mt-0.5">Comprehensive audit breakdown across coaching cohorts</p>
+</div>
+<!-- Search and filter micro-bar -->
+<div class="flex items-center gap-space-sm">
+<div class="relative w-full sm:w-64">
+<span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-secondary text-[18px]">search</span>
+<input class="w-full bg-surface-container-low text-primary-container placeholder:text-secondary font-body-md text-body-md pl-9 pr-3 py-1.5 rounded-[6px] focus:outline-none focus:bg-surface-container-high transition-colors" id="batch-search-input" placeholder="Search batch or center..." type="text"/>
+</div>
+<button class="p-2 text-secondary hover:text-primary-container bg-surface-container-low rounded-[6px] transition-colors" title="Filter columns" type="button">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+</button>
+</div>
+</div>
+<!-- Data Table Container -->
+<div class="overflow-x-auto w-full -mx-space-lg sm:mx-0 px-space-lg sm:px-0">
+<table class="w-full text-left font-body-md text-body-md border-collapse" id="batch-dues-table">
+<thead>
+<tr class="bg-surface-container-high text-primary-container font-label-sm text-label-sm uppercase tracking-wider select-none">
+<th class="py-3 px-4 font-semibold rounded-l-[6px]">
+<button class="inline-flex items-center gap-1 text-primary-container hover:opacity-80 transition-opacity" type="button">
+<span>Batch</span>
+<span class="material-symbols-outlined text-[14px]">arrow_drop_down</span>
+</button>
+</th>
+<th class="py-3 px-4 font-semibold">
+<button class="inline-flex items-center gap-1 text-primary-container hover:opacity-80 transition-opacity" type="button">
+<span>Centre</span>
+<span class="material-symbols-outlined text-[14px] text-secondary">unfold_more</span>
+</button>
+</th>
+<th class="py-3 px-4 font-semibold text-right">
+<button class="inline-flex items-center gap-1 text-primary-container hover:opacity-80 ml-auto transition-opacity" type="button">
+<span>Billed</span>
+<span class="material-symbols-outlined text-[14px] text-secondary">unfold_more</span>
+</button>
+</th>
+<th class="py-3 px-4 font-semibold text-right">
+<button class="inline-flex items-center gap-1 text-primary-container hover:opacity-80 ml-auto transition-opacity" type="button">
+<span>Collected</span>
+<span class="material-symbols-outlined text-[14px] text-secondary">unfold_more</span>
+</button>
+</th>
+<th class="py-3 px-4 font-semibold text-right">
+<button class="inline-flex items-center gap-1 text-primary-container hover:opacity-80 ml-auto transition-opacity" type="button">
+<span>Outstanding</span>
+<span class="material-symbols-outlined text-[14px] text-secondary">unfold_more</span>
+</button>
+</th>
+<th class="py-3 px-4 font-semibold text-right rounded-r-[6px]">
+<button class="inline-flex items-center gap-1 text-primary-container hover:opacity-80 ml-auto transition-opacity" type="button">
+<span>60+ Overdue</span>
+<span class="material-symbols-outlined text-[14px] text-[#B4432F]">arrow_drop_down</span>
+</button>
+</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-high text-primary-container">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-variant transition-colors cursor-pointer group">
+<td class="py-3.5 px-4 font-label-md text-label-md font-semibold">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-secondary group-hover:text-primary-container transition-colors">domain_verification</span>
+<span>JEE 2027 Morning</span>
+</div>
+</td>
+<td class="py-3.5 px-4 text-secondary font-body-md text-body-md">Malviya Nagar</td>
+<td class="py-3.5 px-4 text-right font-tabular-num text-tabular-num font-medium">₹8,40,00,000</td>
+<td class="py-3.5 px-4 text-right font-tabular-num text-tabular-num font-medium">₹7,85,00,000</td>
+<td class="py-3.5 px-4 text-right font-tabular-num text-tabular-num font-medium">₹55,00,000</td>
+<td class="py-3.5 px-4 text-right font-tabular-num text-tabular-num font-semibold text-[#B4432F]">₹6,20,000</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-variant transition-colors cursor-pointer group">
+<td class="py-3.5 px-4 font-label-md text-label-md font-semibold">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-secondary group-hover:text-primary-container transition-colors">domain_verification</span>
+<span>JEE 2027 Evening</span>
+</div>
+</td>
+<td class="py-3.5 px-4 text-secondary font-body-md text-body-md">Malviya Nagar</td>
+<td class="py-3.5 px-4 text-right font-tabular-num text-tabular-num font-medium">₹7,20,00,000</td>
+<td class="py-3.5 px-4 text-right font-tabular-num text-tabular-num font-medium">₹6,30,00,000</td>
+<td class="py-3.5 px-4 text-right font-tabular-num text-tabular-num font-medium">₹90,00,000</td>
+<td class="py-3.5 px-4 text-right font-tabular-num text-tabular-num font-semibold text-[#B4432F]">₹14,50,000</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-variant transition-colors cursor-pointer group">
+<td class="py-3.5 px-4 font-label-md text-label-md font-semibold">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-secondary group-hover:text-primary-container transition-colors">domain_verification</span>
+<span>NEET 2027 Morning</span>
+</div>
+</td>
+<td class="py-3.5 px-4 text-secondary font-body-md text-body-md">Vaishali Nagar</td>
+<td class="py-3.5 px-4 text-right font-tabular-num text-tabular-num font-medium">₹6,50,00,000</td>
+<td class="py-3.5 px-4 text-right font-tabular-num text-tabular-num font-medium">₹5,90,00,000</td>
+<td class="py-3.5 px-4 text-right font-tabular-num text-tabular-num font-medium">₹60,00,000</td>
+<td class="py-3.5 px-4 text-right font-tabular-num text-tabular-num font-semibold text-[#B4432F]">₹8,10,000</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-variant transition-colors cursor-pointer group">
+<td class="py-3.5 px-4 font-label-md text-label-md font-semibold">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-secondary group-hover:text-primary-container transition-colors">domain_verification</span>
+<span>NEET 2027 Evening</span>
+</div>
+</td>
+<td class="py-3.5 px-4 text-secondary font-body-md text-body-md">Vaishali Nagar</td>
+<td class="py-3.5 px-4 text-right font-tabular-num text-tabular-num font-medium">₹5,10,00,000</td>
+<td class="py-3.5 px-4 text-right font-tabular-num text-tabular-num font-medium">₹4,45,00,000</td>
+<td class="py-3.5 px-4 text-right font-tabular-num text-tabular-num font-medium">₹65,00,000</td>
+<td class="py-3.5 px-4 text-right font-tabular-num text-tabular-num font-semibold text-[#B4432F]">₹5,95,000</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-variant transition-colors cursor-pointer group">
+<td class="py-3.5 px-4 font-label-md text-label-md font-semibold">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-secondary group-hover:text-primary-container transition-colors">domain_verification</span>
+<span>Foundation 10th</span>
+</div>
+</td>
+<td class="py-3.5 px-4 text-secondary font-body-md text-body-md">Raja Park</td>
+<td class="py-3.5 px-4 text-right font-tabular-num text-tabular-num font-medium">₹4,00,00,000</td>
+<td class="py-3.5 px-4 text-right font-tabular-num text-tabular-num font-medium">₹3,40,00,000</td>
+<td class="py-3.5 px-4 text-right font-tabular-num text-tabular-num font-medium">₹60,00,000</td>
+<td class="py-3.5 px-4 text-right font-tabular-num text-tabular-num font-semibold text-[#B4432F]">₹3,50,000</td>
+</tr>
+</tbody>
+<!-- Bold Totals Ledger Row -->
+<tfoot>
+<tr class="bg-surface-variant text-primary-container font-semibold rounded-b-[6px]">
+<td class="py-4 px-4 font-label-md text-label-md rounded-l-[6px]">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">calculate</span>
+<span>Total Institution</span>
+</div>
+</td>
+<td class="py-4 px-4 font-label-md text-label-md text-secondary">All Centres</td>
+<td class="py-4 px-4 text-right font-tabular-num text-tabular-num">₹31,20,00,000</td>
+<td class="py-4 px-4 text-right font-tabular-num text-tabular-num">₹27,90,00,000</td>
+<td class="py-4 px-4 text-right font-tabular-num text-tabular-num">₹3,30,00,000</td>
+<td class="py-4 px-4 text-right font-tabular-num text-tabular-num text-[#B4432F] rounded-r-[6px]">₹38,25,000</td>
+</tr>
+</tfoot>
+</table>
+</div>
+<!-- Table Footnote & Pagination Quick Actions -->
+<div class="flex flex-col sm:flex-row items-center justify-between gap-space-sm pt-space-xs text-secondary font-body-sm text-body-sm">
+<div class="flex items-center gap-2">
+<span class="inline-block w-2 h-2 rounded-full bg-[#3E7B55]"></span>
+<span>Showing 5 batch groups · Next scheduled batch reconciliation: 28 Nov 2026</span>
+</div>
+<div class="flex items-center gap-space-md">
+<button class="hover:text-primary-container flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[16px]">print</span>
+<span>Print summary</span>
+</button>
+<button class="hover:text-primary-container flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[16px]">open_in_new</span>
+<span>Detailed ledger</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Simple table interactive filter micro-script
+  document.getElementById('batch-search-input')?.addEventListener('input', function(e) {
+    const term = e.target.value.toLowerCase();
+    const rows = document.querySelectorAll('#batch-dues-table tbody tr');
+    rows.forEach(row => {
+      const text = row.innerText.toLowerCase();
+      row.style.display = text.includes(term) ? '' : 'none';
+    });
+  });
+</script></div></main></div></body></html>

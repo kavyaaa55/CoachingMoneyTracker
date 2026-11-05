@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "on-error-container": "#93000a",
+          "outline": "#76767e",
+          "surface-container-lowest": "#ffffff",
+          "primary-fixed-dim": "#c0c5e4",
+          "on-primary": "#ffffff",
+          "on-background": "#1b1d10",
+          "on-tertiary": "#ffffff",
+          "on-surface": "#1b1d10",
+          "surface-container-highest": "#e4e4cf",
+          "surface-variant": "#e4e4cf",
+          "on-tertiary-container": "#a7a085",
+          "tertiary-container": "#3b3723",
+          "primary": "#1a2138",
+          "tertiary-fixed": "#ebe2c5",
+          "secondary-fixed-dim": "#bac8d3",
+          "surface-tint": "#575d78",
+          "on-secondary-fixed-variant": "#3b4951",
+          "secondary-fixed": "#d6e4ef",
+          "on-secondary": "#ffffff",
+          "inverse-primary": "#c0c5e4",
+          "on-secondary-fixed": "#101d25",
+          "background": "#fbfbe5",
+          "primary-fixed": "#dce1ff",
+          "on-secondary-container": "#59666f",
+          "tertiary-fixed-dim": "#cec7aa",
+          "tertiary": "#25220f",
+          "on-primary-container": "#999fbd",
+          "on-error": "#ffffff",
+          "on-primary-fixed": "#141a32",
+          "error-container": "#ffdad6",
+          "surface-container-low": "#f5f5e0",
+          "on-tertiary-fixed-variant": "#4b4731",
+          "primary-container": "#30364f",
+          "surface-bright": "#fbfbe5",
+          "outline-variant": "#c7c6ce",
+          "surface-container": "#efefda",
+          "on-surface-variant": "#46464d",
+          "surface-container-high": "#e9e9d5",
+          "secondary-container": "#d6e4ef",
+          "error": "#ba1a1a",
+          "inverse-surface": "#303224",
+          "inverse-on-surface": "#f2f2dd",
+          "secondary": "#536069",
+          "on-tertiary-fixed": "#1f1c0a",
+          "surface": "#fbfbe5",
+          "on-primary-fixed-variant": "#40465f",
+          "surface-dim": "#dbdbc7"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "margin": "2rem",
+          "gutter": "1.5rem",
+          "space-md": "1rem",
+          "space-xs": "0.25rem",
+          "space-lg": "1.5rem",
+          "space-xl": "2rem",
+          "space-sm": "0.5rem"
+        },
+        "fontFamily": {
+          "display": [
+            "Inter"
+          ],
+          "tabular-num": [
+            "Inter"
+          ],
+          "body-sm": [
+            "Inter"
+          ],
+          "label-sm": [
+            "Inter"
+          ],
+          "body-lg": [
+            "Inter"
+          ],
+          "label-md": [
+            "Inter"
+          ],
+          "headline-lg": [
+            "Inter"
+          ],
+          "body-md": [
+            "Inter"
+          ],
+          "headline-sm": [
+            "Inter"
+          ]
+        },
+        "fontSize": {
+          "display": [
+            "40px",
+            {
+              "lineHeight": "48px",
+              "letterSpacing": "-0.02em",
+              "fontWeight": "600"
+            }
+          ],
+          "tabular-num": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "500"
+            }
+          ],
+          "body-sm": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "fontWeight": "400"
+            }
+          ],
+          "label-sm": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "letterSpacing": "0.02em",
+              "fontWeight": "500"
+            }
+          ],
+          "body-lg": [
+            "16px",
+            {
+              "lineHeight": "24px",
+              "fontWeight": "400"
+            }
+          ],
+          "label-md": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "500"
+            }
+          ],
+          "headline-lg": [
+            "28px",
+            {
+              "lineHeight": "36px",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "600"
+            }
+          ],
+          "body-md": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "400"
+            }
+          ],
+          "headline-sm": [
+            "20px",
+            {
+              "lineHeight": "28px",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "600"
+            }
+          ]
+        }
+      },
+    },
+  }</script></head><body class="bg-background font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-60 bg-primary-container z-50 flex flex-col justify-between select-none"><div class="flex flex-col"><div class="h-16 px-space-md flex items-center justify-between bg-primary"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-secondary-fixed text-[20px]">account_balance_wallet</span><span class="font-headline-sm text-headline-sm text-on-primary tracking-tight">Fee Tracker</span></div><span class="px-space-xs py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm uppercase tracking-wider font-semibold">JAIPUR</span></div><nav class="flex flex-col gap-0.5 px-space-xs py-space-sm" data-active-classes="bg-primary text-on-primary font-medium shadow-none"><a class="flex items-center justify-between px-space-md py-2.5 rounded text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors" data-path="dashboard" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[18px]">dashboard</span><span class="font-label-md text-label-md">Dashboard</span></div></a><a class="flex items-center justify-between px-space-md py-2.5 rounded text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors" data-path="students" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[18px]">school</span><span class="font-label-md text-label-md">Students</span></div></a><a class="flex items-center justify-between px-space-md py-2.5 rounded text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors" data-path="reminders" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[18px]">notifications_active</span><span class="font-label-md text-label-md">Reminders</span></div></a><a aria-current="page" class="flex items-center justify-between px-space-md py-2.5 rounded transition-colors bg-primary text-on-primary font-medium shadow-none" data-path="counsellor-tasks" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[18px]">assignment</span><span class="font-label-md text-label-md">Counsellor tasks</span></div><span class="px-1.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-tabular-num text-tabular-num text-xs font-semibold">4</span></a><a class="flex items-center justify-between px-space-md py-2.5 rounded text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors" data-path="uploads" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[18px]">upload_file</span><span class="font-label-md text-label-md">Uploads</span></div></a><a class="flex items-center justify-between px-space-md py-2.5 rounded text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors" data-path="unmatched-payments" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[18px]">credit_card_off</span><span class="font-label-md text-label-md">Unmatched payments</span></div><span class="px-1.5 py-0.5 rounded-full bg-error-container text-on-error-container font-tabular-num text-tabular-num text-xs font-semibold">3</span></a><a class="flex items-center justify-between px-space-md py-2.5 rounded text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors" data-path="audit-log" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[18px]">history_edu</span><span class="font-label-md text-label-md">Audit log</span></div></a></nav></div><div class="p-space-md bg-primary flex items-center justify-between"><div class="flex flex-col"><span class="font-label-sm text-label-sm text-on-primary-container">Admin Ledger v2.4</span><span class="font-body-sm text-body-sm text-secondary-fixed-dim">Jaipur Main Campus</span></div><a class="text-on-primary-container hover:text-on-primary transition-colors" data-path="settings" href="#"><span class="material-symbols-outlined text-[20px]">settings</span></a></div></aside><div class="pl-60"><header class="fixed top-0 left-60 right-0 h-16 bg-surface-container-lowest z-40 px-space-margin flex items-center justify-between shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-secondary text-[18px]">location_city</span><label class="font-label-sm text-label-sm text-secondary uppercase font-semibold">Centre:</label><select class="bg-surface-container-low text-on-surface font-label-md text-label-md rounded px-space-sm py-1 focus:outline-none"><option>All centres</option><option>Malviya Nagar</option><option>Vaishali Nagar</option><option>Raja Park</option><option>Mansarovar</option></select></div><div class="h-4 w-px bg-outline-variant"></div><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-secondary text-[18px]">event_available</span><label class="font-label-sm text-label-sm text-secondary uppercase font-semibold">Session:</label><span class="px-space-sm py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-md text-label-md font-semibold">FY 2026-27</span></div></div><div class="flex items-center gap-space-lg"><button class="text-secondary hover:text-primary transition-colors flex items-center" type="button"><span class="material-symbols-outlined text-[20px]">search</span></button><button class="relative text-secondary hover:text-primary transition-colors flex items-center" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-0 right-0 w-2 h-2 rounded-full bg-error ring-2 ring-surface-container-lowest"></span></button><div class="h-6 w-px bg-outline-variant"></div><div class="flex items-center gap-space-sm"><div class="flex flex-col text-right"><span class="font-label-md text-label-md text-on-surface font-semibold leading-tight">Rajesh Sharma</span><span class="font-body-sm text-body-sm text-secondary leading-tight">Senior Accounts Officer</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-16 bg-surface"><div class="max-w-7xl mx-auto p-space-margin"><div class="flex flex-col w-full">
+<div class="flex flex-col gap-space-lg w-full max-w-[940px] mx-auto">
+<!-- Top Header & Metadata -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-space-xs text-secondary font-label-sm text-label-sm uppercase tracking-wider font-semibold">
+<span class="material-symbols-outlined text-[16px] text-primary-container">support_agent</span>
+<span>Intervention Desk • Jaipur Region</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight font-bold">Counsellor tasks</h1>
+<p class="font-body-md text-body-md text-secondary max-w-xl">
+          Student academic retention, payment hardship follow-ups, and counselling intervention queue.
+        </p>
+</div>
+<div class="flex items-center gap-space-sm flex-wrap">
+<div class="relative inline-flex items-center">
+<span class="material-symbols-outlined text-secondary text-[18px] absolute left-3 pointer-events-none">person_outline</span>
+<select class="h-10 pl-9 pr-8 bg-surface-container-lowest text-on-surface font-label-md text-label-md rounded-lg shadow-sm focus:outline-none cursor-pointer">
+<option>Assigned to: Anita Meena (All)</option>
+<option>Assigned to: Vikramaditya S.</option>
+<option>Assigned to: Pooja Kothari</option>
+<option>Unassigned (Pool)</option>
+</select>
+<span class="material-symbols-outlined text-secondary text-[16px] absolute right-2.5 pointer-events-none">expand_more</span>
+</div>
+<button class="h-10 px-space-md bg-surface-container-lowest text-primary-container hover:bg-surface-container-high transition-colors font-label-md text-label-md rounded-lg shadow-sm flex items-center gap-1.5 font-medium" type="button">
+<span class="material-symbols-outlined text-[18px]">sim_card_download</span>
+<span>Export Call Log</span>
+</button>
+</div>
+</div>
+<!-- Permanent Policy Guardrail Strip -->
+<div class="bg-tertiary-fixed text-on-tertiary-fixed p-3.5 px-space-md rounded-lg shadow-sm flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-primary-container text-[20px] shrink-0 mt-0.5">verified_user</span>
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 w-full">
+<p class="font-label-md text-label-md text-primary font-medium">
+          A flag only creates a call task for a counsellor. It never changes fees or sends messages to parents.
+        </p>
+<span class="font-body-sm text-body-sm text-on-tertiary-fixed-variant shrink-0">Jaipur SOP #AC-104</span>
+</div>
+</div>
+<!-- Navigation Tabs & Sort / Filter Toolbar -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-md pb-2">
+<!-- Tab Switcher -->
+<div class="inline-flex p-1 bg-surface-container-low rounded-lg shadow-sm" role="tablist">
+<button class="flex items-center gap-1.5 px-3.5 py-1.5 rounded bg-surface-container-lowest text-primary shadow-sm font-label-md text-label-md font-semibold transition-all" type="button">
+<span>Open</span>
+<span class="px-1.5 py-0.2 rounded-full bg-secondary-fixed text-on-secondary-fixed font-tabular-num text-tabular-num text-xs font-bold">4</span>
+</button>
+<button class="flex items-center gap-1.5 px-3.5 py-1.5 rounded text-secondary hover:text-primary transition-colors font-label-md text-label-md" type="button">
+<span>Done</span>
+<span class="px-1.5 py-0.2 rounded-full bg-surface-container text-secondary font-tabular-num text-tabular-num text-xs font-medium">18</span>
+</button>
+<button class="flex items-center gap-1.5 px-3.5 py-1.5 rounded text-secondary hover:text-primary transition-colors font-label-md text-label-md" type="button">
+<span>False flags</span>
+<span class="px-1.5 py-0.2 rounded-full bg-surface-container text-secondary font-tabular-num text-tabular-num text-xs font-medium">3</span>
+</button>
+</div>
+<!-- Quick Sorting / Filters -->
+<div class="flex items-center gap-space-md text-secondary font-label-sm text-label-sm">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">swap_vert</span>
+<label class="uppercase font-semibold tracking-wider">Sort by:</label>
+<select class="bg-surface-container-lowest text-primary py-1 px-2 rounded font-medium focus:outline-none shadow-sm cursor-pointer">
+<option>Highest Risk score</option>
+<option>Longest Overdue Days</option>
+<option>Lowest Attendance</option>
+<option>Recently Added</option>
+</select>
+</div>
+<div class="flex items-center gap-1.5">
+<label class="uppercase font-semibold tracking-wider">Centre:</label>
+<select class="bg-surface-container-lowest text-primary py-1 px-2 rounded font-medium focus:outline-none shadow-sm cursor-pointer">
+<option>All centres</option>
+<option>Malviya Nagar</option>
+<option>Vaishali Nagar</option>
+<option>Raja Park</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Task Cards Container (Single Column, 880px bounds) -->
+<div class="flex flex-col gap-space-lg max-w-[880px]">
+<!-- CARD 1: ACTIVE HIGH RISK TASK (Ishita Sharma) -->
+<article class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-md transition-shadow hover:shadow-md">
+<!-- Header Row -->
+<div class="flex flex-col sm:flex-row sm:items-start justify-between gap-space-sm pb-space-sm bg-surface-container-lowest">
+<div class="flex flex-col gap-0.5">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="font-headline-sm text-headline-sm text-primary font-bold">Ishita Sharma</span>
+<span class="px-2 py-0.5 rounded bg-surface-container text-secondary font-tabular-num text-tabular-num text-xs font-medium">STU-0587</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm">Class 11</span>
+</div>
+<div class="flex items-center gap-1 text-secondary font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[16px] text-secondary">domain</span>
+<span>JEE 2027 Evening (PH-2) • Malviya Nagar Centre</span>
+</div>
+</div>
+<!-- Risk Score Chip -->
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-error-container text-on-error-container font-label-md text-label-md font-semibold shrink-0">
+<span class="material-symbols-outlined text-[18px]">warning</span>
+<span>High Risk • 72/100</span>
+</div>
+</div>
+<!-- 3 Plain-Language Warning Reasons -->
+<div class="bg-surface-container-low rounded-lg p-space-md flex flex-col gap-2.5">
+<span class="font-label-sm text-label-sm text-secondary uppercase font-semibold tracking-wider">Automated Algorithmic Triggers (Last 30 Days)</span>
+<ul class="flex flex-col gap-2 font-body-md text-body-md text-primary">
+<li class="flex items-start gap-2.5">
+<span class="w-2 h-2 rounded-full bg-error mt-2 shrink-0"></span>
+<span><strong>2 instalments overdue</strong>, max 23 days (Instalment 2: <span class="font-tabular-num font-semibold">₹15,000</span> balance pending)</span>
+</li>
+<li class="flex items-start gap-2.5">
+<span class="w-2 h-2 rounded-full bg-error mt-2 shrink-0"></span>
+<span><strong>Class attendance dropped</strong> from <span class="font-tabular-num">82%</span> to <span class="font-tabular-num text-error font-semibold">61%</span> over the last 3 weeks</span>
+</li>
+<li class="flex items-start gap-2.5">
+<span class="w-2 h-2 rounded-full bg-error mt-2 shrink-0"></span>
+<span><strong>Last 3 internal test average down 14%</strong> (Physics mechanics score dipped to <span class="font-tabular-num">52%</span>)</span>
+</li>
+</ul>
+</div>
+<!-- Guardian Contact Bar -->
+<div class="bg-secondary-fixed/50 text-on-secondary-fixed p-3 rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div class="flex items-center gap-2.5 flex-wrap font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">contacts</span>
+<span class="font-medium text-primary">Father: Mr. Mahendra Sharma</span>
+<span class="text-secondary">•</span>
+<a class="font-tabular-num font-semibold text-primary hover:underline" href="tel:+919829041109">+91 98290 41109</a>
+<span class="text-secondary">•</span>
+<span class="text-secondary font-label-sm">Preferred language: Hindi / English</span>
+</div>
+<div class="flex items-center gap-1.5 shrink-0">
+<button class="h-8 px-2.5 rounded bg-surface-container-lowest text-primary hover:bg-surface-container font-label-sm text-label-sm font-semibold shadow-sm flex items-center gap-1 transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px] text-secondary">phone_forwarded</span>
+<span>Call Logged (2)</span>
+</button>
+<button class="h-8 w-8 rounded bg-surface-container-lowest text-primary hover:bg-surface-container font-label-sm text-label-sm shadow-sm flex items-center justify-center transition-colors" title="Dial via Cloud PBX" type="button">
+<span class="material-symbols-outlined text-[18px]">call</span>
+</button>
+</div>
+</div>
+<!-- Counsellor Note Textarea -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-primary font-semibold flex items-center gap-1.5" for="counsellor-note-1">
+<span class="material-symbols-outlined text-[16px] text-secondary">edit_note</span>
+<span>Counsellor notes &amp; call outcome</span>
+</label>
+<span class="font-body-sm text-body-sm text-secondary">Last updated: 22 Oct, 11:15 AM</span>
+</div>
+<textarea class="w-full p-3 rounded-lg bg-surface-container-low text-primary font-body-md text-body-md placeholder:text-secondary/70 focus:outline-none focus:bg-surface-container-lowest transition-colors shadow-inner" id="counsellor-note-1" placeholder="Log conversation notes, fee relief requests, parent commitments or reason for distress..." rows="3">Called mother on 22 Oct. Father was out of station. Committed to paying ₹15,000 by 28 Oct after salary credit. Requested waiver of late fee.</textarea>
+</div>
+<!-- Action Buttons Bar & Utility Links -->
+<div class="pt-space-sm flex flex-col sm:flex-row sm:items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-sm flex-wrap">
+<button class="h-10 px-space-md rounded-lg bg-primary-container text-surface hover:bg-primary transition-colors font-label-md text-label-md font-semibold flex items-center gap-1.5 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+<span>Mark done</span>
+</button>
+<button class="h-10 px-space-md rounded-lg bg-surface-container-lowest text-error hover:bg-error-container/40 transition-colors font-label-md text-label-md font-semibold flex items-center gap-1.5 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">flag</span>
+<span>False flag</span>
+</button>
+<button class="h-10 px-space-sm rounded-lg bg-surface-container-lowest text-secondary hover:text-primary transition-colors font-label-sm text-label-sm flex items-center gap-1 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+<span>Snooze (3 days)</span>
+</button>
+</div>
+<a class="inline-flex items-center gap-1 font-label-md text-label-md font-semibold text-primary hover:text-primary-container transition-colors group" href="#">
+<span>View Student Ledger</span>
+<span class="material-symbols-outlined text-[18px] group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+</a>
+</div>
+</article>
+<!-- CARD 2: ACTIVE MEDIUM RISK TASK (Diya Khandelwal) -->
+<article class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-md transition-shadow hover:shadow-md">
+<!-- Header Row -->
+<div class="flex flex-col sm:flex-row sm:items-start justify-between gap-space-sm pb-space-sm bg-surface-container-lowest">
+<div class="flex flex-col gap-0.5">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="font-headline-sm text-headline-sm text-primary font-bold">Diya Khandelwal</span>
+<span class="px-2 py-0.5 rounded bg-surface-container text-secondary font-tabular-num text-tabular-num text-xs font-medium">STU-0891</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm">Class 12</span>
+</div>
+<div class="flex items-center gap-1 text-secondary font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[16px] text-secondary">domain</span>
+<span>NEET 2027 Morning • Malviya Nagar Centre</span>
+</div>
+</div>
+<!-- Medium Risk Score Chip -->
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-md text-label-md font-semibold shrink-0">
+<span class="material-symbols-outlined text-[18px]">emergency</span>
+<span>Medium Risk • 54/100</span>
+</div>
+</div>
+<!-- 3 Plain-Language Warning Reasons -->
+<div class="bg-surface-container-low rounded-lg p-space-md flex flex-col gap-2.5">
+<span class="font-label-sm text-label-sm text-secondary uppercase font-semibold tracking-wider">Automated Algorithmic Triggers (Last 30 Days)</span>
+<ul class="flex flex-col gap-2 font-body-md text-body-md text-primary">
+<li class="flex items-start gap-2.5">
+<span class="w-2 h-2 rounded-full bg-secondary-fixed-dim mt-2 shrink-0"></span>
+<span><strong>1 instalment overdue</strong> by 12 days (<span class="font-tabular-num font-semibold">₹25,000</span> pending)</span>
+</li>
+<li class="flex items-start gap-2.5">
+<span class="w-2 h-2 rounded-full bg-secondary-fixed-dim mt-2 shrink-0"></span>
+<span><strong>Attendance dipped</strong> below 75% statutory threshold (currently <span class="font-tabular-num font-semibold text-secondary">71%</span>)</span>
+</li>
+<li class="flex items-start gap-2.5">
+<span class="w-2 h-2 rounded-full bg-secondary-fixed-dim mt-2 shrink-0"></span>
+<span><strong>Missed 2 consecutive</strong> Saturday mock test papers (Botany &amp; Zoology)</span>
+</li>
+</ul>
+</div>
+<!-- Guardian Contact Bar -->
+<div class="bg-surface-container text-on-surface p-3 rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div class="flex items-center gap-2.5 flex-wrap font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-secondary text-[20px]">contacts</span>
+<span class="font-medium text-primary">Mother: Dr. Sunita Khandelwal</span>
+<span class="text-secondary">•</span>
+<a class="font-tabular-num font-semibold text-primary hover:underline" href="tel:+919414022811">+91 94140 22811</a>
+<span class="text-secondary">•</span>
+<span class="text-secondary font-label-sm">Preferred: English / WhatsApp</span>
+</div>
+<div class="flex items-center gap-1.5 shrink-0">
+<button class="h-8 px-2.5 rounded bg-surface-container-lowest text-primary hover:bg-surface-container-high font-label-sm text-label-sm font-semibold shadow-sm flex items-center gap-1 transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px] text-secondary">add_call</span>
+<span>Log Call</span>
+</button>
+</div>
+</div>
+<!-- Empty State Counsellor Note Textarea -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-primary font-semibold flex items-center gap-1.5" for="counsellor-note-2">
+<span class="material-symbols-outlined text-[16px] text-secondary">edit_note</span>
+<span>Counsellor notes &amp; call outcome</span>
+</label>
+<textarea class="w-full p-3 rounded-lg bg-surface-container-low text-primary font-body-md text-body-md placeholder:text-secondary/70 focus:outline-none focus:bg-surface-container-lowest transition-colors shadow-inner" id="counsellor-note-2" placeholder="Log conversation notes, fee relief requests, parent commitments or reason for distress..." rows="2"></textarea>
+</div>
+<!-- Action Buttons Bar & Utility Links -->
+<div class="pt-space-sm flex flex-col sm:flex-row sm:items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-sm flex-wrap">
+<button class="h-10 px-space-md rounded-lg bg-primary-container text-surface hover:bg-primary transition-colors font-label-md text-label-md font-semibold flex items-center gap-1.5 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+<span>Mark done</span>
+</button>
+<button class="h-10 px-space-md rounded-lg bg-surface-container-lowest text-secondary hover:text-error hover:bg-error-container/40 transition-colors font-label-md text-label-md font-semibold flex items-center gap-1.5 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">flag</span>
+<span>False flag</span>
+</button>
+</div>
+<a class="inline-flex items-center gap-1 font-label-md text-label-md font-semibold text-primary hover:text-primary-container transition-colors group" href="#">
+<span>View Student Ledger</span>
+<span class="material-symbols-outlined text-[18px] group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+</a>
+</div>
+</article>
+<!-- CARD 3: COMPLETED STATE CARD (Harsh Vardhan) -->
+<article class="bg-surface-container-low rounded-xl p-space-md shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-space-md opacity-90 transition-opacity hover:opacity-100">
+<div class="flex items-start gap-space-sm">
+<div class="w-8 h-8 rounded-full bg-secondary-fixed flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-primary text-[18px]">check</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="font-label-md text-label-md font-bold text-primary">Task completed • Harsh Vardhan</span>
+<span class="font-tabular-num text-body-sm text-secondary font-medium">STU-0315</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-highest text-on-surface-variant font-label-sm text-label-sm">JEE Morning</span>
+</div>
+<p class="font-body-md text-body-md text-primary">
+<span class="font-medium text-secondary">Outcome:</span> Fee commitment received for 30 Oct. Parent attended branch counseling session.
+            </p>
+<span class="font-body-sm text-body-sm text-secondary mt-1">
+              Logged by Anita Meena on 23 Oct, 16:40 IST • Call duration: 8m 45s
+            </span>
+</div>
+</div>
+<div class="shrink-0 pl-11 sm:pl-0">
+<button class="h-8 px-3 rounded bg-surface-container-lowest text-secondary hover:text-primary font-label-sm text-label-sm font-semibold transition-colors flex items-center gap-1 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[16px]">undo</span>
+<span>Undo / Reopen</span>
+</button>
+</div>
+</article>
+<!-- SECTION PREVIEW: EMPTY STATE DEMONSTRATION -->
+<div class="mt-space-md pt-space-md flex flex-col gap-2">
+<div class="flex items-center gap-2 text-secondary">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+<span class="font-label-sm text-label-sm uppercase font-semibold tracking-wider">Preview Component: All Tasks Cleared State</span>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-space-xl flex flex-col items-center justify-center text-center gap-space-sm shadow-sm py-10">
+<div class="w-14 h-14 rounded-full bg-tertiary-fixed flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-[32px]">task_alt</span>
+</div>
+<div class="flex flex-col gap-1 max-w-md">
+<h2 class="font-headline-sm text-headline-sm text-primary font-bold">No open tasks in queue</h2>
+<p class="font-body-md text-body-md text-secondary">
+              All student interventions have been addressed. The system scans nightly at 02:00 AM for new fee delinquency, fee default triggers, and attendance drop thresholds.
+            </p>
+</div>
+<div class="flex items-center gap-2 mt-2">
+<button class="h-9 px-4 rounded bg-surface-container text-primary font-label-md text-label-md font-semibold hover:bg-surface-container-high transition-colors" type="button">
+              Refresh System Scan
+            </button>
+<button class="h-9 px-4 rounded bg-surface-container-lowest text-secondary font-label-md text-label-md hover:text-primary transition-colors" type="button">
+              View History Log (18)
+            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div></div></main><footer class="w-full bg-surface-container-low py-space-md"><div class="max-w-7xl mx-auto px-space-margin flex flex-col md:flex-row items-center justify-between gap-space-xs text-on-surface-variant font-body-sm text-body-sm"><p>Fee Tracker Coaching Institute • Jaipur Regional Administrative Office</p><p>Helpline: +91 141 2780000 | accounts@feetracker-jaipur.edu.in</p></div></footer></div></body></html>

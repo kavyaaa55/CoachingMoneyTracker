@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"surface-container":"#efefda","secondary-fixed-dim":"#bac8d3","secondary-container":"#d6e4ef","error":"#ba1a1a","inverse-on-surface":"#f2f2dd","on-tertiary-container":"#a7a085","on-primary-fixed-variant":"#40465f","surface-variant":"#e4e4cf","on-error":"#ffffff","on-tertiary":"#ffffff","tertiary-fixed":"#ebe2c5","secondary-fixed":"#d6e4ef","inverse-surface":"#303224","primary-container":"#30364f","on-primary-fixed":"#141a32","on-tertiary-fixed":"#1f1c0a","error-container":"#ffdad6","tertiary-container":"#3b3723","on-secondary":"#ffffff","on-error-container":"#93000a","surface-container-low":"#f5f5e0","surface-container-high":"#e9e9d5","outline-variant":"#c7c6ce","on-surface":"#1b1d10","surface":"#fbfbe5","surface-bright":"#fbfbe5","tertiary":"#25220f","on-primary-container":"#999fbd","on-secondary-fixed":"#101d25","inverse-primary":"#c0c5e4","on-background":"#1b1d10","on-primary":"#ffffff","primary":"#1a2138","secondary":"#536069","surface-container-lowest":"#ffffff","primary-fixed-dim":"#c0c5e4","background":"#fbfbe5","on-secondary-fixed-variant":"#3b4951","surface-container-highest":"#e4e4cf","outline":"#76767e","surface-tint":"#575d78","primary-fixed":"#dce1ff","on-tertiary-fixed-variant":"#4b4731","on-surface-variant":"#46464d","tertiary-fixed-dim":"#cec7aa","on-secondary-container":"#59666f","surface-dim":"#dbdbc7"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"space-sm":"0.5rem","space-lg":"1.5rem","space-xl":"2rem","space-xs":"0.25rem","margin":"2rem","gutter":"1.5rem","space-md":"1rem"},"fontFamily":{"label-sm":["Inter"],"label-md":["Inter"],"body-md":["Inter"],"display":["Inter"],"headline-lg":["Inter"],"headline-sm":["Inter"],"body-sm":["Inter"],"body-lg":["Inter"],"tabular-num":["Inter"]},"fontSize":{"label-sm":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"500"}],"label-md":["14px",{"lineHeight":"20px","fontWeight":"500"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"display":["40px",{"lineHeight":"48px","letterSpacing":"-0.02em","fontWeight":"600"}],"headline-lg":["28px",{"lineHeight":"36px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-sm":["20px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"body-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],"tabular-num":["14px",{"lineHeight":"20px","fontWeight":"500"}]}}}}</script></head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased min-h-screen flex flex-col justify-between"><header class="fixed top-0 w-full z-50 bg-surface-container-lowest border-b border-outline-variant"><div class="h-16 max-w-7xl mx-auto px-space-lg flex items-center justify-between"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-primary-container text-[24px]">school</span><span class="font-headline-sm text-headline-sm text-primary font-semibold tracking-tight">Fee Tracker</span></div><span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-surface-container-high text-secondary border border-outline-variant">Parent Portal</span></div><nav class="hidden md:flex items-center gap-space-md" data-active-classes="bg-surface-variant text-on-surface font-semibold rounded"><a class="text-on-surface-variant hover:text-on-surface px-space-sm py-1.5 text-label-md font-label-md transition-colors" data-path="parent-app-shell" href="#">Fee Overview</a><a class="text-on-surface-variant hover:text-on-surface px-space-sm py-1.5 text-label-md font-label-md transition-colors" data-path="parent-consent" href="#">Parent Consent</a></nav><div class="flex items-center gap-space-md"><div class="text-right hidden sm:block"><span class="block font-label-md text-label-md text-primary font-medium">Ananya Verma</span><span class="block font-body-sm text-body-sm text-secondary">Batch 2024 IIT-JEE</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full flex-1 pt-16 bg-surface max-w-7xl mx-auto px-space-lg py-space-xl"><div class="flex flex-col w-full">
+<!-- Interactive View Switcher & Global Canvas Toolbar -->
+<div class="w-full flex flex-col md:flex-row md:items-center justify-between gap-space-md mb-space-lg">
+<div class="flex items-center gap-space-sm">
+<a class="inline-flex items-center gap-1.5 font-label-md text-label-md text-primary-container hover:underline" href="#">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+<span>Back to receipts</span>
+</a>
+<span class="text-secondary font-label-md">/</span>
+<span class="font-label-md text-label-md text-secondary">Receipt #JPR/2026-27/000123</span>
+</div>
+<!-- Toggle & Print Actions -->
+<div class="flex flex-wrap items-center gap-space-sm">
+<!-- Layout Mode Tabs -->
+<div class="inline-flex p-1 bg-surface-container rounded-lg border border-outline-variant">
+<button class="px-3 py-1.5 rounded font-label-sm text-label-sm font-semibold transition-colors bg-primary-container text-surface" id="btnTabPortal" onclick="setViewMode('portal')">
+          Portal View
+        </button>
+<button class="px-3 py-1.5 rounded font-label-sm text-label-sm font-semibold transition-colors text-primary-container hover:bg-surface-variant" id="btnTabSideBySide" onclick="setViewMode('sideBySide')">
+          Side-by-Side (Compare)
+        </button>
+<button class="px-3 py-1.5 rounded font-label-sm text-label-sm font-semibold transition-colors text-primary-container hover:bg-surface-variant" id="btnTabPrintPreview" onclick="setViewMode('printPreview')">
+          Print Preview (A4)
+        </button>
+</div>
+<!-- Print Trigger Button -->
+<button class="inline-flex items-center gap-2 bg-surface-container-lowest text-primary-container border border-outline-variant hover:bg-surface-container px-space-md py-2 rounded font-label-md text-label-md transition-colors shadow-sm" onclick="window.print()">
+<span class="material-symbols-outlined text-[18px]">print</span>
+<span>Print / Save PDF</span>
+</button>
+<button class="inline-flex items-center gap-1.5 bg-surface-container-lowest text-primary-container border border-outline-variant hover:bg-surface-container px-3 py-2 rounded font-label-md text-label-md transition-colors" onclick="copyReceiptLink()">
+<span class="material-symbols-outlined text-[18px]">share</span>
+<span class="hidden text-body-sm text-secondary font-medium" id="copyFeedbackText">Copied!</span>
+</button>
+</div>
+</div>
+<!-- Workspace Container: Responsive Grid Supporting Dual Layouts -->
+<div class="w-full flex flex-col xl:flex-row gap-space-xl items-start justify-center" id="receiptViewsContainer">
+<!-- VIEW A: Parent Portal Document View -->
+<div class="w-full max-w-[760px] mx-auto flex flex-col transition-all" id="viewPortalCard">
+<!-- Status Badge & Micro Header -->
+<div class="flex items-center justify-between px-space-xs mb-space-sm">
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#3E7B551A] text-[#3E7B55] font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+            Payment Settled
+          </span>
+<span class="font-body-sm text-body-sm text-secondary">Generated on 05 Jul 2026, 14:32 IST</span>
+</div>
+<div class="flex items-center gap-1 text-secondary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">verified</span>
+          Institutional Copy
+        </div>
+</div>
+<!-- Main Ledger Card (Institutional 1px border, shadowless, strictly structured) -->
+<div class="w-full bg-surface-container-lowest rounded-lg border border-outline-variant p-6 sm:p-8">
+<!-- Header: Institute Branding & Tax Registration -->
+<div class="flex flex-col sm:flex-row sm:items-start justify-between gap-space-md pb-6 border-b border-outline-variant">
+<div class="space-y-1">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container text-[26px]">account_balance</span>
+<span class="font-headline-sm text-headline-sm text-primary-container font-semibold tracking-tight">Fee Tracker Coaching Institute</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary">Jaipur Regional Administrative Office • Malviya Nagar Campus</p>
+<p class="font-body-sm text-body-sm text-secondary">Plot 14-B, Sector 3, Malviya Nagar, Jaipur, Rajasthan 302017</p>
+<div class="pt-1 flex flex-wrap gap-x-4 gap-y-1 font-tabular-num text-body-sm text-on-surface-variant">
+<span><strong>GSTIN:</strong> 08AAACF7392K1Z9</span>
+<span><strong>Helpline:</strong> +91 141 2780000</span>
+</div>
+</div>
+<div class="sm:text-right shrink-0">
+<span class="inline-block px-3 py-1 bg-surface-container text-primary-container font-label-sm text-label-sm rounded border border-outline-variant uppercase tracking-wider font-semibold">Official Receipt</span>
+<div class="mt-2 font-tabular-num text-label-md text-primary-container font-semibold">ORIGINAL FOR RECIPIENT</div>
+</div>
+</div>
+<!-- Document Primary Identifier Title -->
+<div class="py-6 flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 border-b border-outline-variant">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-primary-container tracking-tight">Fee Receipt</h1>
+<p class="font-body-sm text-body-sm text-secondary">Issued pursuant to Section 31 of CGST Act, 2017</p>
+</div>
+<div class="sm:text-right">
+<div class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Receipt Number</div>
+<div class="font-tabular-num text-headline-sm text-headline-sm text-primary-container font-semibold">JPR/2026-27/000123</div>
+</div>
+</div>
+<!-- Metadata Matrix (2 Columns) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-lg py-6 border-b border-outline-variant bg-surface/40 -mx-6 sm:-mx-8 px-6 sm:px-8">
+<!-- Column 1: Student Particulars -->
+<div class="space-y-3">
+<div class="font-label-sm text-label-sm text-secondary uppercase tracking-wider pb-1 border-b border-outline-variant">Student &amp; Course Particulars</div>
+<div class="grid grid-cols-3 gap-2 font-body-sm text-body-sm">
+<span class="text-secondary">Student Name</span>
+<span class="col-span-2 font-label-md text-label-md text-primary-container font-semibold">Ishita Sharma</span>
+<span class="text-secondary">Student ID</span>
+<span class="col-span-2 font-tabular-num text-primary-container">JPR-2027-881</span>
+<span class="text-secondary">Enrolled Batch</span>
+<span class="col-span-2 text-primary-container">JEE 2027 Evening (Class 11)</span>
+<span class="text-secondary">Parent / Guardian</span>
+<span class="col-span-2 text-primary-container">Rajesh Sharma</span>
+<span class="text-secondary">Billing State</span>
+<span class="col-span-2 text-primary-container">08 - Rajasthan (State Code)</span>
+</div>
+</div>
+<!-- Column 2: Payment Transaction Particulars -->
+<div class="space-y-3">
+<div class="font-label-sm text-label-sm text-secondary uppercase tracking-wider pb-1 border-b border-outline-variant">Transaction &amp; Settlement</div>
+<div class="grid grid-cols-3 gap-2 font-body-sm text-body-sm">
+<span class="text-secondary">Receipt Date</span>
+<span class="col-span-2 font-tabular-num text-primary-container">05 Jul 2026</span>
+<span class="text-secondary">Payment Method</span>
+<span class="col-span-2 text-primary-container font-medium flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-[#3E7B55]"></span>
+                UPI (GPay / NPCI)
+              </span>
+<span class="text-secondary">Bank UTR / Ref</span>
+<span class="col-span-2 font-tabular-num text-primary-container">UPI-9923812048</span>
+<span class="text-secondary">Cashier / Channel</span>
+<span class="col-span-2 text-primary-container">Parent Portal Gateway 02</span>
+<span class="text-secondary">Academic Term</span>
+<span class="col-span-2 text-primary-container">FY 2026-27 (Quarter 1)</span>
+</div>
+</div>
+</div>
+<!-- Ledger Line Items Table -->
+<div class="mt-6 overflow-hidden rounded border border-outline-variant">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container border-b border-outline-variant text-[12px] uppercase font-semibold text-primary-container">
+<th class="py-3 px-4 font-label-sm tracking-wider w-8">#</th>
+<th class="py-3 px-4 font-label-sm tracking-wider">Description</th>
+<th class="py-3 px-3 font-label-sm tracking-wider">Fee Head</th>
+<th class="py-3 px-3 font-label-sm tracking-wider font-tabular-num text-center">SAC Code</th>
+<th class="py-3 px-4 font-label-sm tracking-wider font-tabular-num text-right">Amount (₹)</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant font-body-sm text-body-sm text-on-surface">
+<!-- Row 1: Tuition Fee Base -->
+<tr class="hover:bg-surface-container/30 transition-colors">
+<td class="py-3 px-4 font-tabular-num text-secondary">1</td>
+<td class="py-3 px-4">
+<span class="font-medium text-primary-container block">Term Tuition Fee · Instalment 1</span>
+<span class="text-secondary text-body-sm">Coaching &amp; Academic Curriculum Delivery</span>
+</td>
+<td class="py-3 px-3 text-secondary">Academic Tuition</td>
+<td class="py-3 px-3 font-tabular-num text-center text-secondary">999293</td>
+<td class="py-3 px-4 font-tabular-num text-right font-medium text-primary-container">25,423.72</td>
+</tr>
+<!-- Row 2: Comprehensive Laboratory & Library Access (Waived) -->
+<tr class="hover:bg-surface-container/30 transition-colors">
+<td class="py-3 px-4 font-tabular-num text-secondary">2</td>
+<td class="py-3 px-4">
+<span class="font-medium text-primary-container block">Comprehensive Laboratory &amp; Library Access</span>
+<span class="text-[#3E7B55] text-body-sm font-medium">Merit Scholarship Subsidy Applied</span>
+</td>
+<td class="py-3 px-3 text-secondary">Facility &amp; Lab</td>
+<td class="py-3 px-3 font-tabular-num text-center text-secondary">999293</td>
+<td class="py-3 px-4 font-tabular-num text-right text-secondary">
+<span class="line-through mr-1.5 text-secondary">₹2,500.00</span>
+<span class="text-[#3E7B55] font-medium">0.00</span>
+</td>
+</tr>
+<!-- Row 3: CGST -->
+<tr class="hover:bg-surface-container/30 transition-colors">
+<td class="py-3 px-4 font-tabular-num text-secondary">3</td>
+<td class="py-3 px-4">
+<span class="text-primary-container font-medium">CGST (9.0%)</span>
+<span class="text-secondary block text-body-sm">Central Goods &amp; Service Tax on Coaching Services</span>
+</td>
+<td class="py-3 px-3 text-secondary">Tax Component</td>
+<td class="py-3 px-3 font-tabular-num text-center text-secondary">999293</td>
+<td class="py-3 px-4 font-tabular-num text-right text-primary-container">2,288.14</td>
+</tr>
+<!-- Row 4: SGST -->
+<tr class="hover:bg-surface-container/30 transition-colors">
+<td class="py-3 px-4 font-tabular-num text-secondary">4</td>
+<td class="py-3 px-4">
+<span class="text-primary-container font-medium">SGST (9.0%)</span>
+<span class="text-secondary block text-body-sm">State Goods &amp; Service Tax Rajasthan</span>
+</td>
+<td class="py-3 px-3 text-secondary">Tax Component</td>
+<td class="py-3 px-3 font-tabular-num text-center text-secondary">999293</td>
+<td class="py-3 px-4 font-tabular-num text-right text-primary-container">2,288.14</td>
+</tr>
+<!-- Grand Total Row -->
+<tr class="bg-surface-container-high border-t-2 border-outline-variant font-medium">
+<td class="py-3.5 px-4 text-primary-container text-right font-label-md text-label-md" colspan="4">
+                    Total (GST Inclusive)
+                  </td>
+<td class="py-3.5 px-4 font-tabular-num text-right text-headline-sm text-headline-sm text-primary-container font-semibold">
+                    ₹30,000.00
+                  </td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Amount In Words Box -->
+<div class="mt-4 p-3 bg-surface rounded border border-outline-variant flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary">Amount in Words:</span>
+<span class="font-body-md text-body-md text-primary-container font-semibold italic">Thirty Thousand Rupees Only</span>
+</div>
+<span class="font-body-sm text-body-sm text-secondary">Currency: INR (₹)</span>
+</div>
+<!-- Verification, Seal, & Signature Grid -->
+<div class="mt-8 pt-6 border-t border-outline-variant grid grid-cols-1 md:grid-cols-2 gap-space-lg items-end">
+<!-- Institutional Seal -->
+<div class="flex items-center gap-space-md p-3.5 rounded border border-outline-variant bg-surface/50">
+<!-- Institutional Emblem Graphic SVG -->
+<div class="w-14 h-14 rounded-full border-2 border-dashed border-primary-container/40 flex items-center justify-center shrink-0 bg-surface-container">
+<svg class="w-9 h-9 text-primary-container" fill="currentColor" viewbox="0 0 100 100">
+<circle cx="50" cy="50" fill="none" r="46" stroke="currentColor" stroke-width="2"></circle>
+<circle cx="50" cy="50" fill="none" r="41" stroke="currentColor" stroke-dasharray="3 2" stroke-width="1"></circle>
+<path d="M50 20 L58 36 L76 39 L63 52 L66 70 L50 62 L34 70 L37 52 L24 39 L42 36 Z" fill="currentColor" opacity="0.85"></path>
+<text fill="currentColor" font-family="sans-serif" font-size="8" font-weight="bold" text-anchor="middle" x="50" y="85">FEE TRACKER</text>
+</svg>
+</div>
+<div>
+<div class="flex items-center gap-1.5 text-primary-container font-label-md text-label-md font-semibold">
+<span class="material-symbols-outlined text-[18px] text-[#3E7B55]">verified_user</span>
+                Digitally Verified Instrument
+              </div>
+<p class="font-body-sm text-body-sm text-secondary">
+                Jaipur Central Administrative Accounts Officer
+              </p>
+<p class="font-tabular-num text-[11px] text-secondary mt-0.5">
+                Hash: 9F8B-73EA-120C-409A • Key 2048-RSA
+              </p>
+</div>
+</div>
+<!-- Signature Signoff Block -->
+<div class="text-right space-y-1">
+<div class="inline-block border-b border-primary-container/30 pb-1 mb-1 w-48 text-center">
+<span class="font-body-sm text-body-sm italic text-primary-container font-serif">Accounts Registrar</span>
+</div>
+<div class="font-label-sm text-label-sm text-primary-container font-semibold">For Fee Tracker Coaching Institute</div>
+<div class="font-body-sm text-body-sm text-secondary">Authorized Signatory • Finance Dept</div>
+</div>
+</div>
+<!-- Legal Disclaimer Footer -->
+<div class="mt-8 pt-4 border-t border-outline-variant text-center font-body-sm text-body-sm text-secondary space-y-1">
+<p>This is a computer-generated official receipt. No physical signature is required.</p>
+<p class="text-[11px]">Fee payments once realized are subject to the standard institute refund and batch transfer policies.</p>
+</div>
+</div>
+<!-- Quick Helpful Actions Below Card -->
+<div class="mt-space-md flex flex-wrap items-center justify-between gap-space-sm px-2">
+<div class="flex items-center gap-space-sm text-secondary font-body-sm">
+<span class="material-symbols-outlined text-[18px]">help_outline</span>
+<span>Questions regarding tax calculation? Contact accounts helpline at 0141-2780000.</span>
+</div>
+<button class="font-label-md text-label-md text-primary-container hover:underline inline-flex items-center gap-1" onclick="downloadLedgerStatement()">
+<span>Download full academic ledger</span>
+<span class="material-symbols-outlined text-[16px]">download</span>
+</button>
+</div>
+</div>
+<!-- VIEW B: Print-Ready Document Preview (A4 Voucher Standard with Perforations) -->
+<div class="w-full max-w-[760px] mx-auto flex flex-col transition-all" id="viewPrintPreviewCard">
+<!-- Preview Header Indicator -->
+<div class="flex items-center justify-between px-space-xs mb-space-sm">
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-surface-container text-primary-container font-label-sm text-label-sm font-semibold border border-outline-variant">
+<span class="material-symbols-outlined text-[14px]">preview</span>
+            A4 Print Output Simulation
+          </span>
+<span class="font-body-sm text-body-sm text-secondary hidden sm:inline">210mm × 297mm standard format</span>
+</div>
+<span class="text-secondary font-label-sm text-label-sm">Pure White (#FFFFFF) Canvas</span>
+</div>
+<!-- Pure White Container with Perforations & A4 Ledger Anatomy -->
+<div class="w-full bg-[#FFFFFF] rounded-none border border-outline-variant p-8 sm:p-10 shadow-sm relative">
+<!-- Top Perforation Guideline for Institutional Voucher Cut -->
+<div class="absolute -top-3 left-4 right-4 flex items-center justify-between text-secondary/60 text-[10px] select-none">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">content_cut</span>
+<span>PERFORATION CUTTER LINE</span>
+</span>
+<span class="font-mono">TEAR HERE FOR OFFICE LEDGER RECORD</span>
+</div>
+<!-- Print-Style Watermark Backdrop (Pure CSS / SVG) -->
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03]">
+<span class="font-headline-lg text-[120px] font-bold tracking-widest text-primary-container uppercase select-none">PAID</span>
+</div>
+<!-- A4 Header Section -->
+<div class="relative border-b-2 border-primary-container pb-4">
+<div class="flex items-start justify-between">
+<div class="space-y-0.5">
+<h2 class="font-headline-sm text-headline-sm text-primary-container font-semibold tracking-tight">FEE TRACKER COACHING INSTITUTE</h2>
+<div class="font-body-sm text-body-sm text-on-surface">Malviya Nagar Campus, Jaipur • Rajasthan (Zone 08)</div>
+<div class="font-body-sm text-[12px] text-secondary">GST Reg. No: 08AAACF7392K1Z9 • Accounts Tel: +91 141 2780000</div>
+</div>
+<div class="text-right">
+<div class="inline-block px-2.5 py-0.5 border border-primary-container font-label-sm text-[11px] font-bold text-primary-container uppercase">
+                ORIGINAL VOUCHER
+              </div>
+<div class="font-tabular-num text-body-sm font-semibold text-primary-container mt-1">NO: JPR/2026-27/000123</div>
+<div class="font-tabular-num text-body-sm text-secondary">DATE: 05-JUL-2026</div>
+</div>
+</div>
+</div>
+<!-- Print Subtitle & Barcode Strip -->
+<div class="relative py-3 flex items-center justify-between border-b border-outline-variant text-body-sm">
+<div>
+<span class="font-label-md text-label-md font-semibold text-primary-container">OFFICIAL TAX INVOICE &amp; FEE RECEIPT</span>
+</div>
+<!-- Barcode Emulation (Inline SVG) -->
+<div class="flex items-center gap-2">
+<svg class="h-6 w-32 text-primary-container" fill="currentColor" viewbox="0 0 120 30">
+<rect height="30" width="3" x="0" y="0"></rect>
+<rect height="30" width="1" x="5" y="0"></rect>
+<rect height="30" width="4" x="8" y="0"></rect>
+<rect height="30" width="2" x="15" y="0"></rect>
+<rect height="30" width="1" x="19" y="0"></rect>
+<rect height="30" width="5" x="23" y="0"></rect>
+<rect height="30" width="2" x="31" y="0"></rect>
+<rect height="30" width="3" x="36" y="0"></rect>
+<rect height="30" width="1" x="42" y="0"></rect>
+<rect height="30" width="4" x="46" y="0"></rect>
+<rect height="30" width="2" x="53" y="0"></rect>
+<rect height="30" width="5" x="58" y="0"></rect>
+<rect height="30" width="1" x="66" y="0"></rect>
+<rect height="30" width="3" x="70" y="0"></rect>
+<rect height="30" width="2" x="76" y="0"></rect>
+<rect height="30" width="4" x="81" y="0"></rect>
+<rect height="30" width="2" x="88" y="0"></rect>
+<rect height="30" width="3" x="93" y="0"></rect>
+<rect height="30" width="1" x="99" y="0"></rect>
+<rect height="30" width="5" x="103" y="0"></rect>
+<rect height="30" width="2" x="111" y="0"></rect>
+<rect height="30" width="3" x="116" y="0"></rect>
+</svg>
+<span class="font-tabular-num text-[11px] text-secondary">*000123*</span>
+</div>
+</div>
+<!-- Compact Metadata Compact Grid for Print -->
+<div class="relative py-4 grid grid-cols-2 gap-4 text-[12px] border-b border-outline-variant font-tabular-num">
+<div class="space-y-1">
+<div><span class="text-secondary">Student Name:</span> <strong class="text-primary-container">Ishita Sharma</strong></div>
+<div><span class="text-secondary">Roll / Student ID:</span> <span class="text-primary-container font-medium">JPR-2027-881</span></div>
+<div><span class="text-secondary">Batch Enrolment:</span> <span class="text-primary-container font-medium">JEE 2027 Evening (Class 11)</span></div>
+<div><span class="text-secondary">Parent / Sponsor:</span> <span class="text-primary-container">Rajesh Sharma</span></div>
+</div>
+<div class="space-y-1 text-right">
+<div><span class="text-secondary">Payment Mode:</span> <strong class="text-primary-container">UPI (GPay)</strong></div>
+<div><span class="text-secondary">UTR Reference:</span> <span class="text-primary-container font-mono">UPI-9923812048</span></div>
+<div><span class="text-secondary">Settlement Status:</span> <span class="text-[#3E7B55] font-semibold">Cleared / Realized</span></div>
+<div><span class="text-secondary">Place of Supply:</span> <span class="text-primary-container">Jaipur (Rajasthan)</span></div>
+</div>
+</div>
+<!-- Clean Print Table without unnecessary shading -->
+<div class="relative mt-4">
+<table class="w-full text-left border-collapse text-[12px]">
+<thead>
+<tr class="border-b border-primary-container font-label-sm uppercase text-primary-container">
+<th class="py-2 pr-2">Sn</th>
+<th class="py-2 px-2">Description &amp; Fee Head</th>
+<th class="py-2 px-2 text-center">SAC</th>
+<th class="py-2 px-2 text-right">Taxable (₹)</th>
+<th class="py-2 px-2 text-right">Total (₹)</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/60 font-body-sm text-[12px]">
+<tr>
+<td class="py-2 pr-2 font-tabular-num">1</td>
+<td class="py-2 px-2">
+<div class="font-medium text-primary-container">Term Tuition Fee · Instalment 1</div>
+<div class="text-[11px] text-secondary">Academic Session 2026-27</div>
+</td>
+<td class="py-2 px-2 text-center font-tabular-num text-secondary">999293</td>
+<td class="py-2 px-2 text-right font-tabular-num">25,423.72</td>
+<td class="py-2 px-2 text-right font-tabular-num font-medium text-primary-container">25,423.72</td>
+</tr>
+<tr>
+<td class="py-2 pr-2 font-tabular-num">2</td>
+<td class="py-2 px-2">
+<div class="font-medium text-primary-container">Lab &amp; Comprehensive Library Access</div>
+<div class="text-[11px] text-[#3E7B55]">100% Academic Merit Waiver Applied</div>
+</td>
+<td class="py-2 px-2 text-center font-tabular-num text-secondary">999293</td>
+<td class="py-2 px-2 text-right font-tabular-num">0.00</td>
+<td class="py-2 px-2 text-right font-tabular-num font-medium text-primary-container">0.00</td>
+</tr>
+<tr>
+<td class="py-2 pr-2 font-tabular-num">3</td>
+<td class="py-2 px-2">
+<div class="text-primary-container">Central GST (CGST @ 9.0%)</div>
+</td>
+<td class="py-2 px-2 text-center font-tabular-num text-secondary">999293</td>
+<td class="py-2 px-2 text-right font-tabular-num text-secondary">-</td>
+<td class="py-2 px-2 text-right font-tabular-num text-primary-container">2,288.14</td>
+</tr>
+<tr>
+<td class="py-2 pr-2 font-tabular-num">4</td>
+<td class="py-2 px-2">
+<div class="text-primary-container">State GST Rajasthan (SGST @ 9.0%)</div>
+</td>
+<td class="py-2 px-2 text-center font-tabular-num text-secondary">999293</td>
+<td class="py-2 px-2 text-right font-tabular-num text-secondary">-</td>
+<td class="py-2 px-2 text-right font-tabular-num text-primary-container">2,288.14</td>
+</tr>
+<tr class="border-t-2 border-primary-container font-semibold">
+<td class="py-2.5 text-right font-label-md text-primary-container" colspan="4">
+                  NET PAYABLE AMOUNT (INR):
+                </td>
+<td class="py-2.5 px-2 text-right font-tabular-num text-body-lg text-primary-container font-bold">
+                  ₹30,000.00
+                </td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Words Strip for Print -->
+<div class="relative mt-2 pt-2 border-t border-outline-variant flex items-center justify-between text-[11px]">
+<div>
+<span class="text-secondary font-medium">IN WORDS:</span>
+<span class="font-semibold text-primary-container ml-1 uppercase">Thirty Thousand Rupees Only</span>
+</div>
+<div class="font-tabular-num text-secondary">E. &amp; O.E.</div>
+</div>
+<!-- Print Footer with Perforation Cutter Border below -->
+<div class="relative mt-8 pt-4 border-t border-outline-variant flex items-end justify-between text-[11px]">
+<div class="space-y-1">
+<div class="font-bold text-primary-container">TERMS &amp; CONDITIONS:</div>
+<p class="text-secondary max-w-sm">1. Fees received are acknowledged subject to bank clearance.<br/>2. Disputes subject exclusively to Jaipur judicial jurisdiction.</p>
+</div>
+<div class="text-right space-y-4">
+<div class="w-36 border-b border-primary-container inline-block"></div>
+<div class="text-primary-container font-semibold">AUTHORISED SIGNATORY</div>
+</div>
+</div>
+<!-- Bottom Voucher Stub Perforation Line -->
+<div class="mt-8 pt-4 border-t border-dashed border-outline-variant flex items-center justify-between text-[10px] text-secondary">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">content_cut</span>
+<span>STUDENT RECORD TEAR-OFF SLIP</span>
+</span>
+<span>SLIP #JPR-2027-881 / RCPT #000123 / AMT: ₹30,000</span>
+</div>
+</div>
+<!-- Quick Action for View B -->
+<div class="mt-space-md flex items-center justify-end gap-space-sm px-2">
+<button class="font-label-md text-label-md text-primary-container hover:underline inline-flex items-center gap-1" onclick="window.print()">
+<span class="material-symbols-outlined text-[16px]">print</span>
+<span>Send direct to system printer</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Client-side Layout Switching & Utilities -->
+<script>
+    function setViewMode(mode) {
+      const portalCard = document.getElementById('viewPortalCard');
+      const printCard = document.getElementById('viewPrintPreviewCard');
+      const container = document.getElementById('receiptViewsContainer');
+      const btnPortal = document.getElementById('btnTabPortal');
+      const btnSide = document.getElementById('btnTabSideBySide');
+      const btnPrint = document.getElementById('btnTabPrintPreview');
+
+      const activeClass = "px-3 py-1.5 rounded font-label-sm text-label-sm font-semibold transition-colors bg-primary-container text-surface";
+      const inactiveClass = "px-3 py-1.5 rounded font-label-sm text-label-sm font-semibold transition-colors text-primary-container hover:bg-surface-variant";
+
+      // Reset Button Styles
+      btnPortal.className = inactiveClass;
+      btnSide.className = inactiveClass;
+      btnPrint.className = inactiveClass;
+
+      if (mode === 'portal') {
+        btnPortal.className = activeClass;
+        portalCard.classList.remove('hidden');
+        printCard.classList.add('hidden');
+        container.classList.remove('xl:flex-row');
+        container.classList.add('flex-col');
+      } else if (mode === 'printPreview') {
+        btnPrint.className = activeClass;
+        portalCard.classList.add('hidden');
+        printCard.classList.remove('hidden');
+        container.classList.remove('xl:flex-row');
+        container.classList.add('flex-col');
+      } else { // sideBySide
+        btnSide.className = activeClass;
+        portalCard.classList.remove('hidden');
+        printCard.classList.remove('hidden');
+        container.classList.remove('flex-col');
+        container.classList.add('xl:flex-row');
+      }
+    }
+
+    function copyReceiptLink() {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(window.location.href);
+      }
+      const feedback = document.getElementById('copyFeedbackText');
+      feedback.classList.remove('hidden');
+      setTimeout(() => {
+        feedback.classList.add('hidden');
+      }, 2500);
+    }
+
+    function downloadLedgerStatement() {
+      window.print();
+    }
+  </script>
+</div></main><footer class="w-full bg-surface-container-lowest border-t border-outline-variant py-space-lg"><div class="max-w-7xl mx-auto px-space-lg flex flex-col md:flex-row items-center justify-between gap-space-sm text-secondary"><div class="flex items-center gap-space-sm"><span class="font-label-sm text-label-sm font-semibold text-primary">Fee Tracker Coaching Institute</span><span>•</span><span class="font-body-sm text-body-sm">Jaipur Regional Administrative Office</span></div><div class="font-body-sm text-body-sm">Helpline: +91 141 2780000 | accounts@feetracker-jaipur.edu.in</div></div></footer></body></html>

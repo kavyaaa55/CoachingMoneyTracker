@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "outline-variant": "#c7c6ce", "surface-dim": "#dbdbc7", "background": "#fbfbe5", "tertiary": "#25220f", "on-tertiary": "#ffffff", "surface-variant": "#e4e4cf", "tertiary-fixed-dim": "#cec7aa", "surface-container-high": "#e9e9d5", "secondary-container": "#d6e4ef", "inverse-primary": "#c0c5e4", "on-tertiary-fixed-variant": "#4b4731", "on-primary-container": "#999fbd", "error-container": "#ffdad6", "inverse-surface": "#303224", "surface-tint": "#575d78", "on-secondary-fixed-variant": "#3b4951", "inverse-on-surface": "#f2f2dd", "on-surface-variant": "#46464d", "on-primary-fixed": "#141a32", "outline": "#76767e", "surface-container-lowest": "#ffffff", "on-tertiary-fixed": "#1f1c0a", "primary-fixed": "#dce1ff", "tertiary-container": "#3b3723", "on-background": "#1b1d10", "on-surface": "#1b1d10", "secondary": "#536069", "on-primary": "#ffffff", "surface-container-low": "#f5f5e0", "error": "#ba1a1a", "on-secondary": "#ffffff", "on-secondary-fixed": "#101d25", "surface-container-highest": "#e4e4cf", "primary-fixed-dim": "#c0c5e4", "on-error-container": "#93000a", "secondary-fixed-dim": "#bac8d3", "surface-bright": "#fbfbe5", "primary": "#1a2138", "primary-container": "#30364f", "tertiary-fixed": "#ebe2c5", "on-secondary-container": "#59666f", "surface-container": "#efefda", "on-tertiary-container": "#a7a085", "surface": "#fbfbe5", "on-primary-fixed-variant": "#40465f", "secondary-fixed": "#d6e4ef", "on-error": "#ffffff" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-lg": "1.5rem", "space-xs": "0.25rem", "space-xl": "2rem", "space-sm": "0.5rem", "space-md": "1rem", "margin": "2rem", "gutter": "1.5rem" }, "fontFamily": { "body-sm": ["Inter"], "headline-lg": ["Inter"], "headline-sm": ["Inter"], "label-md": ["Inter"], "body-lg": ["Inter"], "label-sm": ["Inter"], "tabular-num": ["Inter"], "display": ["Inter"], "body-md": ["Inter"] }, "fontSize": { "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }], "headline-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "headline-sm": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }], "tabular-num": ["14px", { "lineHeight": "20px", "fontWeight": "500" }], "display": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-[240px] bg-primary-container z-50 flex flex-col justify-between py-space-md"><div class="flex flex-col"><div class="px-space-md pb-space-lg pt-space-xs flex items-center justify-between border-b border-outline/30"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-tertiary-fixed text-[22px]">account_balance</span><span class="font-headline-sm text-headline-sm text-surface-container-lowest tracking-tight">Fee Tracker</span></div><span class="bg-tertiary-fixed/20 text-tertiary-fixed border border-tertiary-fixed/40 font-label-sm text-label-sm px-1.5 py-0.5 rounded-[4px] tracking-wide">JAIPUR</span></div><nav class="flex flex-col gap-1 px-space-sm mt-space-md" data-active-classes="bg-surface-variant text-primary-container font-label-md rounded-[6px]"><a aria-current="page" class="flex items-center gap-space-sm px-space-sm py-2 transition-colors bg-surface-variant text-primary-container font-label-md rounded-[6px]" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[20px]">dashboard</span><span>Dashboard</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-[6px] text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="students" href="#"><span class="material-symbols-outlined text-[20px]">school</span><span>Students</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-[6px] text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="reminders" href="#"><span class="material-symbols-outlined text-[20px]">notifications_active</span><span>Reminders</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-[6px] text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="counsellor-tasks" href="#"><span class="material-symbols-outlined text-[20px]">assignment</span><span>Counsellor tasks</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-[6px] text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="uploads" href="#"><span class="material-symbols-outlined text-[20px]">upload_file</span><span>Uploads</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-[6px] text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="unmatched-payments" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">receipt_long</span><span>Unmatched payments</span></div><span class="bg-error text-on-error font-label-sm text-label-sm px-1.5 py-0.5 rounded-full">3</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-[6px] text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="audit-log" href="#"><span class="material-symbols-outlined text-[20px]">history_edu</span><span>Audit log</span></a></nav></div><div class="px-space-sm border-t border-outline/30 pt-space-md"><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-[6px] text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="design-system-sheet" href="#"><span class="material-symbols-outlined text-[20px]">palette</span><span>Design System Sheet</span></a></div></aside><div class="pl-[240px]"><header class="fixed top-0 left-[240px] right-0 h-16 bg-surface-container-lowest border-b border-outline-variant z-40 flex items-center justify-between px-space-lg"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-secondary text-[18px]">store</span><select class="bg-surface-container-lowest border border-outline-variant rounded-[6px] px-2.5 py-1 font-body-md text-body-md text-primary-container focus:outline-none focus:border-primary-container"><option value="all">All centres</option><option value="malviya-nagar">Malviya Nagar</option><option value="vaishali-nagar">Vaishali Nagar</option><option value="raja-park">Raja Park</option></select></div><div class="flex items-center gap-1.5 bg-surface-variant border border-outline-variant px-2.5 py-1 rounded-[6px]"><span class="material-symbols-outlined text-primary-container text-[16px]">date_range</span><span class="font-label-sm text-label-sm text-primary-container font-semibold">FY 2026-27</span></div></div><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-md border-r border-outline-variant pr-space-lg"><button aria-label="Search" class="text-secondary hover:text-primary-container flex items-center justify-center p-1 rounded transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">search</span></button><button aria-label="Notifications" class="relative text-secondary hover:text-primary-container flex items-center justify-center p-1 rounded transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full ring-2 ring-surface-container-lowest"></span></button></div><div class="flex items-center gap-space-sm"><div class="text-right leading-tight hidden sm:block"><div class="font-label-md text-label-md text-on-surface font-semibold">Rajesh Sharma</div><div class="font-label-sm text-label-sm text-secondary">Senior Accounts Officer</div></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="relative pt-16 bg-surface min-h-screen"><div class="max-w-[1440px] mx-auto p-space-lg lg:p-space-xl"><div class="flex flex-col w-full relative">
+<!-- BACKGROUND DASHBOARD (Dues Overview & Ledger Summary Screen 4.1 in Context) -->
+<div aria-hidden="true" class="flex flex-col w-full gap-space-lg select-none opacity-40 pointer-events-none filter blur-[1.5px]">
+<!-- Header Block -->
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-sm text-secondary font-label-sm text-label-sm">
+<span>CENTRAL ACCOUNTS</span>
+<span>/</span>
+<span>RECONCILIATION</span>
+<span>/</span>
+<span class="text-primary-container font-semibold">DUES & TALLY LEDGER</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-primary-container mt-1">Dues Overview & Batch Collections</h1>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="flex items-center gap-1.5 px-4 py-2 rounded-[6px] bg-surface-container-lowest text-primary-container font-label-md text-label-md">
+<span class="material-symbols-outlined text-[18px]">calendar_today</span>
+<span>Oct 2026 Batch</span>
+</button>
+<button class="flex items-center gap-1.5 px-4 py-2 rounded-[6px] bg-primary-container text-surface-container-low font-label-md text-label-md">
+<span class="material-symbols-outlined text-[18px]">file_download</span>
+<span>Export Tally</span>
+</button>
+</div>
+</div>
+<!-- Metrics Row -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-space-md">
+<div class="bg-surface-container-lowest p-space-lg rounded-[8px] flex flex-col justify-between">
+<span class="font-label-sm text-label-sm text-secondary">TOTAL DEMAND (OCT)</span>
+<div class="font-display text-display text-primary-container tabular-nums mt-space-sm">₹1,84,50,000</div>
+<div class="flex items-center gap-1 text-[#3E7B55] font-label-sm text-label-sm mt-space-sm">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+<span>94.2% projected realization</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-space-lg rounded-[8px] flex flex-col justify-between">
+<span class="font-label-sm text-label-sm text-secondary">COLLECTED VIA RAZORPAY / NEFT</span>
+<div class="font-display text-display text-primary-container tabular-nums mt-space-sm">₹1,42,88,400</div>
+<div class="text-secondary font-label-sm text-label-sm mt-space-sm">2,140 verified transactions</div>
+</div>
+<div class="bg-surface-container-lowest p-space-lg rounded-[8px] flex flex-col justify-between">
+<span class="font-label-sm text-label-sm text-secondary">OUTSTANDING OVERDUE</span>
+<div class="font-display text-display text-[#B4432F] tabular-nums mt-space-sm">₹28,61,600</div>
+<div class="text-[#B4432F] font-label-sm text-label-sm mt-space-sm">184 accounts flagged</div>
+</div>
+<div class="bg-surface-container-lowest p-space-lg rounded-[8px] flex flex-col justify-between">
+<span class="font-label-sm text-label-sm text-secondary">UNMAPPED BANK UTRs</span>
+<div class="font-display text-display text-primary-container tabular-nums mt-space-sm">₹13,00,000</div>
+<div class="text-secondary font-label-sm text-label-sm mt-space-sm">3 suspense records pending</div>
+</div>
+</div>
+<!-- Data Table Preview -->
+<div class="bg-surface-container-lowest rounded-[8px] overflow-hidden">
+<div class="px-space-lg py-space-md bg-surface-container-low flex items-center justify-between">
+<span class="font-label-md text-label-md text-primary-container font-semibold">Ledger Entries Awaiting Synchronisation</span>
+<span class="font-label-sm text-label-sm text-secondary">Showing 5 of 2,418 records</span>
+</div>
+<div class="w-full overflow-x-auto">
+<table class="w-full text-left font-body-md text-body-md text-primary-container">
+<thead class="bg-surface-container font-label-sm text-label-sm text-primary-container uppercase">
+<tr>
+<th class="py-3 px-space-md">Date</th>
+<th class="py-3 px-space-md">Receipt #</th>
+<th class="py-3 px-space-md">Student & ID</th>
+<th class="py-3 px-space-md">Centre</th>
+<th class="py-3 px-space-md">Course Head</th>
+<th class="py-3 px-space-md text-right">Tax (GST)</th>
+<th class="py-3 px-space-md text-right">Net Amount</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container">
+<tr>
+<td class="py-3 px-space-md">31/10/2026</td>
+<td class="py-3 px-space-md font-tabular-num text-tabular-num">REC-JPR-9082</td>
+<td class="py-3 px-space-md">Aarav Singhania (ST-8902)</td>
+<td class="py-3 px-space-md">Malviya Nagar</td>
+<td class="py-3 px-space-md">JEE Advanced 2-Yr</td>
+<td class="py-3 px-space-md text-right font-tabular-num text-tabular-num">₹9,900</td>
+<td class="py-3 px-space-md text-right font-tabular-num text-tabular-num">₹64,900</td>
+</tr>
+<tr>
+<td class="py-3 px-space-md">31/10/2026</td>
+<td class="py-3 px-space-md font-tabular-num text-tabular-num">REC-JPR-9081</td>
+<td class="py-3 px-space-md">Bhavna Mathur (ST-8919)</td>
+<td class="py-3 px-space-md">Vaishali Nagar</td>
+<td class="py-3 px-space-md">NEET Pre-Medical</td>
+<td class="py-3 px-space-md text-right font-tabular-num text-tabular-num">₹6,750</td>
+<td class="py-3 px-space-md text-right font-tabular-num text-tabular-num">₹44,250</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- MODAL BACKDROP (Screen Overlay: semi-transparent primary-container at 45% with slight blur) -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-space-md bg-primary-container/45 backdrop-blur-[2px]">
+<!-- MODAL CARD CONTAINER: Max 540px, pure white, 8px radius, 32px padding -->
+<div class="w-full max-w-[540px] bg-surface-container-lowest rounded-[8px] p-space-xl flex flex-col relative shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+<!-- Top Actions: Progress Pill & Close Button -->
+<div class="flex items-center justify-between mb-space-sm">
+<div class="flex items-center gap-2">
+<span class="bg-surface-variant text-primary-container font-label-sm text-label-sm px-2.5 py-0.5 rounded-[4px] font-semibold">TALLY XML / CSV</span>
+<span class="text-secondary font-label-sm text-label-sm">v3.4 Schema</span>
+</div>
+<button aria-label="Close dialog" class="text-secondary hover:text-primary-container transition-colors p-1 -mr-2 rounded flex items-center justify-center" id="modalCloseBtn" type="button">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<!-- Header Content -->
+<div class="flex flex-col mb-space-lg">
+<h2 class="font-headline-sm text-headline-sm text-primary-container">Export to Tally ERP / Prime</h2>
+<p class="font-body-md text-body-md text-secondary mt-1">Generate CSV journal vouchers formatted for Tally XML/CSV batch import.</p>
+</div>
+<!-- Export Form -->
+<form class="flex flex-col gap-space-md" id="tallyExportForm" onsubmit="event.preventDefault();">
+<!-- Date Range Grid -->
+<div class="grid grid-cols-2 gap-space-md">
+<!-- From Date -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-sm text-label-sm text-primary-container font-medium" for="fromDate">From date</label>
+<div class="relative flex items-center">
+<input class="w-full h-10 px-3 pr-9 rounded-[8px] bg-surface-container-lowest text-primary-container font-tabular-num text-tabular-num focus:outline-none focus:bg-surface-container-low transition-colors" id="fromDate" placeholder="DD/MM/YYYY" type="text" value="01/10/2026"/>
+<span class="material-symbols-outlined text-secondary text-[18px] absolute right-3 pointer-events-none">calendar_today</span>
+</div>
+</div>
+<!-- To Date -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-sm text-label-sm text-primary-container font-medium" for="toDate">To date</label>
+<div class="relative flex items-center">
+<input class="w-full h-10 px-3 pr-9 rounded-[8px] bg-surface-container-lowest text-primary-container font-tabular-num text-tabular-num focus:outline-none focus:bg-surface-container-low transition-colors" id="toDate" placeholder="DD/MM/YYYY" type="text" value="31/10/2026"/>
+<span class="material-symbols-outlined text-secondary text-[18px] absolute right-3 pointer-events-none">event</span>
+</div>
+</div>
+</div>
+<!-- Centre Dropdown -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-sm text-label-sm text-primary-container font-medium" for="centreSelect">Centre</label>
+<div class="relative flex items-center">
+<select class="w-full h-10 px-3 pr-9 rounded-[8px] bg-surface-container-lowest text-primary-container font-body-md text-body-md focus:outline-none focus:bg-surface-container-low appearance-none cursor-pointer" id="centreSelect">
+<option selected="" value="all">All Centres (Jaipur Region)</option>
+<option value="malviya">Malviya Nagar (Core)</option>
+<option value="vaishali">Vaishali Nagar</option>
+<option value="raja-park">Raja Park</option>
+</select>
+<span class="material-symbols-outlined text-secondary text-[20px] absolute right-3 pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Voucher Type Selection -->
+<div class="flex flex-col gap-2">
+<span class="font-label-sm text-label-sm text-primary-container font-medium">Voucher Type</span>
+<div aria-label="Voucher Type" class="grid grid-cols-2 gap-space-sm" role="radiogroup">
+<!-- Option 1: Standard Fee Receipts -->
+<label class="flex items-center gap-2.5 p-3 rounded-[6px] bg-surface-container-low cursor-pointer hover:bg-surface-container transition-colors">
+<input checked="" class="w-4 h-4 text-primary-container accent-primary-container cursor-pointer" name="voucherType" type="radio" value="receipt"/>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary-container font-medium">Fee Receipts</span>
+<span class="font-label-sm text-label-sm text-secondary">Standard receipt journals</span>
+</div>
+</label>
+<!-- Option 2: Refunds & Reversals -->
+<label class="flex items-center gap-2.5 p-3 rounded-[6px] bg-surface-container-low cursor-pointer hover:bg-surface-container transition-colors">
+<input class="w-4 h-4 text-primary-container accent-primary-container cursor-pointer" name="voucherType" type="radio" value="refund"/>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary-container font-medium">Refund / Reversal</span>
+<span class="font-label-sm text-label-sm text-secondary">Contra & credit memos</span>
+</div>
+</label>
+</div>
+</div>
+<!-- Informational Note (Light #F5F5E0 box) -->
+<div class="flex items-start gap-space-sm p-3.5 rounded-[6px] bg-surface-container-low text-primary-container">
+<span class="material-symbols-outlined text-primary-container text-[20px] shrink-0 mt-0.5">info</span>
+<p class="font-body-sm text-body-sm leading-relaxed text-primary-container">
+            Downloads a CSV file with mapped ledger heads (<span class="font-semibold">Course Fee, CGST 9%, SGST 9%, Bank UTR</span>). Compatible with <span class="font-semibold">Tally Prime 3.0+</span> and <span class="font-semibold">Tally.ERP 9</span>.
+          </p>
+</div>
+<!-- PROGRESS STATE PREVIEW (Simulated batch preparation status) -->
+<div class="flex flex-col gap-2 p-3 bg-surface-variant rounded-[6px]" id="exportProgressBox">
+<div class="flex items-center justify-between text-primary-container font-label-sm text-label-sm">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+<span class="font-semibold">Preparing ledger vouchers...</span>
+</div>
+<span class="font-tabular-num text-tabular-num font-semibold">68%</span>
+</div>
+<div class="w-full bg-surface-container-highest rounded-full h-1.5 overflow-hidden">
+<div class="bg-primary-container h-1.5 rounded-full transition-all duration-300 w-[68%]"></div>
+</div>
+<div class="flex items-center justify-between text-secondary font-label-sm text-label-sm pt-0.5">
+<span>Aggregating GST breakdown</span>
+<span class="font-tabular-num text-tabular-num">1,644 / 2,418 vouchers</span>
+</div>
+</div>
+<!-- Action Footer -->
+<div class="flex items-center justify-between pt-space-sm mt-1">
+<div class="flex items-center gap-1.5 text-secondary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">verified</span>
+<span>Ledger mappings OK</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="px-4 py-2 rounded-[6px] bg-surface-container-lowest text-primary-container font-label-md text-label-md hover:bg-surface-container-low transition-colors" id="cancelModalBtn" type="button">
+              Cancel
+            </button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-[6px] bg-primary-container text-surface-container-low font-label-md text-label-md hover:bg-primary transition-colors" id="triggerExportBtn" type="button">
+<span class="material-symbols-outlined text-[18px]">download</span>
+<span>Download CSV</span>
+</button>
+</div>
+</div>
+</form>
+</div>
+</div>
+<!-- FLOATING SUCCESS TOAST NOTIFICATION -->
+<!-- Top-right fixed position overlay, authentic staff ledger feedback -->
+<div class="fixed top-20 right-8 z-[60] w-full max-w-[440px] bg-surface-container-lowest rounded-[6px] p-space-md shadow-xl flex items-start justify-between gap-space-sm animate-in slide-in-from-top-4 duration-200" id="successToast">
+<div class="flex items-start gap-3">
+<!-- Left Green Accent Icon -->
+<div class="w-8 h-8 rounded-[6px] bg-[#3E7B55]/10 flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[#3E7B55] text-[20px]">check_circle</span>
+</div>
+<!-- Toast Body -->
+<div class="flex flex-col gap-0.5">
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md text-primary-container font-semibold">Export ready</span>
+<span class="bg-[#3E7B55]/15 text-[#3E7B55] font-label-sm text-label-sm px-1.5 py-0.2 rounded font-medium">UTF-8</span>
+</div>
+<p class="font-body-sm text-body-sm text-primary-container leading-tight mt-0.5">
+<span class="font-tabular-num text-tabular-num font-medium">Tally_Vouchers_Oct2026_AllCentres.csv</span> (2,418 records) generated successfully.
+        </p>
+<div class="flex items-center gap-4 mt-2">
+<button class="text-primary-container font-label-sm text-label-sm underline hover:text-primary transition-colors font-medium flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[14px]">download</span>
+<span>Click to download again</span>
+</button>
+<span class="text-secondary text-body-sm">•</span>
+<span class="font-label-sm text-label-sm text-secondary font-tabular-num text-tabular-num">4.2 MB</span>
+</div>
+</div>
+</div>
+<!-- Dismiss Button -->
+<button aria-label="Dismiss toast" class="text-secondary hover:text-primary-container p-1 rounded transition-colors" id="dismissToastBtn" type="button">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<script>
+    // Lightweight interactivity for modal demonstration & dismissal
+    const dismissToastBtn = document.getElementById('dismissToastBtn');
+    const successToast = document.getElementById('successToast');
+    const triggerExportBtn = document.getElementById('triggerExportBtn');
+    const progressBox = document.getElementById('exportProgressBox');
+
+    if (dismissToastBtn && successToast) {
+      dismissToastBtn.addEventListener('click', () => {
+        successToast.style.display = 'none';
+      });
+    }
+
+    if (triggerExportBtn && successToast) {
+      triggerExportBtn.addEventListener('click', () => {
+        // Toggle simulated completion state
+        if (progressBox) {
+          progressBox.classList.add('bg-secondary-container');
+        }
+        successToast.style.display = 'flex';
+        successToast.classList.add('animate-bounce');
+        setTimeout(() => {
+          successToast.classList.remove('animate-bounce');
+        }, 600);
+      });
+    }
+  </script>
+</div></div></main></div></body></html>

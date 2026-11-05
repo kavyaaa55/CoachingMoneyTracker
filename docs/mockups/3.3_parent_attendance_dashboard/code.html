@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"surface-container":"#efefda","secondary-fixed-dim":"#bac8d3","secondary-container":"#d6e4ef","error":"#ba1a1a","inverse-on-surface":"#f2f2dd","on-tertiary-container":"#a7a085","on-primary-fixed-variant":"#40465f","surface-variant":"#e4e4cf","on-error":"#ffffff","on-tertiary":"#ffffff","tertiary-fixed":"#ebe2c5","secondary-fixed":"#d6e4ef","inverse-surface":"#303224","primary-container":"#30364f","on-primary-fixed":"#141a32","on-tertiary-fixed":"#1f1c0a","error-container":"#ffdad6","tertiary-container":"#3b3723","on-secondary":"#ffffff","on-error-container":"#93000a","surface-container-low":"#f5f5e0","surface-container-high":"#e9e9d5","outline-variant":"#c7c6ce","on-surface":"#1b1d10","surface":"#fbfbe5","surface-bright":"#fbfbe5","tertiary":"#25220f","on-primary-container":"#999fbd","on-secondary-fixed":"#101d25","inverse-primary":"#c0c5e4","on-background":"#1b1d10","on-primary":"#ffffff","primary":"#1a2138","secondary":"#536069","surface-container-lowest":"#ffffff","primary-fixed-dim":"#c0c5e4","background":"#fbfbe5","on-secondary-fixed-variant":"#3b4951","surface-container-highest":"#e4e4cf","outline":"#76767e","surface-tint":"#575d78","primary-fixed":"#dce1ff","on-tertiary-fixed-variant":"#4b4731","on-surface-variant":"#46464d","tertiary-fixed-dim":"#cec7aa","on-secondary-container":"#59666f","surface-dim":"#dbdbc7"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"space-sm":"0.5rem","space-lg":"1.5rem","space-xl":"2rem","space-xs":"0.25rem","margin":"2rem","gutter":"1.5rem","space-md":"1rem"},"fontFamily":{"label-sm":["Inter"],"label-md":["Inter"],"body-md":["Inter"],"display":["Inter"],"headline-lg":["Inter"],"headline-sm":["Inter"],"body-sm":["Inter"],"body-lg":["Inter"],"tabular-num":["Inter"]},"fontSize":{"label-sm":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"500"}],"label-md":["14px",{"lineHeight":"20px","fontWeight":"500"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"display":["40px",{"lineHeight":"48px","letterSpacing":"-0.02em","fontWeight":"600"}],"headline-lg":["28px",{"lineHeight":"36px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-sm":["20px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"body-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],"tabular-num":["14px",{"lineHeight":"20px","fontWeight":"500"}]}}}}</script></head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased min-h-screen flex flex-col justify-between"><header class="fixed top-0 w-full z-50 bg-surface-container-lowest border-b border-outline-variant"><div class="h-16 max-w-7xl mx-auto px-space-lg flex items-center justify-between"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-primary-container text-[24px]">school</span><span class="font-headline-sm text-headline-sm text-primary font-semibold tracking-tight">Fee Tracker</span></div><span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-surface-container-high text-secondary border border-outline-variant">Parent Portal</span></div><nav class="hidden md:flex items-center gap-space-md" data-active-classes="bg-surface-variant text-on-surface font-semibold rounded"><a class="text-on-surface-variant hover:text-on-surface px-space-sm py-1.5 text-label-md font-label-md transition-colors" data-path="parent-app-shell" href="#">Fee Overview</a><a class="text-on-surface-variant hover:text-on-surface px-space-sm py-1.5 text-label-md font-label-md transition-colors" data-path="parent-consent" href="#">Parent Consent</a></nav><div class="flex items-center gap-space-md"><div class="text-right hidden sm:block"><span class="block font-label-md text-label-md text-primary font-medium">Ananya Verma</span><span class="block font-body-sm text-body-sm text-secondary">Batch 2024 IIT-JEE</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full flex-1 pt-16 bg-surface max-w-7xl mx-auto px-space-lg py-space-xl"><div class="flex flex-col w-full">
+<div class="w-full max-w-[1100px] mx-auto pb-space-xl flex flex-col gap-6">
+<!-- Active Navigation Marker Script (Aligns parent shell nav if matching) -->
+<script>
+      (function() {
+        const links = document.querySelectorAll('header nav a');
+        links.forEach(link => {
+          if (link.textContent.trim().toLowerCase().includes('attendance')) {
+            link.classList.add('border-b-2', 'border-[#30364F]', 'text-primary');
+          }
+        });
+      })();
+    </script>
+<!-- Top Administrative Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between border-b border-[#ACBAC4] pb-5 gap-4">
+<div class="flex flex-col">
+<div class="flex items-center gap-2 text-label-sm font-label-sm text-[#536069] tracking-wider uppercase mb-1">
+<span>Ishita Sharma</span>
+<span class="text-[#ACBAC4]">•</span>
+<span>JEE 2027 Evening</span>
+<span class="text-[#ACBAC4]">•</span>
+<span class="font-tabular-num text-primary font-semibold">Biometric ID: BIO-881</span>
+</div>
+<h1 class="text-headline-lg font-headline-lg text-[#30364F] tracking-tight m-0">Attendance</h1>
+<p class="text-body-md font-body-md text-[#536069] mt-0.5">Classroom biometric punch records and attendance trends</p>
+</div>
+<!-- Eligibility Benchmark Tag -->
+<div class="flex items-center gap-2 bg-[#FFFFFF] border border-[#ACBAC4] rounded px-3 py-1.5 self-start md:self-auto">
+<span class="material-symbols-outlined text-[#30364F] text-[18px]">verified</span>
+<span class="text-body-sm font-body-sm text-[#30364F]">
+          Minimum required for test eligibility: <strong class="font-semibold text-primary">75%</strong>
+</span>
+</div>
+</div>
+<!-- Section 1: Key Metric Cards (Row of 3) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Stat 1: Last 30 Days -->
+<div class="bg-[#FFFFFF] border border-[#ACBAC4] rounded-lg p-6 flex flex-col justify-between">
+<div class="flex items-center justify-between mb-3">
+<span class="text-[11px] font-label-sm font-semibold tracking-wider uppercase text-[#536069]">Last 30 Days</span>
+<span class="material-symbols-outlined text-[#ACBAC4] text-[20px]">calendar_today</span>
+</div>
+<div>
+<div class="text-display font-display text-[#30364F] tracking-tight font-bold font-tabular-num leading-none">82%</div>
+<div class="text-body-sm font-body-sm text-[#536069] mt-2 flex items-center gap-1.5">
+<span class="inline-block w-2 h-2 rounded-full bg-[#3E7B55]"></span>
+<span>23 of 28 sessions attended</span>
+</div>
+</div>
+</div>
+<!-- Stat 2: Previous 30 Days -->
+<div class="bg-[#FFFFFF] border border-[#ACBAC4] rounded-lg p-6 flex flex-col justify-between">
+<div class="flex items-center justify-between mb-3">
+<span class="text-[11px] font-label-sm font-semibold tracking-wider uppercase text-[#536069]">Previous 30 Days</span>
+<span class="material-symbols-outlined text-[#ACBAC4] text-[20px]">history</span>
+</div>
+<div>
+<div class="text-display font-display text-[#30364F] tracking-tight font-bold font-tabular-num leading-none">91%</div>
+<div class="text-body-sm font-body-sm text-[#536069] mt-2 flex items-center gap-1.5">
+<span class="inline-block w-2 h-2 rounded-full bg-[#30364F]"></span>
+<span>26 of 28 sessions attended</span>
+</div>
+</div>
+</div>
+<!-- Stat 3: Change / Alert Metric -->
+<div class="bg-[#FFFFFF] border border-[#B4432F] rounded-lg p-6 flex flex-col justify-between relative overflow-hidden">
+<div class="flex items-center justify-between mb-3">
+<span class="text-[11px] font-label-sm font-semibold tracking-wider uppercase text-[#B4432F]">Change</span>
+<span class="material-symbols-outlined text-[#B4432F] text-[20px]">trending_down</span>
+</div>
+<div>
+<div class="text-display font-display text-[#B4432F] tracking-tight font-bold font-tabular-num leading-none">-9 pts</div>
+<div class="text-body-sm font-body-sm text-[#B4432F] font-medium mt-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] shrink-0">error</span>
+<span>Warning: below 85% benchmark</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 2: Weekly Attendance Bar Chart -->
+<div class="bg-[#FFFFFF] border border-[#ACBAC4] rounded-lg p-6 flex flex-col">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-[#ACBAC4] gap-2">
+<div>
+<h2 class="text-headline-sm font-headline-sm text-[#30364F] tracking-tight m-0">Weekly Attendance Rate (Last 5 Weeks)</h2>
+<p class="text-body-sm font-body-sm text-[#536069] mt-0.5">Biometric tally across aggregate lectures and scheduled laboratory sessions</p>
+</div>
+<!-- Legend Indicator -->
+<div class="flex items-center gap-4 text-label-sm font-label-sm">
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 bg-[#30364F] rounded-sm inline-block"></span>
+<span class="text-[#30364F]">Attended rate %</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-4 border-b-2 border-dashed border-[#B4432F] inline-block"></span>
+<span class="text-[#B4432F]">75% Institute limit</span>
+</div>
+</div>
+</div>
+<!-- Chart Graphics Area -->
+<div class="w-full pt-8 pb-4">
+<div class="relative w-full h-64">
+<!-- Benchmark line at 75% height (height calculation: 75% from bottom => top: 25%) -->
+<div class="absolute inset-x-0 top-[25%] border-b border-dashed border-[#B4432F] z-10 pointer-events-none flex items-center justify-end">
+<span class="bg-[#FFFFFF] px-2 py-0.5 text-[11px] font-label-sm font-semibold text-[#B4432F] border border-[#B4432F] rounded -mr-1">
+              75% Minimum institute threshold
+            </span>
+</div>
+<!-- Horizontal Reference Gridlines (100%, 50%, 25%, 0%) -->
+<div class="absolute inset-x-0 top-0 border-b border-[#ACBAC4] border-dotted opacity-50"></div>
+<div class="absolute inset-x-0 top-[50%] border-b border-[#ACBAC4] border-dotted opacity-50"></div>
+<div class="absolute inset-x-0 bottom-0 border-b border-[#ACBAC4]"></div>
+<!-- Y-Axis Values (tab numbers) -->
+<div class="absolute -left-6 top-0 text-[10px] font-tabular-num text-[#536069] -translate-y-1/2">100%</div>
+<div class="absolute -left-6 top-[25%] text-[10px] font-tabular-num text-[#B4432F] -translate-y-1/2 font-semibold">75%</div>
+<div class="absolute -left-6 top-[50%] text-[10px] font-tabular-num text-[#536069] -translate-y-1/2">50%</div>
+<div class="absolute -left-6 bottom-0 text-[10px] font-tabular-num text-[#536069] translate-y-1/2">0%</div>
+<!-- 5 Bars Container -->
+<div class="grid grid-cols-5 h-full items-end gap-3 sm:gap-8 px-2 sm:px-6">
+<!-- Week 1: 92% -->
+<div class="group relative flex flex-col items-center h-full justify-end">
+<div class="text-[12px] font-label-sm font-semibold font-tabular-num text-[#30364F] mb-1.5 transition-transform group-hover:-translate-y-0.5">92%</div>
+<div class="w-full max-w-[56px] bg-[#30364F] rounded-t transition-all group-hover:bg-[#232738]" style="height: 92%;"></div>
+<div class="absolute -top-7 hidden group-hover:flex bg-[#30364F] text-[#FFFFFF] text-[10px] py-1 px-2 rounded whitespace-nowrap shadow-sm z-20">
+                12 of 13 Sessions
+              </div>
+</div>
+<!-- Week 2: 90% -->
+<div class="group relative flex flex-col items-center h-full justify-end">
+<div class="text-[12px] font-label-sm font-semibold font-tabular-num text-[#30364F] mb-1.5 transition-transform group-hover:-translate-y-0.5">90%</div>
+<div class="w-full max-w-[56px] bg-[#30364F] rounded-t transition-all group-hover:bg-[#232738]" style="height: 90%;"></div>
+<div class="absolute -top-7 hidden group-hover:flex bg-[#30364F] text-[#FFFFFF] text-[10px] py-1 px-2 rounded whitespace-nowrap shadow-sm z-20">
+                9 of 10 Sessions
+              </div>
+</div>
+<!-- Week 3: 88% -->
+<div class="group relative flex flex-col items-center h-full justify-end">
+<div class="text-[12px] font-label-sm font-semibold font-tabular-num text-[#30364F] mb-1.5 transition-transform group-hover:-translate-y-0.5">88%</div>
+<div class="w-full max-w-[56px] bg-[#30364F] rounded-t transition-all group-hover:bg-[#232738]" style="height: 88%;"></div>
+<div class="absolute -top-7 hidden group-hover:flex bg-[#30364F] text-[#FFFFFF] text-[10px] py-1 px-2 rounded whitespace-nowrap shadow-sm z-20">
+                14 of 16 Sessions
+              </div>
+</div>
+<!-- Week 4: 80% -->
+<div class="group relative flex flex-col items-center h-full justify-end">
+<div class="text-[12px] font-label-sm font-semibold font-tabular-num text-[#30364F] mb-1.5 transition-transform group-hover:-translate-y-0.5">80%</div>
+<div class="w-full max-w-[56px] bg-[#30364F] rounded-t transition-all group-hover:bg-[#232738]" style="height: 80%;"></div>
+<div class="absolute -top-7 hidden group-hover:flex bg-[#30364F] text-[#FFFFFF] text-[10px] py-1 px-2 rounded whitespace-nowrap shadow-sm z-20">
+                8 of 10 Sessions
+              </div>
+</div>
+<!-- Week 5: 82% -->
+<div class="group relative flex flex-col items-center h-full justify-end">
+<div class="text-[12px] font-label-sm font-semibold font-tabular-num text-[#30364F] mb-1.5 transition-transform group-hover:-translate-y-0.5">82%</div>
+<div class="w-full max-w-[56px] bg-[#30364F] rounded-t transition-all group-hover:bg-[#232738]" style="height: 82%;"></div>
+<div class="absolute -top-7 hidden group-hover:flex bg-[#30364F] text-[#FFFFFF] text-[10px] py-1 px-2 rounded whitespace-nowrap shadow-sm z-20">
+                9 of 11 Sessions
+              </div>
+</div>
+</div>
+</div>
+<!-- Axis Labels Row -->
+<div class="grid grid-cols-5 text-center mt-3 pt-2 border-t border-[#ACBAC4] gap-2 sm:gap-6 px-2 sm:px-6">
+<div class="text-body-sm font-body-sm text-[#30364F] font-medium leading-tight">
+            Week 1<span class="block text-[11px] text-[#536069] font-normal">18–24 Sep</span>
+</div>
+<div class="text-body-sm font-body-sm text-[#30364F] font-medium leading-tight">
+            Week 2<span class="block text-[11px] text-[#536069] font-normal">25 Sep–01 Oct</span>
+</div>
+<div class="text-body-sm font-body-sm text-[#30364F] font-medium leading-tight">
+            Week 3<span class="block text-[11px] text-[#536069] font-normal">02–08 Oct</span>
+</div>
+<div class="text-body-sm font-body-sm text-[#30364F] font-medium leading-tight">
+            Week 4<span class="block text-[11px] text-[#536069] font-normal">09–15 Oct</span>
+</div>
+<div class="text-body-sm font-body-sm text-[#30364F] font-medium leading-tight">
+            Week 5<span class="block text-[11px] text-[#536069] font-normal">16–22 Oct</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 3: Recent Absences Table Card -->
+<div class="bg-[#FFFFFF] border border-[#ACBAC4] rounded-lg p-6 flex flex-col">
+<div class="flex items-center justify-between pb-4 border-b border-[#ACBAC4] mb-4">
+<div>
+<h2 class="text-headline-sm font-headline-sm text-[#30364F] tracking-tight m-0">Recent Absences &amp; Leave Log</h2>
+<p class="text-body-sm font-body-sm text-[#536069] mt-0.5">Biometric logs missing morning/evening entrance tap scans</p>
+</div>
+<div class="flex items-center gap-2">
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 text-label-sm font-label-sm font-medium bg-[#FFFFFF] text-[#30364F] border border-[#ACBAC4] rounded hover:bg-[#F0F0DB] transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">file_download</span>
+<span>Export Log</span>
+</button>
+</div>
+</div>
+<!-- Dense Table Container -->
+<div class="overflow-x-auto border border-[#ACBAC4] rounded">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-[#F0F0DB] border-b border-[#ACBAC4] text-[11px] uppercase tracking-wider font-semibold text-[#30364F]">
+<th class="py-3 px-4">Date</th>
+<th class="py-3 px-4">Day</th>
+<th class="py-3 px-4">Sessions Missed</th>
+<th class="py-3 px-4">Reason / Recorded Status</th>
+<th class="py-3 px-4 text-right">Parent Acknowledgement</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-[#ACBAC4] text-body-sm font-body-sm text-[#30364F]">
+<!-- Row 1 -->
+<tr class="hover:bg-[#E1D9BC]/30 transition-colors">
+<td class="py-3 px-4 font-tabular-num font-medium text-primary whitespace-nowrap">
+                19 Oct 2026
+              </td>
+<td class="py-3 px-4 text-[#536069] whitespace-nowrap">Monday</td>
+<td class="py-3 px-4">
+<div class="font-medium text-[#30364F]">Physics Core + Chemistry Lab</div>
+<div class="text-[11px] text-[#536069]">2 Sessions (03:30 PM – 07:45 PM)</div>
+</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-label-sm font-medium bg-[#B4432F]/10 text-[#B4432F] border border-[#B4432F]/20">
+<span class="material-symbols-outlined text-[12px]">warning</span>
+                  Uninformed Absence
+                </span>
+</td>
+<td class="py-3 px-4 text-right">
+<button class="inline-flex items-center gap-1 px-2.5 py-1 text-label-sm font-label-sm font-medium bg-[#30364F] text-[#F0F0DB] rounded hover:bg-[#232738] active:bg-[#1A1D2B] transition-colors" type="button">
+<span>Acknowledge</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-[#E1D9BC]/30 transition-colors">
+<td class="py-3 px-4 font-tabular-num font-medium text-primary whitespace-nowrap">
+                14 Oct 2026
+              </td>
+<td class="py-3 px-4 text-[#536069] whitespace-nowrap">Wednesday</td>
+<td class="py-3 px-4">
+<div class="font-medium text-[#30364F]">Mathematics Tutorial &amp; Problem Desk</div>
+<div class="text-[11px] text-[#536069]">1 Session (05:00 PM – 07:00 PM)</div>
+</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-label-sm font-medium bg-[#E1D9BC] text-[#30364F] border border-[#ACBAC4]">
+<span class="material-symbols-outlined text-[12px]">stethoscope</span>
+                  Medical Intimation
+                </span>
+</td>
+<td class="py-3 px-4 text-right">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-label-sm font-medium bg-[#3E7B55]/10 text-[#3E7B55]">
+<span class="material-symbols-outlined text-[13px]">check_circle</span>
+                  Acknowledged
+                </span>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-[#E1D9BC]/30 transition-colors">
+<td class="py-3 px-4 font-tabular-num font-medium text-primary whitespace-nowrap">
+                08 Oct 2026
+              </td>
+<td class="py-3 px-4 text-[#536069] whitespace-nowrap">Thursday</td>
+<td class="py-3 px-4">
+<div class="font-medium text-[#30364F]">Advanced Organic Chemistry Seminar</div>
+<div class="text-[11px] text-[#536069]">1 Session (04:00 PM – 06:15 PM)</div>
+</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-label-sm font-medium bg-[#FFFFFF] text-[#30364F] border border-[#ACBAC4]">
+<span class="material-symbols-outlined text-[12px]">event_note</span>
+                  Prior Leave Granted
+                </span>
+</td>
+<td class="py-3 px-4 text-right">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-label-sm font-medium bg-[#3E7B55]/10 text-[#3E7B55]">
+<span class="material-symbols-outlined text-[13px]">check_circle</span>
+                  Acknowledged
+                </span>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-[#E1D9BC]/30 transition-colors">
+<td class="py-3 px-4 font-tabular-num font-medium text-primary whitespace-nowrap">
+                29 Sep 2026
+              </td>
+<td class="py-3 px-4 text-[#536069] whitespace-nowrap">Tuesday</td>
+<td class="py-3 px-4">
+<div class="font-medium text-[#30364F]">Full Mock Test Series Session 4</div>
+<div class="text-[11px] text-[#536069]">2 Sessions (02:00 PM – 06:00 PM)</div>
+</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-label-sm font-medium bg-[#B4432F]/10 text-[#B4432F] border border-[#B4432F]/20">
+<span class="material-symbols-outlined text-[12px]">error</span>
+                  Uninformed Absence
+                </span>
+</td>
+<td class="py-3 px-4 text-right">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-label-sm font-medium bg-[#3E7B55]/10 text-[#3E7B55]">
+<span class="material-symbols-outlined text-[13px]">check_circle</span>
+                  Acknowledged (Mother)
+                </span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Sync Disclaimer / Footer note -->
+<div class="mt-4 pt-3 border-t border-[#ACBAC4] flex items-center justify-between text-body-sm text-[#536069]">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-[#30364F]">sync</span>
+<span>Biometric punches are synced twice daily at <strong>09:30 AM</strong> and <strong>05:30 PM</strong> from Malviya Nagar biometric gates.</span>
+</div>
+<div class="hidden sm:block text-[11px] text-[#536069] font-tabular-num">
+          Last batch pull: Today, 05:30 PM IST
+        </div>
+</div>
+</div>
+</div>
+</div></main><footer class="w-full bg-surface-container-lowest border-t border-outline-variant py-space-lg"><div class="max-w-7xl mx-auto px-space-lg flex flex-col md:flex-row items-center justify-between gap-space-sm text-secondary"><div class="flex items-center gap-space-sm"><span class="font-label-sm text-label-sm font-semibold text-primary">Fee Tracker Coaching Institute</span><span>•</span><span class="font-body-sm text-body-sm">Jaipur Regional Administrative Office</span></div><div class="font-body-sm text-body-sm">Helpline: +91 141 2780000 | accounts@feetracker-jaipur.edu.in</div></div></footer></body></html>

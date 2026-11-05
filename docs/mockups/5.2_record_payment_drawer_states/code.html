@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "outline-variant": "#c7c6ce", "surface-dim": "#dbdbc7", "background": "#fbfbe5", "tertiary": "#25220f", "on-tertiary": "#ffffff", "surface-variant": "#e4e4cf", "tertiary-fixed-dim": "#cec7aa", "surface-container-high": "#e9e9d5", "secondary-container": "#d6e4ef", "inverse-primary": "#c0c5e4", "on-tertiary-fixed-variant": "#4b4731", "on-primary-container": "#999fbd", "error-container": "#ffdad6", "inverse-surface": "#303224", "surface-tint": "#575d78", "on-secondary-fixed-variant": "#3b4951", "inverse-on-surface": "#f2f2dd", "on-surface-variant": "#46464d", "on-primary-fixed": "#141a32", "outline": "#76767e", "surface-container-lowest": "#ffffff", "on-tertiary-fixed": "#1f1c0a", "primary-fixed": "#dce1ff", "tertiary-container": "#3b3723", "on-background": "#1b1d10", "on-surface": "#1b1d10", "secondary": "#536069", "on-primary": "#ffffff", "surface-container-low": "#f5f5e0", "error": "#ba1a1a", "on-secondary": "#ffffff", "on-secondary-fixed": "#101d25", "surface-container-highest": "#e4e4cf", "primary-fixed-dim": "#c0c5e4", "on-error-container": "#93000a", "secondary-fixed-dim": "#bac8d3", "surface-bright": "#fbfbe5", "primary": "#1a2138", "primary-container": "#30364f", "tertiary-fixed": "#ebe2c5", "on-secondary-container": "#59666f", "surface-container": "#efefda", "on-tertiary-container": "#a7a085", "surface": "#fbfbe5", "on-primary-fixed-variant": "#40465f", "secondary-fixed": "#d6e4ef", "on-error": "#ffffff" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-lg": "1.5rem", "space-xs": "0.25rem", "space-xl": "2rem", "space-sm": "0.5rem", "space-md": "1rem", "margin": "2rem", "gutter": "1.5rem" }, "fontFamily": { "body-sm": ["Inter"], "headline-lg": ["Inter"], "headline-sm": ["Inter"], "label-md": ["Inter"], "body-lg": ["Inter"], "label-sm": ["Inter"], "tabular-num": ["Inter"], "display": ["Inter"], "body-md": ["Inter"] }, "fontSize": { "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }], "headline-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "headline-sm": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }], "tabular-num": ["14px", { "lineHeight": "20px", "fontWeight": "500" }], "display": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-[240px] bg-primary-container z-50 flex flex-col justify-between py-space-md"><div class="flex flex-col"><div class="px-space-md pb-space-lg pt-space-xs flex items-center justify-between border-b border-outline/30"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-tertiary-fixed text-[22px]">account_balance</span><span class="font-headline-sm text-headline-sm text-surface-container-lowest tracking-tight">Fee Tracker</span></div><span class="bg-tertiary-fixed/20 text-tertiary-fixed border border-tertiary-fixed/40 font-label-sm text-label-sm px-1.5 py-0.5 rounded-[4px] tracking-wide">JAIPUR</span></div><nav class="flex flex-col gap-1 px-space-sm mt-space-md" data-active-classes="bg-surface-variant text-primary-container font-label-md rounded-[6px]"><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-[6px] text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[20px]">dashboard</span><span>Dashboard</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-[6px] text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="students" href="#"><span class="material-symbols-outlined text-[20px]">school</span><span>Students</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-[6px] text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="reminders" href="#"><span class="material-symbols-outlined text-[20px]">notifications_active</span><span>Reminders</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-[6px] text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="counsellor-tasks" href="#"><span class="material-symbols-outlined text-[20px]">assignment</span><span>Counsellor tasks</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-[6px] text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="uploads" href="#"><span class="material-symbols-outlined text-[20px]">upload_file</span><span>Uploads</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-[6px] text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="unmatched-payments" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">receipt_long</span><span>Unmatched payments</span></div><span class="bg-error text-on-error font-label-sm text-label-sm px-1.5 py-0.5 rounded-full">3</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-[6px] text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="audit-log" href="#"><span class="material-symbols-outlined text-[20px]">history_edu</span><span>Audit log</span></a></nav></div><div class="px-space-sm border-t border-outline/30 pt-space-md"><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-[6px] text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="design-system-sheet" href="#"><span class="material-symbols-outlined text-[20px]">palette</span><span>Design System Sheet</span></a></div></aside><div class="pl-[240px]"><header class="fixed top-0 left-[240px] right-0 h-16 bg-surface-container-lowest border-b border-outline-variant z-40 flex items-center justify-between px-space-lg"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-secondary text-[18px]">store</span><select class="bg-surface-container-lowest border border-outline-variant rounded-[6px] px-2.5 py-1 font-body-md text-body-md text-primary-container focus:outline-none focus:border-primary-container"><option value="all">All centres</option><option value="malviya-nagar">Malviya Nagar</option><option value="vaishali-nagar">Vaishali Nagar</option><option value="raja-park">Raja Park</option></select></div><div class="flex items-center gap-1.5 bg-surface-variant border border-outline-variant px-2.5 py-1 rounded-[6px]"><span class="material-symbols-outlined text-primary-container text-[16px]">date_range</span><span class="font-label-sm text-label-sm text-primary-container font-semibold">FY 2026-27</span></div></div><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-md border-r border-outline-variant pr-space-lg"><button aria-label="Search" class="text-secondary hover:text-primary-container flex items-center justify-center p-1 rounded transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">search</span></button><button aria-label="Notifications" class="relative text-secondary hover:text-primary-container flex items-center justify-center p-1 rounded transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full ring-2 ring-surface-container-lowest"></span></button></div><div class="flex items-center gap-space-sm"><div class="text-right leading-tight hidden sm:block"><div class="font-label-md text-label-md text-on-surface font-semibold">Rajesh Sharma</div><div class="font-label-sm text-label-sm text-secondary">Senior Accounts Officer</div></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="relative pt-16 bg-surface min-h-screen"><div class="flex flex-col w-full relative">
+<!-- Backdrop / Ambient Dimmed Student Ledger Canvas -->
+<div class="w-full px-space-lg py-space-lg transition-opacity duration-300">
+<div class="max-w-[1180px] mx-auto space-y-space-lg">
+<!-- Student Profile Header Banner -->
+<div class="bg-surface-container-lowest rounded-lg p-space-lg shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div class="flex items-start gap-space-md">
+<div class="w-12 h-12 rounded-lg bg-primary-container text-tertiary-fixed flex items-center justify-center font-headline-sm text-headline-sm">
+            IS
+          </div>
+<div>
+<div class="flex items-center gap-space-sm">
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">Ishita Sharma</h1>
+<span class="bg-surface-variant text-on-surface-variant font-label-sm text-label-sm px-2 py-0.5 rounded">STU-0587</span>
+<span class="bg-secondary-container text-on-secondary-fixed-variant font-label-sm text-label-sm px-2 py-0.5 rounded">Batch: JEE-Adv-2027</span>
+</div>
+<p class="font-body-md text-body-md text-secondary mt-0.5">Class XII Target Batch • Malviya Nagar Centre • Roll #2418</p>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="bg-surface-container-lowest text-primary-container font-label-md text-label-md px-4 py-2 rounded-lg shadow-sm hover:bg-surface-variant transition-colors flex items-center gap-1.5" type="button">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+            Statement
+          </button>
+<button class="bg-primary-container text-surface-container-lowest font-label-md text-label-md px-4 py-2 rounded-lg hover:bg-primary transition-colors flex items-center gap-1.5 shadow-sm" id="openMainDrawerBtn" type="button">
+<span class="material-symbols-outlined text-[18px]">add_circle</span>
+            Record payment
+          </button>
+</div>
+</div>
+<!-- Financial Summary Metric Strips -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-space-md">
+<div class="bg-surface-container-lowest rounded-lg p-space-md shadow-sm">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider block">Total Course Fee</span>
+<div class="font-headline-lg text-headline-lg text-primary mt-1 font-tabular-num">₹1,20,000</div>
+<span class="font-body-sm text-body-sm text-secondary">Base fee + Study kit</span>
+</div>
+<div class="bg-surface-container-lowest rounded-lg p-space-md shadow-sm">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider block">Paid Till Date</span>
+<div class="font-headline-lg text-headline-lg text-primary mt-1 font-tabular-num">₹65,000</div>
+<span class="font-body-sm text-body-sm text-primary font-medium">Instalment 1 settled</span>
+</div>
+<div class="bg-surface-container-lowest rounded-lg p-space-md shadow-sm">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider block">Current Due</span>
+<div class="font-headline-lg text-headline-lg text-error mt-1 font-tabular-num">₹15,000</div>
+<span class="font-body-sm text-body-sm text-error">Instalment 2 (Overdue: 20 Oct)</span>
+</div>
+<div class="bg-surface-container-lowest rounded-lg p-space-md shadow-sm">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider block">Upcoming Instalment 3</span>
+<div class="font-headline-lg text-headline-lg text-secondary mt-1 font-tabular-num">₹40,000</div>
+<span class="font-body-sm text-body-sm text-secondary">Due: 15 Jan 2027</span>
+</div>
+</div>
+<!-- Student Fee Ledger Schedule Table -->
+<div class="bg-surface-container-lowest rounded-lg overflow-hidden shadow-sm">
+<div class="px-space-lg py-space-md bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]">calendar_month</span>
+<h2 class="font-headline-sm text-headline-sm text-primary">Instalment Ledger &amp; Milestones</h2>
+</div>
+<span class="font-label-sm text-label-sm text-secondary font-tabular-num">3 instalments scheduled</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-surface-container text-primary-container font-label-sm text-label-sm uppercase">
+<tr>
+<th class="py-3 px-4">Instalment</th>
+<th class="py-3 px-4">Due Date</th>
+<th class="py-3 px-4 text-right">Amount</th>
+<th class="py-3 px-4 text-right">Paid</th>
+<th class="py-3 px-4 text-right">Balance</th>
+<th class="py-3 px-4 text-center">Status</th>
+<th class="py-3 px-4 text-right">Receipt #</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md divide-y divide-surface-variant">
+<tr class="hover:bg-surface-variant/40 transition-colors">
+<td class="py-3 px-4 font-semibold text-primary">Instalment 1 (Seat Confirmation)</td>
+<td class="py-3 px-4 text-secondary">10 Jul 2026</td>
+<td class="py-3 px-4 text-right font-tabular-num">₹65,000</td>
+<td class="py-3 px-4 text-right font-tabular-num text-primary font-medium">₹65,000</td>
+<td class="py-3 px-4 text-right font-tabular-num text-secondary">₹0</td>
+<td class="py-3 px-4 text-center">
+<span class="inline-block px-2.5 py-1 rounded bg-surface-container-high text-primary font-label-sm text-label-sm font-semibold">PAID</span>
+</td>
+<td class="py-3 px-4 text-right font-tabular-num text-secondary">JPR/26-27/000042</td>
+</tr>
+<tr class="bg-error-container/20 hover:bg-error-container/30 transition-colors">
+<td class="py-3 px-4 font-semibold text-error">Instalment 2 (Mid-Term Fee)</td>
+<td class="py-3 px-4 text-error font-medium">20 Oct 2026</td>
+<td class="py-3 px-4 text-right font-tabular-num text-primary">₹15,000</td>
+<td class="py-3 px-4 text-right font-tabular-num text-secondary">₹0</td>
+<td class="py-3 px-4 text-right font-tabular-num text-error font-bold">₹15,000</td>
+<td class="py-3 px-4 text-center">
+<span class="inline-block px-2.5 py-1 rounded bg-error-container text-on-error-container font-label-sm text-label-sm font-semibold">OVERDUE</span>
+</td>
+<td class="py-3 px-4 text-right text-secondary">—</td>
+</tr>
+<tr class="hover:bg-surface-variant/40 transition-colors">
+<td class="py-3 px-4 font-semibold text-primary">Instalment 3 (Final Revision Module)</td>
+<td class="py-3 px-4 text-secondary">15 Jan 2027</td>
+<td class="py-3 px-4 text-right font-tabular-num">₹40,000</td>
+<td class="py-3 px-4 text-right font-tabular-num text-secondary">₹0</td>
+<td class="py-3 px-4 text-right font-tabular-num">₹40,000</td>
+<td class="py-3 px-4 text-center">
+<span class="inline-block px-2.5 py-1 rounded bg-surface-variant text-on-surface-variant font-label-sm text-label-sm font-semibold">UPCOMING</span>
+</td>
+<td class="py-3 px-4 text-right text-secondary">—</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- State Matrix Reference Showcase Container -->
+<div class="mt-space-xl pt-space-lg space-y-space-lg">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-sm">
+<div>
+<div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-tertiary-fixed text-tertiary font-label-sm text-label-sm mb-1 uppercase tracking-wide">Specification Matrix</div>
+<h2 class="font-headline-lg text-headline-lg text-primary tracking-tight">Screen 5.2: Drawer State Matrix &amp; Exception Handlers</h2>
+<p class="font-body-md text-body-md text-secondary">Visual ledger behavior across form input lifecycles, overpayment validations, and receipt dispatch cycles.</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-primary-container inline-block"></span>
+<span class="font-label-sm text-label-sm text-secondary">4 Distinct Execution States</span>
+</div>
+</div>
+<!-- 4-Card Responsive Grid for Specification States -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-lg">
+<!-- STATE 1: Default Empty State -->
+<div class="bg-surface-container-lowest rounded-lg p-space-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between pb-space-sm mb-space-md">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-surface-container-highest text-primary flex items-center justify-center font-label-sm text-label-sm font-semibold">1</span>
+<h3 class="font-headline-sm text-headline-sm text-primary">Default State (Pristine)</h3>
+</div>
+<span class="bg-surface-variant text-on-surface-variant font-label-sm text-label-sm px-2 py-0.5 rounded font-medium">Unfilled</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary mb-space-md">Clean form initialized upon drawer launch. Amount field empty, payment method reset to default cash/UPI, dynamic allocation preview in neutral state.</p>
+<!-- Mini Mock Form: Default -->
+<div class="bg-surface-container-low rounded-lg p-space-md space-y-space-sm">
+<div>
+<label class="block font-label-sm text-label-sm text-secondary mb-1">Amount</label>
+<div class="relative">
+<span class="absolute left-3 top-2.5 font-label-md text-label-md text-outline">₹</span>
+<input class="w-full pl-8 pr-3 py-2 bg-surface-container-lowest rounded-lg font-tabular-num text-outline placeholder:text-outline/40 cursor-not-allowed" disabled="" placeholder="0.00" type="text"/>
+</div>
+</div>
+<div>
+<label class="block font-label-sm text-label-sm text-secondary mb-1">Payment Method</label>
+<div class="grid grid-cols-4 gap-1 p-1 bg-surface-variant rounded-lg text-center font-label-sm text-label-sm">
+<div class="py-1 rounded bg-surface-container-lowest text-primary font-semibold shadow-xs">Cash</div>
+<div class="py-1 text-secondary">UPI</div>
+<div class="py-1 text-secondary">Cheque</div>
+<div class="py-1 text-secondary">Online</div>
+</div>
+</div>
+<!-- Neutral / Blank Allocation Preview -->
+<div class="p-space-sm rounded-lg bg-surface-container-high text-secondary">
+<div class="font-label-sm text-label-sm font-semibold text-primary-container">What this will do</div>
+<div class="font-body-sm text-body-sm text-secondary mt-0.5 italic">Enter an amount to calculate automatic instalment assignment.</div>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-outline">Action: Drawer opened via button</span>
+<button class="px-3 py-1.5 rounded-lg bg-surface-variant text-outline font-label-sm text-label-sm cursor-not-allowed" disabled="">Save payment</button>
+</div>
+</div>
+<!-- STATE 2: Populated with Allocation Preview -->
+<div class="bg-surface-container-lowest rounded-lg p-space-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between pb-space-sm mb-space-md">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-primary-container text-surface-container-lowest flex items-center justify-center font-label-sm text-label-sm font-semibold">2</span>
+<h3 class="font-headline-sm text-headline-sm text-primary">Filled with Live Allocation</h3>
+</div>
+<span class="bg-secondary-container text-on-secondary-fixed-variant font-label-sm text-label-sm px-2 py-0.5 rounded font-medium">Valid Entry</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary mb-space-md">Exact instalment balance entered. The algorithm highlights instalment resolution with the signature institutional amber card fill (#E1D9BC).</p>
+<!-- Mini Mock Form: Filled -->
+<div class="bg-surface-container-low rounded-lg p-space-md space-y-space-sm">
+<div>
+<label class="block font-label-sm text-label-sm text-secondary mb-1">Amount</label>
+<div class="relative">
+<span class="absolute left-3 top-2.5 font-label-md text-label-md text-primary font-bold">₹</span>
+<input class="w-full pl-8 pr-3 py-2 bg-surface-container-lowest rounded-lg font-tabular-num text-primary font-semibold" readonly="" type="text" value="15,000"/>
+</div>
+</div>
+<div>
+<label class="block font-label-sm text-label-sm text-secondary mb-1">Payment Method</label>
+<div class="grid grid-cols-4 gap-1 p-1 bg-surface-variant rounded-lg text-center font-label-sm text-label-sm">
+<div class="py-1 text-secondary">Cash</div>
+<div class="py-1 rounded bg-primary-container text-surface-container-lowest font-semibold shadow-xs">UPI</div>
+<div class="py-1 text-secondary">Cheque</div>
+<div class="py-1 text-secondary">Online</div>
+</div>
+</div>
+<!-- Active Allocation Callout (#E1D9BC equivalent token tertiary-fixed) -->
+<div class="p-space-sm rounded-lg bg-tertiary-fixed text-primary">
+<div class="flex items-center gap-1.5 font-label-sm text-label-sm font-semibold text-primary">
+<span class="material-symbols-outlined text-[16px]">info</span>
+                    What this will do
+                  </div>
+<div class="font-body-sm text-body-sm text-primary mt-0.5 font-medium">Clears Instalment 2 (₹15,000 outstanding)</div>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-primary font-semibold">Allocation: 100% matched</span>
+<button class="px-3 py-1.5 rounded-lg bg-primary-container text-surface-container-lowest font-label-sm text-label-sm hover:bg-primary">Save payment</button>
+</div>
+</div>
+<!-- STATE 3: Overpayment Error State -->
+<div class="bg-surface-container-lowest rounded-lg p-space-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between pb-space-sm mb-space-md">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-error text-surface-container-lowest flex items-center justify-center font-label-sm text-label-sm font-semibold">3</span>
+<h3 class="font-headline-sm text-headline-sm text-error">Error: Overpayment Blocked</h3>
+</div>
+<span class="bg-error-container text-on-error-container font-label-sm text-label-sm px-2 py-0.5 rounded font-medium">Validation Failure</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary mb-space-md">User inputs ₹20,000 exceeding the active instalment overdue sum. Enforces strict coaching fee ledger constraint rejecting unallocated advances.</p>
+<!-- Mini Mock Form: Error -->
+<div class="bg-surface-container-low rounded-lg p-space-md space-y-space-sm">
+<div>
+<label class="block font-label-sm text-label-sm text-error font-medium mb-1">Amount (Exceeds Due ₹15,000)</label>
+<div class="relative">
+<span class="absolute left-3 top-2.5 font-label-md text-label-md text-error font-bold">₹</span>
+<input class="w-full pl-8 pr-3 py-2 bg-error-container/30 text-error font-tabular-num font-semibold rounded-lg focus:outline-none" readonly="" type="text" value="20,000"/>
+</div>
+</div>
+<!-- Red Error Message Banner -->
+<div class="p-space-sm rounded-lg bg-error-container text-on-error-container flex items-start gap-2">
+<span class="material-symbols-outlined text-error text-[18px] mt-0.5 shrink-0">error</span>
+<div class="font-body-sm text-body-sm">
+<span class="font-semibold block">Invalid Payment Sum</span>
+                    Amount is more than the total outstanding. Overpayments are not accepted.
+                  </div>
+</div>
+<div class="p-space-sm rounded-lg bg-surface-variant/60 text-secondary">
+<div class="font-label-sm text-label-sm font-semibold text-outline">What this will do</div>
+<div class="font-body-sm text-body-sm text-outline mt-0.5">Allocation calculation suspended due to input errors.</div>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-error font-medium">Save Disabled</span>
+<button class="px-3 py-1.5 rounded-lg bg-surface-variant text-outline font-label-sm text-label-sm cursor-not-allowed" disabled="">Save payment</button>
+</div>
+</div>
+<!-- STATE 4: Submitting & Success Confirmation -->
+<div class="bg-surface-container-lowest rounded-lg p-space-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between pb-space-sm mb-space-md">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-primary text-tertiary-fixed flex items-center justify-center font-label-sm text-label-sm font-semibold">4</span>
+<h3 class="font-headline-sm text-headline-sm text-primary">Submitting &amp; Success Toast</h3>
+</div>
+<span class="bg-surface-container-high text-primary font-label-sm text-label-sm px-2 py-0.5 rounded font-medium">Async Response</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary mb-space-md">Demonstrates in-flight asynchronous spinner lock followed by floating global receipt confirmation banner with quick-action trigger.</p>
+<div class="bg-surface-container-low rounded-lg p-space-md space-y-space-md">
+<!-- Submitting Button Mock -->
+<div class="p-3 bg-surface-container-lowest rounded-lg shadow-xs flex items-center justify-between">
+<div class="flex items-center gap-2">
+<svg class="animate-spin h-4 w-4 text-primary" fill="none" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+<path class="opacity-75" d="M4 12a8 8 0 018-8v8H4z" fill="currentColor"></path>
+</svg>
+<span class="font-label-md text-label-md text-primary font-medium">Recording payment...</span>
+</div>
+<span class="font-body-sm text-body-sm text-secondary">Ledger locking</span>
+</div>
+<!-- Floating Success Toast Replica -->
+<div class="p-space-sm rounded-lg bg-primary-container text-surface-container-lowest shadow-md flex items-center justify-between gap-3">
+<div class="flex items-center gap-2.5">
+<div class="w-7 h-7 rounded-full bg-surface-container-high/20 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-tertiary-fixed text-[18px]">check_circle</span>
+</div>
+<div>
+<div class="font-label-sm text-label-sm font-semibold text-surface-container-lowest">Payment recorded</div>
+<div class="font-body-sm text-body-sm text-on-primary-container font-tabular-num">Receipt JPR/2026-27/000124 created.</div>
+</div>
+</div>
+<button class="shrink-0 bg-surface-container-lowest text-primary-container px-2.5 py-1 rounded text-label-sm font-label-sm hover:bg-surface-variant transition-colors flex items-center gap-1 font-semibold" type="button">
+<span class="material-symbols-outlined text-[14px]">print</span>
+                    Print
+                  </button>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-secondary font-tabular-num">Generated in 420ms</span>
+<span class="font-label-sm text-label-sm text-primary font-semibold">Audit Entry Synced</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- PERSISTENT DRAWER BACKDROP (Slightly dimmed overlay wash: #30364F at 40% opacity) -->
+<div class="fixed inset-0 top-16 left-[240px] bg-primary-container/40 z-40 transition-opacity backdrop-blur-[0.5px]" id="drawerOverlay"></div>
+<!-- 480px RIGHT-PINNED RECORD PAYMENT DRAWER -->
+<aside class="fixed top-16 right-0 bottom-0 w-[480px] bg-surface-container-lowest z-50 flex flex-col justify-between shadow-2xl transition-transform duration-300" id="recordPaymentDrawer">
+<!-- Drawer Header -->
+<div class="px-space-xl py-space-lg flex items-start justify-between bg-surface-container-lowest">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-primary tracking-tight">Record payment</h2>
+<div class="font-body-md text-body-md text-secondary mt-0.5 flex items-center gap-1.5">
+<span>Student: <strong class="text-on-surface font-semibold">Ishita Sharma</strong></span>
+<span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-surface-variant text-on-surface-variant font-tabular-num">STU-0587</span>
+</div>
+</div>
+<button aria-label="Close drawer" class="w-8 h-8 rounded-lg flex items-center justify-center text-secondary hover:text-primary hover:bg-surface-variant transition-colors" id="closeDrawerBtn" type="button">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<!-- Drawer Form Content (Scrollable) -->
+<div class="flex-1 overflow-y-auto px-space-xl py-space-lg space-y-space-lg">
+<!-- Interactive State Toggle for Testing & Evaluation -->
+<div class="p-2.5 bg-surface-container rounded-lg flex items-center justify-between text-secondary">
+<span class="font-label-sm text-label-sm flex items-center gap-1 text-primary-container font-semibold">
+<span class="material-symbols-outlined text-[16px]">tune</span> Test scenario:
+        </span>
+<div class="flex items-center gap-1">
+<button class="px-2 py-0.5 rounded bg-primary-container text-surface-container-lowest font-label-sm text-label-sm font-medium" id="setFilledStateBtn" type="button">Valid ₹15k</button>
+<button class="px-2 py-0.5 rounded bg-surface-container-lowest text-secondary hover:text-primary font-label-sm text-label-sm font-medium" id="setErrorStateBtn" type="button">Error ₹20k</button>
+<button class="px-2 py-0.5 rounded bg-surface-container-lowest text-secondary hover:text-primary font-label-sm text-label-sm font-medium" id="setEmptyStateBtn" type="button">Blank</button>
+</div>
+</div>
+<!-- Form Field 1: Amount -->
+<div class="space-y-1.5">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-primary font-semibold" for="paymentAmount">Amount</label>
+<span class="font-body-sm text-body-sm text-secondary font-tabular-num">Total Overdue: <strong class="text-error">₹15,000</strong></span>
+</div>
+<div class="relative">
+<span class="absolute left-3.5 top-2.5 font-headline-sm text-headline-sm text-primary font-semibold pointer-events-none" id="amountCurrencySymbol">₹</span>
+<input class="w-full h-10 pl-9 pr-3 rounded-lg bg-surface-container-lowest text-primary font-headline-sm text-headline-sm font-tabular-num focus:outline-none transition-colors" id="paymentAmount" placeholder="0" type="text" value="15,000"/>
+</div>
+<!-- Dynamic Error Banner Container -->
+<div class="hidden p-space-sm rounded-lg bg-error-container text-on-error-container items-start gap-2 mt-2" id="drawerErrorBanner">
+<span class="material-symbols-outlined text-error text-[18px] shrink-0 mt-0.5">error</span>
+<div class="font-body-sm text-body-sm">
+<span class="font-semibold block">Overpayment Rejected</span>
+            Amount is more than the total outstanding. Overpayments are not accepted.
+          </div>
+</div>
+</div>
+<!-- Form Field 2: Method (Segmented Buttons) -->
+<div class="space-y-1.5">
+<label class="font-label-md text-label-md text-primary font-semibold">Payment Method</label>
+<div class="grid grid-cols-4 gap-1 p-1 bg-surface-container rounded-lg" id="methodButtonGroup">
+<button class="method-btn py-2 text-center rounded-lg font-label-md text-label-md text-secondary hover:text-primary transition-all" data-method="Cash" type="button">
+            Cash
+          </button>
+<button class="method-btn py-2 text-center rounded-lg font-label-md text-label-md bg-primary-container text-surface-container-lowest font-semibold transition-all" data-method="UPI" type="button">
+            UPI
+          </button>
+<button class="method-btn py-2 text-center rounded-lg font-label-md text-label-md text-secondary hover:text-primary transition-all" data-method="Cheque" type="button">
+            Cheque
+          </button>
+<button class="method-btn py-2 text-center rounded-lg font-label-md text-label-md text-secondary hover:text-primary transition-all" data-method="Online" type="button">
+            Online
+          </button>
+</div>
+</div>
+<!-- Form Field 3: Reference / Transaction ID -->
+<div class="space-y-1.5">
+<label class="font-label-md text-label-md text-primary font-semibold" for="referenceId">Reference / Transaction ID</label>
+<input class="w-full h-10 px-3 rounded-lg bg-surface-container-lowest text-primary font-body-md text-body-md placeholder:text-outline focus:outline-none transition-colors" id="referenceId" placeholder="e.g. UTR-2026-OCT-8812 or Cheque number" type="text" value="UTR-2026-OCT-8812"/>
+</div>
+<!-- Form Field 4: Date -->
+<div class="space-y-1.5">
+<label class="font-label-md text-label-md text-primary font-semibold" for="paymentDate">Payment Date</label>
+<div class="relative">
+<input class="w-full h-10 pl-3 pr-10 rounded-lg bg-surface-container-lowest text-primary font-body-md text-body-md font-tabular-num focus:outline-none transition-colors" id="paymentDate" type="text" value="24 Oct 2026"/>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-secondary text-[20px] pointer-events-none">calendar_today</span>
+</div>
+</div>
+<!-- Form Field 5: Remarks / Bank -->
+<div class="space-y-1.5">
+<label class="font-label-md text-label-md text-primary font-semibold" for="remarksBank">Remarks / Deposit Location</label>
+<input class="w-full h-10 px-3 rounded-lg bg-surface-container-lowest text-primary font-body-md text-body-md placeholder:text-outline focus:outline-none transition-colors" id="remarksBank" placeholder="Institute counter or bank account" type="text" value="HDFC Bank Malviya Nagar Counter"/>
+</div>
+<!-- 'What this will do' Allocation Container -->
+<div class="p-space-md rounded-lg bg-tertiary-fixed text-primary transition-all" id="allocationBox">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px] text-primary">task_alt</span>
+<h4 class="font-label-md text-label-md font-semibold text-primary">What this will do</h4>
+</div>
+<p class="font-body-md text-body-md text-primary mt-1 font-medium" id="allocationText">
+          Clears Instalment 2 (₹15,000 outstanding)
+        </p>
+</div>
+</div>
+<!-- Drawer Footer Actions -->
+<div class="px-space-xl py-space-lg bg-surface-container-lowest flex items-center justify-end gap-space-md">
+<button class="h-10 px-space-md rounded-lg bg-surface-container-lowest text-primary-container font-label-md text-label-md hover:bg-surface-variant transition-colors shadow-sm" id="cancelDrawerBtn" type="button">
+        Cancel
+      </button>
+<button class="h-10 px-space-lg rounded-lg bg-primary-container text-surface-container-lowest font-label-md text-label-md hover:bg-primary transition-colors flex items-center justify-center gap-2 shadow-sm font-semibold" id="savePaymentBtn" type="button">
+<span class="hidden" id="saveBtnSpinner">
+<svg class="animate-spin h-4 w-4 text-surface-container-lowest" fill="none" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+<path class="opacity-75" d="M4 12a8 8 0 018-8v8H4z" fill="currentColor"></path>
+</svg>
+</span>
+<span id="saveBtnText">Save payment</span>
+</button>
+</div>
+</aside>
+<!-- FLOATING SUCCESS TOAST (Initially visible for preview/evaluation per prompt) -->
+<div class="fixed bottom-6 right-[500px] z-50 bg-primary-container text-surface-container-lowest px-space-md py-space-md rounded-lg shadow-xl flex items-center gap-space-md max-w-[420px] transition-all duration-300" id="successToast">
+<div class="w-8 h-8 rounded-full bg-tertiary-fixed/20 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-tertiary-fixed text-[20px]">check_circle</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="font-label-md text-label-md font-semibold text-surface-container-lowest">Payment recorded</div>
+<div class="font-body-sm text-body-sm text-on-primary-container font-tabular-num truncate">
+        Receipt JPR/2026-27/000124 created.
+      </div>
+</div>
+<div class="flex items-center gap-2 shrink-0">
+<button class="bg-surface-container-lowest text-primary-container font-label-sm text-label-sm px-2.5 py-1 rounded font-semibold hover:bg-surface-variant transition-colors flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[14px]">print</span>
+        Print receipt
+      </button>
+<button class="text-on-primary-container hover:text-surface-container-lowest p-1" id="closeToastBtn" type="button">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+</div>
+</div>
+<script>
+  (function initFeeDrawerInteraction() {
+    const drawer = document.getElementById('recordPaymentDrawer');
+    const overlay = document.getElementById('drawerOverlay');
+    const closeBtn = document.getElementById('closeDrawerBtn');
+    const cancelBtn = document.getElementById('cancelDrawerBtn');
+    const openBtn = document.getElementById('openMainDrawerBtn');
+    const amountInput = document.getElementById('paymentAmount');
+    const errorBanner = document.getElementById('drawerErrorBanner');
+    const allocationBox = document.getElementById('allocationBox');
+    const allocationText = document.getElementById('allocationText');
+    const saveBtn = document.getElementById('savePaymentBtn');
+    const saveBtnText = document.getElementById('saveBtnText');
+    const saveBtnSpinner = document.getElementById('saveBtnSpinner');
+    const successToast = document.getElementById('successToast');
+    const closeToastBtn = document.getElementById('closeToastBtn');
+
+    // State Switcher Buttons
+    const setFilledBtn = document.getElementById('setFilledStateBtn');
+    const setErrorBtn = document.getElementById('setErrorStateBtn');
+    const setEmptyBtn = document.getElementById('setEmptyStateBtn');
+
+    // Method selection toggles
+    const methodBtns = document.querySelectorAll('.method-btn');
+    methodBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        methodBtns.forEach(b => {
+          b.className = 'method-btn py-2 text-center rounded-lg font-label-md text-label-md text-secondary hover:text-primary transition-all';
+        });
+        btn.className = 'method-btn py-2 text-center rounded-lg font-label-md text-label-md bg-primary-container text-surface-container-lowest font-semibold transition-all';
+      });
+    });
+
+    // Close and open drawer logic
+    function closeDrawer() {
+      drawer.style.transform = 'translateX(100%)';
+      overlay.style.opacity = '0';
+      overlay.style.pointerEvents = 'none';
+    }
+
+    function openDrawer() {
+      drawer.style.transform = 'translateX(0)';
+      overlay.style.opacity = '1';
+      overlay.style.pointerEvents = 'auto';
+    }
+
+    if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+    if (cancelBtn) cancelBtn.addEventListener('click', closeDrawer);
+    if (openBtn) openBtn.addEventListener('click', openDrawer);
+    if (overlay) overlay.addEventListener('click', closeDrawer);
+
+    if (closeToastBtn) {
+      closeToastBtn.addEventListener('click', () => {
+        successToast.style.opacity = '0';
+        setTimeout(() => successToast.style.display = 'none', 300);
+      });
+    }
+
+    // State presets
+    function applyStateFilled() {
+      amountInput.value = '15,000';
+      amountInput.className = 'w-full h-10 pl-9 pr-3 rounded-lg bg-surface-container-lowest text-primary font-headline-sm text-headline-sm font-tabular-num focus:outline-none transition-colors';
+      errorBanner.classList.add('hidden');
+      errorBanner.classList.remove('flex');
+      
+      allocationBox.className = 'p-space-md rounded-lg bg-tertiary-fixed text-primary transition-all';
+      allocationText.textContent = 'Clears Instalment 2 (₹15,000 outstanding)';
+      
+      saveBtn.disabled = false;
+      saveBtn.className = 'h-10 px-space-lg rounded-lg bg-primary-container text-surface-container-lowest font-label-md text-label-md hover:bg-primary transition-colors flex items-center justify-center gap-2 shadow-sm font-semibold';
+      
+      setFilledBtn.className = 'px-2 py-0.5 rounded bg-primary-container text-surface-container-lowest font-label-sm text-label-sm font-medium';
+      setErrorBtn.className = 'px-2 py-0.5 rounded bg-surface-container-lowest text-secondary hover:text-primary font-label-sm text-label-sm font-medium';
+      setEmptyBtn.className = 'px-2 py-0.5 rounded bg-surface-container-lowest text-secondary hover:text-primary font-label-sm text-label-sm font-medium';
+    }
+
+    function applyStateError() {
+      amountInput.value = '20,000';
+      amountInput.className = 'w-full h-10 pl-9 pr-3 rounded-lg bg-error-container/20 text-error font-headline-sm text-headline-sm font-tabular-num focus:outline-none transition-colors';
+      errorBanner.classList.remove('hidden');
+      errorBanner.classList.add('flex');
+      
+      allocationBox.className = 'p-space-md rounded-lg bg-surface-variant/80 text-secondary transition-all';
+      allocationText.textContent = 'Allocation calculation suspended due to overpayment error.';
+      
+      saveBtn.disabled = true;
+      saveBtn.className = 'h-10 px-space-lg rounded-lg bg-surface-variant text-outline font-label-md text-label-md cursor-not-allowed flex items-center justify-center gap-2 shadow-none font-semibold';
+      
+      setErrorBtn.className = 'px-2 py-0.5 rounded bg-error text-surface-container-lowest font-label-sm text-label-sm font-medium';
+      setFilledBtn.className = 'px-2 py-0.5 rounded bg-surface-container-lowest text-secondary hover:text-primary font-label-sm text-label-sm font-medium';
+      setEmptyBtn.className = 'px-2 py-0.5 rounded bg-surface-container-lowest text-secondary hover:text-primary font-label-sm text-label-sm font-medium';
+    }
+
+    function applyStateEmpty() {
+      amountInput.value = '';
+      amountInput.className = 'w-full h-10 pl-9 pr-3 rounded-lg bg-surface-container-lowest text-primary font-headline-sm text-headline-sm font-tabular-num focus:outline-none transition-colors';
+      errorBanner.classList.add('hidden');
+      errorBanner.classList.remove('flex');
+      
+      allocationBox.className = 'p-space-md rounded-lg bg-surface-container-high text-secondary transition-all';
+      allocationText.textContent = 'Enter an amount to calculate automatic instalment assignment.';
+      
+      saveBtn.disabled = true;
+      saveBtn.className = 'h-10 px-space-lg rounded-lg bg-surface-variant text-outline font-label-sm text-label-sm cursor-not-allowed flex items-center justify-center gap-2 shadow-none font-semibold';
+      
+      setEmptyBtn.className = 'px-2 py-0.5 rounded bg-primary-container text-surface-container-lowest font-label-sm text-label-sm font-medium';
+      setFilledBtn.className = 'px-2 py-0.5 rounded bg-surface-container-lowest text-secondary hover:text-primary font-label-sm text-label-sm font-medium';
+      setErrorBtn.className = 'px-2 py-0.5 rounded bg-surface-container-lowest text-secondary hover:text-primary font-label-sm text-label-sm font-medium';
+    }
+
+    if (setFilledBtn) setFilledBtn.addEventListener('click', applyStateFilled);
+    if (setErrorBtn) setErrorBtn.addEventListener('click', applyStateError);
+    if (setEmptyBtn) setEmptyBtn.addEventListener('click', applyStateEmpty);
+
+    // Save Button Async Submission Simulation
+    if (saveBtn) {
+      saveBtn.addEventListener('click', () => {
+        if (saveBtn.disabled) return;
+        saveBtnSpinner.classList.remove('hidden');
+        saveBtnText.textContent = 'Recording payment...';
+        saveBtn.disabled = true;
+
+        setTimeout(() => {
+          saveBtnSpinner.classList.add('hidden');
+          saveBtnText.textContent = 'Save payment';
+          saveBtn.disabled = false;
+          
+          // Re-trigger Success Toast animation
+          if (successToast) {
+            successToast.style.display = 'flex';
+            successToast.style.opacity = '1';
+          }
+        }, 1200);
+      });
+    }
+
+    // Input live validation listener
+    if (amountInput) {
+      amountInput.addEventListener('input', (e) => {
+        const val = e.target.value.replace(/[^0-9]/g, '');
+        const num = parseInt(val, 10);
+        if (isNaN(num) || num === 0) {
+          applyStateEmpty();
+        } else if (num > 15000) {
+          applyStateError();
+        } else {
+          applyStateFilled();
+        }
+      });
+    }
+  })();
+</script></main></div></body></html>

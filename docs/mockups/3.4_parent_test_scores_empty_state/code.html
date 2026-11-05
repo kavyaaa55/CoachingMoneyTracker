@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"surface-container":"#efefda","secondary-fixed-dim":"#bac8d3","secondary-container":"#d6e4ef","error":"#ba1a1a","inverse-on-surface":"#f2f2dd","on-tertiary-container":"#a7a085","on-primary-fixed-variant":"#40465f","surface-variant":"#e4e4cf","on-error":"#ffffff","on-tertiary":"#ffffff","tertiary-fixed":"#ebe2c5","secondary-fixed":"#d6e4ef","inverse-surface":"#303224","primary-container":"#30364f","on-primary-fixed":"#141a32","on-tertiary-fixed":"#1f1c0a","error-container":"#ffdad6","tertiary-container":"#3b3723","on-secondary":"#ffffff","on-error-container":"#93000a","surface-container-low":"#f5f5e0","surface-container-high":"#e9e9d5","outline-variant":"#c7c6ce","on-surface":"#1b1d10","surface":"#fbfbe5","surface-bright":"#fbfbe5","tertiary":"#25220f","on-primary-container":"#999fbd","on-secondary-fixed":"#101d25","inverse-primary":"#c0c5e4","on-background":"#1b1d10","on-primary":"#ffffff","primary":"#1a2138","secondary":"#536069","surface-container-lowest":"#ffffff","primary-fixed-dim":"#c0c5e4","background":"#fbfbe5","on-secondary-fixed-variant":"#3b4951","surface-container-highest":"#e4e4cf","outline":"#76767e","surface-tint":"#575d78","primary-fixed":"#dce1ff","on-tertiary-fixed-variant":"#4b4731","on-surface-variant":"#46464d","tertiary-fixed-dim":"#cec7aa","on-secondary-container":"#59666f","surface-dim":"#dbdbc7"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"space-sm":"0.5rem","space-lg":"1.5rem","space-xl":"2rem","space-xs":"0.25rem","margin":"2rem","gutter":"1.5rem","space-md":"1rem"},"fontFamily":{"label-sm":["Inter"],"label-md":["Inter"],"body-md":["Inter"],"display":["Inter"],"headline-lg":["Inter"],"headline-sm":["Inter"],"body-sm":["Inter"],"body-lg":["Inter"],"tabular-num":["Inter"]},"fontSize":{"label-sm":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"500"}],"label-md":["14px",{"lineHeight":"20px","fontWeight":"500"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"display":["40px",{"lineHeight":"48px","letterSpacing":"-0.02em","fontWeight":"600"}],"headline-lg":["28px",{"lineHeight":"36px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-sm":["20px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"body-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],"tabular-num":["14px",{"lineHeight":"20px","fontWeight":"500"}]}}}}</script></head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased min-h-screen flex flex-col justify-between"><header class="fixed top-0 w-full z-50 bg-surface-container-lowest border-b border-outline-variant"><div class="h-16 max-w-7xl mx-auto px-space-lg flex items-center justify-between"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-primary-container text-[24px]">school</span><span class="font-headline-sm text-headline-sm text-primary font-semibold tracking-tight">Fee Tracker</span></div><span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-surface-container-high text-secondary border border-outline-variant">Parent Portal</span></div><nav class="hidden md:flex items-center gap-space-md" data-active-classes="bg-surface-variant text-on-surface font-semibold rounded"><a class="text-on-surface-variant hover:text-on-surface px-space-sm py-1.5 text-label-md font-label-md transition-colors" data-path="parent-app-shell" href="#">Fee Overview</a><a class="text-on-surface-variant hover:text-on-surface px-space-sm py-1.5 text-label-md font-label-md transition-colors" data-path="parent-consent" href="#">Parent Consent</a></nav><div class="flex items-center gap-space-md"><div class="text-right hidden sm:block"><span class="block font-label-md text-label-md text-primary font-medium">Ananya Verma</span><span class="block font-body-sm text-body-sm text-secondary">Batch 2024 IIT-JEE</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full flex-1 pt-16 bg-surface max-w-7xl mx-auto px-space-lg py-space-xl"><div class="flex flex-col w-full">
+<div class="w-full max-w-[1100px] mx-auto pb-space-xl flex flex-col gap-6">
+<!-- Active Navigation Indicator for Scores -->
+<div class="w-full border-b border-outline-variant flex items-center justify-between pb-3">
+<div class="flex items-center gap-6">
+<a class="font-label-md text-label-md text-secondary hover:text-primary transition-colors pb-1" href="#">Fee Overview</a>
+<a class="font-label-md text-label-md text-primary font-semibold border-b-2 border-primary-container pb-3 -mb-[13px]" href="#">Test Scores</a>
+<a class="font-label-md text-label-md text-secondary hover:text-primary transition-colors pb-1" href="#">Attendance</a>
+<a class="font-label-md text-label-md text-secondary hover:text-primary transition-colors pb-1" href="#">Parent Consent</a>
+</div>
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#3E7B55]/10 text-[#3E7B55] font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-[#3E7B55]"></span> Academic Standing: Active
+        </span>
+</div>
+</div>
+<!-- Student Header Block -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pt-1">
+<div>
+<div class="font-label-sm text-label-sm text-secondary tracking-wide mb-1 flex items-center gap-2">
+<span>Ishita Sharma</span>
+<span class="text-outline-variant">·</span>
+<span>JEE 2027 Evening</span>
+<span class="text-outline-variant">·</span>
+<span class="font-tabular-num text-tabular-num">Roll No: 2027-JEE-088</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-primary-container font-semibold tracking-tight">Test Scores</h1>
+<p class="font-body-md text-body-md text-secondary mt-0.5">Weekly unit evaluations, chapter tests, and All India Test Series (AITS)</p>
+</div>
+<!-- View Switcher (Simulates current active view vs newly enrolled student empty state) -->
+<div class="inline-flex rounded border border-[#ACBAC4] bg-[#FFFFFF] p-0.5 self-start md:self-auto">
+<button class="px-3 py-1.5 rounded text-label-sm font-label-sm bg-primary-container text-surface transition-all" id="viewActiveBtn" onclick="switchView('active')">
+          Active Student (Batch 2027)
+        </button>
+<button class="px-3 py-1.5 rounded text-label-sm font-label-sm text-secondary hover:text-primary transition-all" id="viewEmptyBtn" onclick="switchView('empty')">
+          New Enrollment (Empty State)
+        </button>
+</div>
+</div>
+<!-- CONTAINER 1: ACTIVE RECORDS VIEW -->
+<div class="flex flex-col gap-6 w-full" id="activeViewContainer">
+<!-- 1. Top Card: Performance Trend Line Chart -->
+<div class="w-full bg-[#FFFFFF] rounded-[8px] border border-[#ACBAC4] p-6 shadow-sm">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between pb-6 mb-6 border-b border-[#ACBAC4] gap-4">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-primary-container">Performance Trend (Last 6 Tests)</h2>
+<p class="font-body-sm text-body-sm text-secondary mt-0.5">Continuous evaluation track across Physics, Chemistry, and Mathematics</p>
+</div>
+<div class="flex flex-wrap items-center gap-6">
+<div class="flex flex-col text-left lg:text-right">
+<span class="font-body-sm text-body-sm text-secondary">Latest Score</span>
+<span class="font-headline-sm text-headline-sm text-primary-container font-semibold font-tabular-num">78.0%</span>
+</div>
+<div class="h-8 w-[1px] bg-[#ACBAC4] hidden sm:block"></div>
+<div class="flex flex-col text-left lg:text-right">
+<span class="font-body-sm text-body-sm text-secondary">Batch Average</span>
+<span class="font-headline-sm text-headline-sm text-secondary font-medium font-tabular-num">64.5%</span>
+</div>
+<div class="h-8 w-[1px] bg-[#ACBAC4] hidden sm:block"></div>
+<div class="flex flex-col text-left lg:text-right">
+<span class="font-body-sm text-body-sm text-secondary">Highest in Batch</span>
+<span class="font-headline-sm text-headline-sm text-[#3E7B55] font-semibold font-tabular-num">92.0%</span>
+</div>
+</div>
+</div>
+<!-- SVG Line Chart (Clean administrative grid with tabular callouts) -->
+<div class="w-full overflow-x-auto pb-2">
+<div class="min-w-[700px] h-[280px] relative flex flex-col justify-between">
+<svg class="w-full h-full overflow-visible" preserveaspectratio="none" viewbox="0 0 880 230">
+<defs>
+<lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#30364F" stop-opacity="0.12"></stop>
+<stop offset="100%" stop-color="#30364F" stop-opacity="0.0"></stop>
+</lineargradient>
+</defs>
+<!-- Y-Axis Gridlines & Reference Labels -->
+<!-- 100% at Y=20 -->
+<line opacity="0.65" stroke="#ACBAC4" stroke-dasharray="3 3" stroke-width="1" x1="50" x2="860" y1="20" y2="20"></line>
+<text class="text-[11px] fill-secondary font-tabular-num" text-anchor="end" x="40" y="24">100%</text>
+<!-- 75% at Y=65 -->
+<line opacity="0.65" stroke="#ACBAC4" stroke-dasharray="3 3" stroke-width="1" x1="50" x2="860" y1="65" y2="65"></line>
+<text class="text-[11px] fill-secondary font-tabular-num" text-anchor="end" x="40" y="69">75%</text>
+<!-- Batch Average Benchmark (64.5% at Y=84) -->
+<line stroke="#ACBAC4" stroke-dasharray="2 2" stroke-width="1" x1="50" x2="860" y1="84" y2="84"></line>
+<text class="text-[10px] fill-secondary font-medium uppercase tracking-wider" text-anchor="end" x="860" y="80">Avg 64.5%</text>
+<!-- 50% at Y=110 -->
+<line opacity="0.65" stroke="#ACBAC4" stroke-dasharray="3 3" stroke-width="1" x1="50" x2="860" y1="110" y2="110"></line>
+<text class="text-[11px] fill-secondary font-tabular-num" text-anchor="end" x="40" y="114">50%</text>
+<!-- 25% at Y=155 -->
+<line opacity="0.65" stroke="#ACBAC4" stroke-dasharray="3 3" stroke-width="1" x1="50" x2="860" y1="155" y2="155"></line>
+<text class="text-[11px] fill-secondary font-tabular-num" text-anchor="end" x="40" y="159">25%</text>
+<!-- 0% Baseline at Y=200 -->
+<line stroke="#30364F" stroke-width="1.5" x1="50" x2="860" y1="200" y2="200"></line>
+<text class="text-[11px] fill-secondary font-tabular-num" text-anchor="end" x="40" y="204">0%</text>
+<!-- Area Fill Under Path -->
+<!-- Points coordinates: 
+                   P1: (110, 88.4)  [62%]
+                   P2: (254, 77.6)  [68%]
+                   P3: (398, 72.2)  [71%]
+                   P4: (542, 83.0)  [65%]
+                   P5: (686, 66.8)  [74%]
+                   P6: (830, 59.6)  [78%]
+              -->
+<polygon fill="url(#chartGradient)" points="110,200 110,88.4 254,77.6 398,72.2 542,83.0 686,66.8 830,59.6 830,200"></polygon>
+<!-- Main Trend Line -->
+<polyline fill="none" points="110,88.4 254,77.6 398,72.2 542,83.0 686,66.8 830,59.6" stroke="#30364F" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></polyline>
+<!-- Data Node 1: 08 Sep (62%) -->
+<circle cx="110" cy="88.4" fill="#FFFFFF" r="5" stroke="#30364F" stroke-width="2.5"></circle>
+<text class="text-[12px] font-semibold fill-primary-container font-tabular-num" text-anchor="middle" x="110" y="76">62.0%</text>
+<!-- Data Node 2: 15 Sep (68%) -->
+<circle cx="254" cy="77.6" fill="#FFFFFF" r="5" stroke="#30364F" stroke-width="2.5"></circle>
+<text class="text-[12px] font-semibold fill-primary-container font-tabular-num" text-anchor="middle" x="254" y="65">68.0%</text>
+<!-- Data Node 3: 22 Sep (71%) -->
+<circle cx="398" cy="72.2" fill="#FFFFFF" r="5" stroke="#30364F" stroke-width="2.5"></circle>
+<text class="text-[12px] font-semibold fill-primary-container font-tabular-num" text-anchor="middle" x="398" y="59">71.0%</text>
+<!-- Data Node 4: 29 Sep (65%) -->
+<circle cx="542" cy="83.0" fill="#FFFFFF" r="5" stroke="#30364F" stroke-width="2.5"></circle>
+<text class="text-[12px] font-semibold fill-primary-container font-tabular-num" text-anchor="middle" x="542" y="70">65.0%</text>
+<!-- Data Node 5: 06 Oct (74%) -->
+<circle cx="686" cy="66.8" fill="#FFFFFF" r="5" stroke="#30364F" stroke-width="2.5"></circle>
+<text class="text-[12px] font-semibold fill-primary-container font-tabular-num" text-anchor="middle" x="686" y="53">74.0%</text>
+<!-- Data Node 6: 13 Oct (78%) -->
+<circle cx="830" cy="59.6" fill="#30364F" r="6" stroke="#FFFFFF" stroke-width="2"></circle>
+<text class="text-[12px] font-semibold fill-[#3E7B55] font-tabular-num" text-anchor="middle" x="830" y="45">78.0%</text>
+</svg>
+<!-- Bottom X-Axis Descriptive Labels -->
+<div class="grid grid-cols-6 pl-12 pr-4 text-center border-t border-[#ACBAC4] pt-2.5">
+<div>
+<p class="font-label-sm text-label-sm font-semibold text-primary-container">Test 01</p>
+<p class="font-body-sm text-body-sm text-secondary font-tabular-num">08 Sep (186/300)</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm font-semibold text-primary-container">Test 02</p>
+<p class="font-body-sm text-body-sm text-secondary font-tabular-num">15 Sep (204/300)</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm font-semibold text-primary-container">Test 03</p>
+<p class="font-body-sm text-body-sm text-secondary font-tabular-num">22 Sep (213/300)</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm font-semibold text-primary-container">Test 04</p>
+<p class="font-body-sm text-body-sm text-secondary font-tabular-num">29 Sep (195/300)</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm font-semibold text-primary-container">Test 05</p>
+<p class="font-body-sm text-body-sm text-secondary font-tabular-num">06 Oct (222/300)</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm font-semibold text-primary-container">Test 06</p>
+<p class="font-body-sm text-body-sm text-secondary font-tabular-num">13 Oct (234/300)</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- 2. Bottom Card: Test Scores Table -->
+<div class="w-full bg-[#FFFFFF] rounded-[8px] border border-[#ACBAC4] p-6 shadow-sm">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 gap-3">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-primary-container">Detailed Test Record</h2>
+<p class="font-body-sm text-body-sm text-secondary">Verified records endorsed by the Academic Operations Department</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-secondary">Showing 6 assessments</span>
+</div>
+</div>
+<!-- Table Container -->
+<div class="w-full overflow-x-auto border border-[#ACBAC4] rounded">
+<table class="w-full border-collapse text-left">
+<thead>
+<tr class="bg-[#F0F0DB] border-b border-[#ACBAC4] text-[12px] font-semibold text-primary-container uppercase tracking-wider">
+<th class="py-3 px-4 font-label-sm" scope="col">Test Name</th>
+<th class="py-3 px-4 font-label-sm" scope="col">Date</th>
+<th class="py-3 px-4 font-label-sm text-right" scope="col">Score</th>
+<th class="py-3 px-4 font-label-sm text-right" scope="col">Max</th>
+<th class="py-3 px-4 font-label-sm text-right" scope="col">Percentage</th>
+<th class="py-3 px-4 font-label-sm text-center" scope="col">Rank / Standing</th>
+<th class="py-3 px-4 font-label-sm text-right" scope="col">Question Paper</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-[#ACBAC4]">
+<!-- Row 1: Test 06 -->
+<tr class="hover:bg-[#E1D9BC]/30 transition-colors">
+<td class="py-3 px-4">
+<div class="font-label-md text-label-md font-medium text-primary-container">AITS Mock Test 06 - Physics Mechanics &amp; Electrostatics</div>
+<div class="font-body-sm text-body-sm text-secondary">JEE Advanced Standard • Pattern 300M</div>
+</td>
+<td class="py-3 px-4 font-tabular-num text-body-md text-primary-container whitespace-nowrap">13 Oct 2026</td>
+<td class="py-3 px-4 text-right font-tabular-num text-body-md font-semibold text-primary-container">234</td>
+<td class="py-3 px-4 text-right font-tabular-num text-body-md text-secondary">300</td>
+<td class="py-3 px-4 text-right font-tabular-num text-body-md font-semibold text-[#3E7B55]">78.0%</td>
+<td class="py-3 px-4 text-center">
+<span class="inline-block px-2.5 py-1 rounded text-label-sm font-label-sm bg-[#3E7B55]/10 text-[#3E7B55] font-tabular-num">
+                    Rank 14 of 120
+                  </span>
+</td>
+<td class="py-3 px-4 text-right whitespace-nowrap">
+<a class="inline-flex items-center gap-1 font-label-md text-label-md text-primary-container hover:underline font-medium" href="#">
+<span class="material-symbols-outlined text-[16px] text-primary-container">description</span>
+                    View key
+                  </a>
+</td>
+</tr>
+<!-- Row 2: Test 05 -->
+<tr class="hover:bg-[#E1D9BC]/30 transition-colors">
+<td class="py-3 px-4">
+<div class="font-label-md text-label-md font-medium text-primary-container">Weekly Unit Test 05 - Thermodynamics &amp; Chemical Kinetics</div>
+<div class="font-body-sm text-body-sm text-secondary">Subject Evaluation • Physical Chemistry</div>
+</td>
+<td class="py-3 px-4 font-tabular-num text-body-md text-primary-container whitespace-nowrap">06 Oct 2026</td>
+<td class="py-3 px-4 text-right font-tabular-num text-body-md font-semibold text-primary-container">222</td>
+<td class="py-3 px-4 text-right font-tabular-num text-body-md text-secondary">300</td>
+<td class="py-3 px-4 text-right font-tabular-num text-body-md font-semibold text-primary-container">74.0%</td>
+<td class="py-3 px-4 text-center">
+<span class="inline-block px-2.5 py-1 rounded text-label-sm font-label-sm bg-[#E1D9BC] text-primary-container font-tabular-num">
+                    Rank 21 of 120
+                  </span>
+</td>
+<td class="py-3 px-4 text-right whitespace-nowrap">
+<a class="inline-flex items-center gap-1 font-label-md text-label-md text-primary-container hover:underline font-medium" href="#">
+<span class="material-symbols-outlined text-[16px] text-primary-container">description</span>
+                    View key
+                  </a>
+</td>
+</tr>
+<!-- Row 3: Test 04 -->
+<tr class="hover:bg-[#E1D9BC]/30 transition-colors">
+<td class="py-3 px-4">
+<div class="font-label-md text-label-md font-medium text-primary-container">AITS Mock Test 04 - Integral Calculus &amp; Probability</div>
+<div class="font-body-sm text-body-sm text-secondary">JEE Advanced Standard • Pattern 300M</div>
+</td>
+<td class="py-3 px-4 font-tabular-num text-body-md text-primary-container whitespace-nowrap">29 Sep 2026</td>
+<td class="py-3 px-4 text-right font-tabular-num text-body-md font-semibold text-primary-container">195</td>
+<td class="py-3 px-4 text-right font-tabular-num text-body-md text-secondary">300</td>
+<td class="py-3 px-4 text-right font-tabular-num text-body-md font-semibold text-primary-container">65.0%</td>
+<td class="py-3 px-4 text-center">
+<span class="inline-block px-2.5 py-1 rounded text-label-sm font-label-sm bg-[#E1D9BC] text-primary-container font-tabular-num">
+                    Rank 39 of 120
+                  </span>
+</td>
+<td class="py-3 px-4 text-right whitespace-nowrap">
+<a class="inline-flex items-center gap-1 font-label-md text-label-md text-primary-container hover:underline font-medium" href="#">
+<span class="material-symbols-outlined text-[16px] text-primary-container">description</span>
+                    View key
+                  </a>
+</td>
+</tr>
+<!-- Row 4: Test 03 -->
+<tr class="hover:bg-[#E1D9BC]/30 transition-colors">
+<td class="py-3 px-4">
+<div class="font-label-md text-label-md font-medium text-primary-container">Weekly Unit Test 03 - Optics &amp; Wave Mechanics</div>
+<div class="font-body-sm text-body-sm text-secondary">Subject Evaluation • Physics</div>
+</td>
+<td class="py-3 px-4 font-tabular-num text-body-md text-primary-container whitespace-nowrap">22 Sep 2026</td>
+<td class="py-3 px-4 text-right font-tabular-num text-body-md font-semibold text-primary-container">213</td>
+<td class="py-3 px-4 text-right font-tabular-num text-body-md text-secondary">300</td>
+<td class="py-3 px-4 text-right font-tabular-num text-body-md font-semibold text-primary-container">71.0%</td>
+<td class="py-3 px-4 text-center">
+<span class="inline-block px-2.5 py-1 rounded text-label-sm font-label-sm bg-[#E1D9BC] text-primary-container font-tabular-num">
+                    Rank 27 of 120
+                  </span>
+</td>
+<td class="py-3 px-4 text-right whitespace-nowrap">
+<a class="inline-flex items-center gap-1 font-label-md text-label-md text-primary-container hover:underline font-medium" href="#">
+<span class="material-symbols-outlined text-[16px] text-primary-container">description</span>
+                    View key
+                  </a>
+</td>
+</tr>
+<!-- Row 5: Test 02 -->
+<tr class="hover:bg-[#E1D9BC]/30 transition-colors">
+<td class="py-3 px-4">
+<div class="font-label-md text-label-md font-medium text-primary-container">Chapter Test 02 - Organic Chemistry Reaction Mechanisms</div>
+<div class="font-body-sm text-body-sm text-secondary">Subject Evaluation • Organic Chemistry</div>
+</td>
+<td class="py-3 px-4 font-tabular-num text-body-md text-primary-container whitespace-nowrap">15 Sep 2026</td>
+<td class="py-3 px-4 text-right font-tabular-num text-body-md font-semibold text-primary-container">204</td>
+<td class="py-3 px-4 text-right font-tabular-num text-body-md text-secondary">300</td>
+<td class="py-3 px-4 text-right font-tabular-num text-body-md font-semibold text-primary-container">68.0%</td>
+<td class="py-3 px-4 text-center">
+<span class="inline-block px-2.5 py-1 rounded text-label-sm font-label-sm bg-[#E1D9BC] text-primary-container font-tabular-num">
+                    Rank 32 of 120
+                  </span>
+</td>
+<td class="py-3 px-4 text-right whitespace-nowrap">
+<a class="inline-flex items-center gap-1 font-label-md text-label-md text-primary-container hover:underline font-medium" href="#">
+<span class="material-symbols-outlined text-[16px] text-primary-container">description</span>
+                    View key
+                  </a>
+</td>
+</tr>
+<!-- Row 6: Test 01 -->
+<tr class="hover:bg-[#E1D9BC]/30 transition-colors">
+<td class="py-3 px-4">
+<div class="font-label-md text-label-md font-medium text-primary-container">Diagnostic Entrance Baseline Test 01</div>
+<div class="font-body-sm text-body-sm text-secondary">Foundation Level Assessment • Full Syllabus</div>
+</td>
+<td class="py-3 px-4 font-tabular-num text-body-md text-primary-container whitespace-nowrap">08 Sep 2026</td>
+<td class="py-3 px-4 text-right font-tabular-num text-body-md font-semibold text-primary-container">186</td>
+<td class="py-3 px-4 text-right font-tabular-num text-body-md text-secondary">300</td>
+<td class="py-3 px-4 text-right font-tabular-num text-body-md font-semibold text-primary-container">62.0%</td>
+<td class="py-3 px-4 text-center">
+<span class="inline-block px-2.5 py-1 rounded text-label-sm font-label-sm bg-[#E1D9BC] text-primary-container font-tabular-num">
+                    Rank 48 of 120
+                  </span>
+</td>
+<td class="py-3 px-4 text-right whitespace-nowrap">
+<a class="inline-flex items-center gap-1 font-label-md text-label-md text-primary-container hover:underline font-medium" href="#">
+<span class="material-symbols-outlined text-[16px] text-primary-container">description</span>
+                    View key
+                  </a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="mt-4 pt-3 border-t border-[#ACBAC4] flex flex-col sm:flex-row items-center justify-between text-secondary gap-2">
+<div class="font-body-sm text-body-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-secondary">verified</span>
+<span>Official marks certified by Controller of Examinations, Jaipur Central Office.</span>
+</div>
+<div class="font-body-sm text-body-sm font-tabular-num">
+            Cumulative Average: 69.67% (Rank Average: 28.5)
+          </div>
+</div>
+</div>
+</div>
+<!-- CONTAINER 2: EMPTY STATE VIEW (Hidden by default, switchable via header control) -->
+<div class="hidden flex-col gap-6 w-full" id="emptyViewContainer">
+<div class="w-full bg-[#FFFFFF] rounded-[8px] border border-[#ACBAC4] p-12 text-center flex flex-col items-center justify-center min-h-[360px] shadow-sm">
+<div class="w-16 h-16 rounded-full bg-[#F0F0DB] border border-[#ACBAC4] flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-[#30364F] text-[32px]">fact_check</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-primary-container font-semibold mb-2">
+          No test scores recorded yet
+        </h3>
+<p class="font-body-md text-body-md text-secondary max-w-[520px] mb-6">
+          Test scores and percentile rankings will appear here once the first chapter assessment is graded by faculty.
+        </p>
+<div class="inline-flex items-center gap-2.5 px-4 py-2.5 rounded bg-[#F0F0DB] border border-[#ACBAC4] text-left">
+<span class="material-symbols-outlined text-primary-container text-[20px]">calendar_clock</span>
+<div class="font-body-sm text-body-sm text-primary-container">
+<span class="font-medium">First scheduled evaluation:</span>
+<span class="font-tabular-num">28 Oct 2026 (Physics Unit Test 01)</span>
+</div>
+</div>
+<div class="mt-8 text-secondary font-body-sm text-body-sm">
+          Queries regarding syllabus distribution? Contact academic coordinator at <span class="font-medium text-primary-container">academics@feetracker-jaipur.edu.in</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  function switchView(view) {
+    const activeCont = document.getElementById('activeViewContainer');
+    const emptyCont = document.getElementById('emptyViewContainer');
+    const activeBtn = document.getElementById('viewActiveBtn');
+    const emptyBtn = document.getElementById('viewEmptyBtn');
+
+    if (view === 'empty') {
+      activeCont.classList.add('hidden');
+      emptyCont.classList.remove('hidden');
+      emptyCont.classList.add('flex');
+
+      emptyBtn.className = 'px-3 py-1.5 rounded text-label-sm font-label-sm bg-primary-container text-surface transition-all';
+      activeBtn.className = 'px-3 py-1.5 rounded text-label-sm font-label-sm text-secondary hover:text-primary transition-all';
+    } else {
+      emptyCont.classList.add('hidden');
+      emptyCont.classList.remove('flex');
+      activeCont.classList.remove('hidden');
+
+      activeBtn.className = 'px-3 py-1.5 rounded text-label-sm font-label-sm bg-primary-container text-surface transition-all';
+      emptyBtn.className = 'px-3 py-1.5 rounded text-label-sm font-label-sm text-secondary hover:text-primary transition-all';
+    }
+  }
+</script></main><footer class="w-full bg-surface-container-lowest border-t border-outline-variant py-space-lg"><div class="max-w-7xl mx-auto px-space-lg flex flex-col md:flex-row items-center justify-between gap-space-sm text-secondary"><div class="flex items-center gap-space-sm"><span class="font-label-sm text-label-sm font-semibold text-primary">Fee Tracker Coaching Institute</span><span>•</span><span class="font-body-sm text-body-sm">Jaipur Regional Administrative Office</span></div><div class="font-body-sm text-body-sm">Helpline: +91 141 2780000 | accounts@feetracker-jaipur.edu.in</div></div></footer></body></html>

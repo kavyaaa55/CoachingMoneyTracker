@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "outline-variant": "#c7c6ce", "surface-dim": "#dbdbc7", "background": "#fbfbe5", "tertiary": "#25220f", "on-tertiary": "#ffffff", "surface-variant": "#e4e4cf", "tertiary-fixed-dim": "#cec7aa", "surface-container-high": "#e9e9d5", "secondary-container": "#d6e4ef", "inverse-primary": "#c0c5e4", "on-tertiary-fixed-variant": "#4b4731", "on-primary-container": "#999fbd", "error-container": "#ffdad6", "inverse-surface": "#303224", "surface-tint": "#575d78", "on-secondary-fixed-variant": "#3b4951", "inverse-on-surface": "#f2f2dd", "on-surface-variant": "#46464d", "on-primary-fixed": "#141a32", "outline": "#76767e", "surface-container-lowest": "#ffffff", "on-tertiary-fixed": "#1f1c0a", "primary-fixed": "#dce1ff", "tertiary-container": "#3b3723", "on-background": "#1b1d10", "on-surface": "#1b1d10", "secondary": "#536069", "on-primary": "#ffffff", "surface-container-low": "#f5f5e0", "error": "#ba1a1a", "on-secondary": "#ffffff", "on-secondary-fixed": "#101d25", "surface-container-highest": "#e4e4cf", "primary-fixed-dim": "#c0c5e4", "on-error-container": "#93000a", "secondary-fixed-dim": "#bac8d3", "surface-bright": "#fbfbe5", "primary": "#1a2138", "primary-container": "#30364f", "tertiary-fixed": "#ebe2c5", "on-secondary-container": "#59666f", "surface-container": "#efefda", "on-tertiary-container": "#a7a085", "surface": "#fbfbe5", "on-primary-fixed-variant": "#40465f", "secondary-fixed": "#d6e4ef", "on-error": "#ffffff" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-lg": "1.5rem", "space-xs": "0.25rem", "space-xl": "2rem", "space-sm": "0.5rem", "space-md": "1rem", "margin": "2rem", "gutter": "1.5rem" }, "fontFamily": { "body-sm": ["Inter"], "headline-lg": ["Inter"], "headline-sm": ["Inter"], "label-md": ["Inter"], "body-lg": ["Inter"], "label-sm": ["Inter"], "tabular-num": ["Inter"], "display": ["Inter"], "body-md": ["Inter"] }, "fontSize": { "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }], "headline-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "headline-sm": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }], "tabular-num": ["14px", { "lineHeight": "20px", "fontWeight": "500" }], "display": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-[240px] bg-primary-container z-50 flex flex-col justify-between py-space-md"><div class="flex flex-col"><div class="px-space-md pb-space-lg pt-space-xs flex items-center justify-between border-b border-outline/30"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-tertiary-fixed text-[22px]">account_balance</span><span class="font-headline-sm text-headline-sm text-surface-container-lowest tracking-tight">Fee Tracker</span></div><span class="bg-tertiary-fixed/20 text-tertiary-fixed border border-tertiary-fixed/40 font-label-sm text-label-sm px-1.5 py-0.5 rounded-[4px] tracking-wide">JAIPUR</span></div><nav class="flex flex-col gap-1 px-space-sm mt-space-md" data-active-classes="bg-surface-variant text-primary-container font-label-md rounded-[6px]"><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-[6px] text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[20px]">dashboard</span><span>Dashboard</span></a><a aria-current="page" class="flex items-center gap-space-sm px-space-sm py-2 transition-colors bg-surface-variant text-primary-container font-label-md rounded-[6px]" data-path="students" href="#"><span class="material-symbols-outlined text-[20px]">school</span><span>Students</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-[6px] text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="reminders" href="#"><span class="material-symbols-outlined text-[20px]">notifications_active</span><span>Reminders</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-[6px] text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="counsellor-tasks" href="#"><span class="material-symbols-outlined text-[20px]">assignment</span><span>Counsellor tasks</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-[6px] text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="uploads" href="#"><span class="material-symbols-outlined text-[20px]">upload_file</span><span>Uploads</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-[6px] text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="unmatched-payments" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">receipt_long</span><span>Unmatched payments</span></div><span class="bg-error text-on-error font-label-sm text-label-sm px-1.5 py-0.5 rounded-full">3</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-[6px] text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="audit-log" href="#"><span class="material-symbols-outlined text-[20px]">history_edu</span><span>Audit log</span></a></nav></div><div class="px-space-sm border-t border-outline/30 pt-space-md"><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-[6px] text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors font-body-md text-body-md" data-path="design-system-sheet" href="#"><span class="material-symbols-outlined text-[20px]">palette</span><span>Design System Sheet</span></a></div></aside><div class="pl-[240px]"><header class="fixed top-0 left-[240px] right-0 h-16 bg-surface-container-lowest border-b border-outline-variant z-40 flex items-center justify-between px-space-lg"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-secondary text-[18px]">store</span><select class="bg-surface-container-lowest border border-outline-variant rounded-[6px] px-2.5 py-1 font-body-md text-body-md text-primary-container focus:outline-none focus:border-primary-container"><option value="all">All centres</option><option value="malviya-nagar">Malviya Nagar</option><option value="vaishali-nagar">Vaishali Nagar</option><option value="raja-park">Raja Park</option></select></div><div class="flex items-center gap-1.5 bg-surface-variant border border-outline-variant px-2.5 py-1 rounded-[6px]"><span class="material-symbols-outlined text-primary-container text-[16px]">date_range</span><span class="font-label-sm text-label-sm text-primary-container font-semibold">FY 2026-27</span></div></div><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-md border-r border-outline-variant pr-space-lg"><button aria-label="Search" class="text-secondary hover:text-primary-container flex items-center justify-center p-1 rounded transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">search</span></button><button aria-label="Notifications" class="relative text-secondary hover:text-primary-container flex items-center justify-center p-1 rounded transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full ring-2 ring-surface-container-lowest"></span></button></div><div class="flex items-center gap-space-sm"><div class="text-right leading-tight hidden sm:block"><div class="font-label-md text-label-md text-on-surface font-semibold">Rajesh Sharma</div><div class="font-label-sm text-label-sm text-secondary">Senior Accounts Officer</div></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="relative pt-16 bg-surface min-h-screen"><div class="max-w-[1440px] mx-auto p-space-lg lg:p-space-xl"><div class="flex flex-col w-full">
+<!-- Top Section: Header & KPI Ledger ribbon -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md mb-space-lg">
+<div>
+<div class="flex items-center gap-space-sm mb-1">
+<span class="font-headline-lg text-headline-lg text-primary-container font-semibold tracking-tight">Students</span>
+<span class="bg-surface-variant text-primary-container font-label-sm text-label-sm px-2 py-0.5 rounded-[4px] font-medium">JAIPUR ZONE</span>
+</div>
+<p class="font-body-md text-body-md text-secondary">2,600 active enrolments across Jaipur campuses</p>
+</div>
+<!-- Quick Stats Ticker -->
+<div class="flex items-center gap-space-md bg-surface-container-lowest p-2 px-space-md rounded-[8px] border border-outline-variant shadow-sm">
+<div class="flex flex-col pr-space-md border-r border-outline-variant">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Total Ledger Due</span>
+<span class="font-tabular-num text-headline-sm text-primary-container font-semibold">₹1,42,85,000</span>
+</div>
+<div class="flex flex-col pr-space-md border-r border-outline-variant">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Critical Overdue</span>
+<span class="font-tabular-num text-headline-sm text-error font-semibold">348 Enrolments</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Collection Rate</span>
+<span class="font-tabular-num text-headline-sm text-[#3E7B55] font-semibold">86.4%</span>
+</div>
+</div>
+</div>
+<!-- Filter & Action Toolbar -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-[8px] p-space-md mb-space-lg shadow-sm flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-space-md">
+<div class="flex flex-wrap items-center gap-space-sm flex-1">
+<!-- Search -->
+<div class="relative w-full sm:w-[280px]">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-secondary text-[20px] pointer-events-none">search</span>
+<input class="w-full h-10 pl-10 pr-3 bg-surface-container-lowest text-primary-container font-body-md text-body-md rounded-[8px] border border-outline-variant placeholder:text-secondary focus:outline-none focus:border-primary-container transition-colors" id="studentSearchInput" placeholder="Search by name or ID" type="text"/>
+</div>
+<!-- Centre Dropdown -->
+<div class="relative min-w-[150px]">
+<select class="w-full h-10 px-3 pr-8 bg-surface-container-lowest text-primary-container font-body-md text-body-md rounded-[8px] border border-outline-variant focus:outline-none focus:border-primary-container appearance-none cursor-pointer" id="centreFilter">
+<option value="all">All Centres</option>
+<option value="Malviya Nagar">Malviya Nagar</option>
+<option value="Vaishali Nagar">Vaishali Nagar</option>
+<option value="Raja Park">Raja Park</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 text-secondary text-[20px] pointer-events-none">expand_more</span>
+</div>
+<!-- Batch Dropdown -->
+<div class="relative min-w-[160px]">
+<select class="w-full h-10 px-3 pr-8 bg-surface-container-lowest text-primary-container font-body-md text-body-md rounded-[8px] border border-outline-variant focus:outline-none focus:border-primary-container appearance-none cursor-pointer" id="batchFilter">
+<option value="all">All Batches</option>
+<option value="JEE 2027 Morning">JEE 2027 Morning</option>
+<option value="JEE 2027 Evening">JEE 2027 Evening</option>
+<option value="NEET 2027 Morning">NEET 2027 Morning</option>
+<option value="NEET 2027 Evening">NEET 2027 Evening</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 text-secondary text-[20px] pointer-events-none">expand_more</span>
+</div>
+<!-- Status Dropdown -->
+<div class="relative min-w-[140px]">
+<select class="w-full h-10 px-3 pr-8 bg-surface-container-lowest text-primary-container font-body-md text-body-md rounded-[8px] border border-outline-variant focus:outline-none focus:border-primary-container appearance-none cursor-pointer" id="statusFilter">
+<option value="all">All Statuses</option>
+<option value="paid">Paid</option>
+<option value="part-paid">Part Paid</option>
+<option value="overdue">Overdue</option>
+<option value="due-soon">Due Soon</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 text-secondary text-[20px] pointer-events-none">expand_more</span>
+</div>
+<!-- Overdue Only Toggle Pill -->
+<label class="flex items-center gap-2 cursor-pointer select-none bg-surface-variant/60 px-3 h-10 rounded-[8px] border border-outline-variant hover:bg-surface-variant transition-colors">
+<input class="sr-only peer" id="overdueToggle" type="checkbox"/>
+<div class="w-8 h-4 bg-outline-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-surface-container-lowest after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-surface-container-lowest after:border-outline-variant after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-primary-container relative"></div>
+<span class="font-label-md text-label-md text-primary-container font-medium">Overdue only</span>
+</label>
+</div>
+<!-- Right Action Items -->
+<div class="flex items-center gap-space-sm self-end xl:self-auto">
+<button class="h-10 px-3 bg-surface-container-lowest text-secondary border border-outline-variant rounded-[6px] hover:text-primary-container hover:bg-surface-variant font-label-md text-label-md flex items-center gap-1.5 transition-colors" id="resetBtn" title="Reset all applied filters" type="button">
+<span class="material-symbols-outlined text-[18px]">restart_alt</span>
+<span class="hidden sm:inline">Reset</span>
+</button>
+<button class="h-10 px-4 bg-surface-container-lowest text-primary-container border border-outline-variant rounded-[6px] hover:bg-surface-variant font-label-md text-label-md font-medium flex items-center gap-2 transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">file_download</span>
+<span>Export List</span>
+</button>
+</div>
+</div>
+<!-- Primary Ledger Table Card Container -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-[8px] shadow-sm overflow-hidden mb-space-xl">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse" id="studentsTable">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant">
+<th class="py-3 px-4 font-label-sm text-label-sm uppercase tracking-wider text-primary-container font-semibold w-[120px]">Student ID</th>
+<th class="py-3 px-4 font-label-sm text-label-sm uppercase tracking-wider text-primary-container font-semibold">Student Name</th>
+<th class="py-3 px-4 font-label-sm text-label-sm uppercase tracking-wider text-primary-container font-semibold">Batch</th>
+<th class="py-3 px-4 font-label-sm text-label-sm uppercase tracking-wider text-primary-container font-semibold">Centre</th>
+<th class="py-3 px-4 font-label-sm text-label-sm uppercase tracking-wider text-primary-container font-semibold text-right">Balance</th>
+<th class="py-3 px-4 font-label-sm text-label-sm uppercase tracking-wider text-primary-container font-semibold text-right">Days Overdue</th>
+<th class="py-3 px-4 font-label-sm text-label-sm uppercase tracking-wider text-primary-container font-semibold text-center w-[110px]">Risk</th>
+<th class="py-3 px-4 font-label-sm text-label-sm uppercase tracking-wider text-primary-container font-semibold text-right w-[90px]">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant font-body-md text-body-md text-primary-container" id="studentsTableBody">
+<!-- Row 1 -->
+<tr class="hover:bg-tertiary-fixed/30 transition-colors group" data-batch="Foundation 10th" data-centre="Vaishali Nagar" data-overdue="false">
+<td class="py-3 px-4 font-tabular-num text-tabular-num font-medium text-secondary group-hover:text-primary-container">STU-0412</td>
+<td class="py-3 px-4 font-label-md text-label-md font-semibold text-on-surface">Aarav Meena</td>
+<td class="py-3 px-4 text-on-surface-variant font-body-md text-body-md">Foundation 10th</td>
+<td class="py-3 px-4 text-on-surface-variant font-body-md text-body-md">Vaishali Nagar</td>
+<td class="py-3 px-4 text-right font-tabular-num text-tabular-num font-semibold text-on-surface">₹0</td>
+<td class="py-3 px-4 text-right font-tabular-num text-tabular-num text-secondary">-</td>
+<td class="py-3 px-4 text-center">
+<span class="inline-flex items-center justify-center font-label-sm text-label-sm px-2 py-0.5 rounded-[6px] font-medium bg-[#3E7B55]/15 text-[#3E7B55]">Low</span>
+</td>
+<td class="py-3 px-4 text-right">
+<button class="p-1 rounded text-secondary hover:text-primary-container hover:bg-surface-variant transition-colors" title="View Full Ledger" type="button">
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-tertiary-fixed/30 transition-colors group" data-batch="JEE 2027 Evening" data-centre="Malviya Nagar" data-overdue="true">
+<td class="py-3 px-4 font-tabular-num text-tabular-num font-medium text-secondary group-hover:text-primary-container">STU-0587</td>
+<td class="py-3 px-4 font-label-md text-label-md font-semibold text-on-surface">Ishita Sharma</td>
+<td class="py-3 px-4 text-on-surface-variant font-body-md text-body-md">JEE 2027 Evening</td>
+<td class="py-3 px-4 text-on-surface-variant font-body-md text-body-md">Malviya Nagar</td>
+<td class="py-3 px-4 text-right font-tabular-num text-tabular-num font-semibold text-primary-container">₹15,000</td>
+<td class="py-3 px-4 text-right font-tabular-num text-tabular-num text-error font-medium">23 days</td>
+<td class="py-3 px-4 text-center">
+<span class="inline-flex items-center justify-center font-label-sm text-label-sm px-2 py-0.5 rounded-[6px] font-medium bg-[#B4432F]/15 text-[#B4432F]">High</span>
+</td>
+<td class="py-3 px-4 text-right">
+<button class="p-1 rounded text-secondary hover:text-primary-container hover:bg-surface-variant transition-colors" title="View Full Ledger" type="button">
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-tertiary-fixed/30 transition-colors group" data-batch="NEET 2026 Morning" data-centre="Raja Park" data-overdue="false">
+<td class="py-3 px-4 font-tabular-num text-tabular-num font-medium text-secondary group-hover:text-primary-container">STU-0219</td>
+<td class="py-3 px-4 font-label-md text-label-md font-semibold text-on-surface">Mohit Gurjar</td>
+<td class="py-3 px-4 text-on-surface-variant font-body-md text-body-md">NEET 2026 Morning</td>
+<td class="py-3 px-4 text-on-surface-variant font-body-md text-body-md">Raja Park</td>
+<td class="py-3 px-4 text-right font-tabular-num text-tabular-num font-semibold text-primary-container">₹40,000</td>
+<td class="py-3 px-4 text-right font-tabular-num text-tabular-num text-secondary">Due in 13 days</td>
+<td class="py-3 px-4 text-center">
+<span class="inline-flex items-center justify-center font-label-sm text-label-sm px-2 py-0.5 rounded-[6px] font-medium bg-[#3E7B55]/15 text-[#3E7B55]">Low</span>
+</td>
+<td class="py-3 px-4 text-right">
+<button class="p-1 rounded text-secondary hover:text-primary-container hover:bg-surface-variant transition-colors" title="View Full Ledger" type="button">
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-tertiary-fixed/30 transition-colors group" data-batch="NEET 2027 Morning" data-centre="Malviya Nagar" data-overdue="true">
+<td class="py-3 px-4 font-tabular-num text-tabular-num font-medium text-secondary group-hover:text-primary-container">STU-0891</td>
+<td class="py-3 px-4 font-label-md text-label-md font-semibold text-on-surface">Diya Khandelwal</td>
+<td class="py-3 px-4 text-on-surface-variant font-body-md text-body-md">NEET 2027 Morning</td>
+<td class="py-3 px-4 text-on-surface-variant font-body-md text-body-md">Malviya Nagar</td>
+<td class="py-3 px-4 text-right font-tabular-num text-tabular-num font-semibold text-primary-container">₹25,000</td>
+<td class="py-3 px-4 text-right font-tabular-num text-tabular-num text-[#996000] font-medium">12 days</td>
+<td class="py-3 px-4 text-center">
+<span class="inline-flex items-center justify-center font-label-sm text-label-sm px-2 py-0.5 rounded-[6px] font-medium bg-tertiary-fixed text-primary-container">Medium</span>
+</td>
+<td class="py-3 px-4 text-right">
+<button class="p-1 rounded text-secondary hover:text-primary-container hover:bg-surface-variant transition-colors" title="View Full Ledger" type="button">
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-tertiary-fixed/30 transition-colors group" data-batch="Foundation 10th (Evening)" data-centre="Vaishali Nagar" data-overdue="true">
+<td class="py-3 px-4 font-tabular-num text-tabular-num font-medium text-secondary group-hover:text-primary-container">STU-0104</td>
+<td class="py-3 px-4 font-label-md text-label-md font-semibold text-on-surface">Kabir Meena</td>
+<td class="py-3 px-4 text-on-surface-variant font-body-md text-body-md">Foundation 10th (Evening)</td>
+<td class="py-3 px-4 text-on-surface-variant font-body-md text-body-md">Vaishali Nagar</td>
+<td class="py-3 px-4 text-right font-tabular-num text-tabular-num font-semibold text-primary-container">₹32,500</td>
+<td class="py-3 px-4 text-right font-tabular-num text-tabular-num text-error font-medium">45 days</td>
+<td class="py-3 px-4 text-center">
+<span class="inline-flex items-center justify-center font-label-sm text-label-sm px-2 py-0.5 rounded-[6px] font-medium bg-[#B4432F]/15 text-[#B4432F]">High</span>
+</td>
+<td class="py-3 px-4 text-right">
+<button class="p-1 rounded text-secondary hover:text-primary-container hover:bg-surface-variant transition-colors" title="View Full Ledger" type="button">
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</td>
+</tr>
+<!-- Row 6 -->
+<tr class="hover:bg-tertiary-fixed/30 transition-colors group" data-batch="JEE 2027 Morning" data-centre="Malviya Nagar" data-overdue="true">
+<td class="py-3 px-4 font-tabular-num text-tabular-num font-medium text-secondary group-hover:text-primary-container">STU-1120</td>
+<td class="py-3 px-4 font-label-md text-label-md font-semibold text-on-surface">Rohan Agarwal</td>
+<td class="py-3 px-4 text-on-surface-variant font-body-md text-body-md">JEE 2027 Morning</td>
+<td class="py-3 px-4 text-on-surface-variant font-body-md text-body-md">Malviya Nagar</td>
+<td class="py-3 px-4 text-right font-tabular-num text-tabular-num font-semibold text-primary-container">₹22,500</td>
+<td class="py-3 px-4 text-right font-tabular-num text-tabular-num text-[#996000] font-medium">8 days</td>
+<td class="py-3 px-4 text-center">
+<span class="inline-flex items-center justify-center font-label-sm text-label-sm px-2 py-0.5 rounded-[6px] font-medium bg-tertiary-fixed text-primary-container">Medium</span>
+</td>
+<td class="py-3 px-4 text-right">
+<button class="p-1 rounded text-secondary hover:text-primary-container hover:bg-surface-variant transition-colors" title="View Full Ledger" type="button">
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</td>
+</tr>
+<!-- Row 7 -->
+<tr class="hover:bg-tertiary-fixed/30 transition-colors group" data-batch="Batch 2024 IIT-JEE" data-centre="Raja Park" data-overdue="true">
+<td class="py-3 px-4 font-tabular-num text-tabular-num font-medium text-secondary group-hover:text-primary-container">STU-0654</td>
+<td class="py-3 px-4 font-label-md text-label-md font-semibold text-on-surface">Sanya Acharya</td>
+<td class="py-3 px-4 text-on-surface-variant font-body-md text-body-md">Batch 2024 IIT-JEE</td>
+<td class="py-3 px-4 text-on-surface-variant font-body-md text-body-md">Raja Park</td>
+<td class="py-3 px-4 text-right font-tabular-num text-tabular-num font-semibold text-primary-container">₹60,000</td>
+<td class="py-3 px-4 text-right font-tabular-num text-tabular-num text-error font-medium">62 days</td>
+<td class="py-3 px-4 text-center">
+<span class="inline-flex items-center justify-center font-label-sm text-label-sm px-2 py-0.5 rounded-[6px] font-medium bg-[#B4432F]/15 text-[#B4432F]">High</span>
+</td>
+<td class="py-3 px-4 text-right">
+<button class="p-1 rounded text-secondary hover:text-primary-container hover:bg-surface-variant transition-colors" title="View Full Ledger" type="button">
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</td>
+</tr>
+<!-- Row 8 -->
+<tr class="hover:bg-tertiary-fixed/30 transition-colors group" data-batch="JEE 2027 Evening" data-centre="Malviya Nagar" data-overdue="false">
+<td class="py-3 px-4 font-tabular-num text-tabular-num font-medium text-secondary group-hover:text-primary-container">STU-0782</td>
+<td class="py-3 px-4 font-label-md text-label-md font-semibold text-on-surface">Aditya Verma</td>
+<td class="py-3 px-4 text-on-surface-variant font-body-md text-body-md">JEE 2027 Evening</td>
+<td class="py-3 px-4 text-on-surface-variant font-body-md text-body-md">Malviya Nagar</td>
+<td class="py-3 px-4 text-right font-tabular-num text-tabular-num font-semibold text-on-surface">₹0</td>
+<td class="py-3 px-4 text-right font-tabular-num text-tabular-num text-secondary">-</td>
+<td class="py-3 px-4 text-center">
+<span class="inline-flex items-center justify-center font-label-sm text-label-sm px-2 py-0.5 rounded-[6px] font-medium bg-[#3E7B55]/15 text-[#3E7B55]">Low</span>
+</td>
+<td class="py-3 px-4 text-right">
+<button class="p-1 rounded text-secondary hover:text-primary-container hover:bg-surface-variant transition-colors" title="View Full Ledger" type="button">
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</td>
+</tr>
+<!-- Row 9 -->
+<tr class="hover:bg-tertiary-fixed/30 transition-colors group" data-batch="NEET 2027 Evening" data-centre="Vaishali Nagar" data-overdue="false">
+<td class="py-3 px-4 font-tabular-num text-tabular-num font-medium text-secondary group-hover:text-primary-container">STU-0943</td>
+<td class="py-3 px-4 font-label-md text-label-md font-semibold text-on-surface">Priya Choudhary</td>
+<td class="py-3 px-4 text-on-surface-variant font-body-md text-body-md">NEET 2027 Evening</td>
+<td class="py-3 px-4 text-on-surface-variant font-body-md text-body-md">Vaishali Nagar</td>
+<td class="py-3 px-4 text-right font-tabular-num text-tabular-num font-semibold text-primary-container">₹18,000</td>
+<td class="py-3 px-4 text-right font-tabular-num text-tabular-num text-secondary">Due in 5 days</td>
+<td class="py-3 px-4 text-center">
+<span class="inline-flex items-center justify-center font-label-sm text-label-sm px-2 py-0.5 rounded-[6px] font-medium bg-[#3E7B55]/15 text-[#3E7B55]">Low</span>
+</td>
+<td class="py-3 px-4 text-right">
+<button class="p-1 rounded text-secondary hover:text-primary-container hover:bg-surface-variant transition-colors" title="View Full Ledger" type="button">
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</td>
+</tr>
+<!-- Row 10 -->
+<tr class="hover:bg-tertiary-fixed/30 transition-colors group" data-batch="JEE 2027 Morning" data-centre="Raja Park" data-overdue="true">
+<td class="py-3 px-4 font-tabular-num text-tabular-num font-medium text-secondary group-hover:text-primary-container">STU-0315</td>
+<td class="py-3 px-4 font-label-md text-label-md font-semibold text-on-surface">Harsh Vardhan</td>
+<td class="py-3 px-4 text-on-surface-variant font-body-md text-body-md">JEE 2027 Morning</td>
+<td class="py-3 px-4 text-on-surface-variant font-body-md text-body-md">Raja Park</td>
+<td class="py-3 px-4 text-right font-tabular-num text-tabular-num font-semibold text-primary-container">₹35,000</td>
+<td class="py-3 px-4 text-right font-tabular-num text-tabular-num text-error font-medium">34 days</td>
+<td class="py-3 px-4 text-center">
+<span class="inline-flex items-center justify-center font-label-sm text-label-sm px-2 py-0.5 rounded-[6px] font-medium bg-[#B4432F]/15 text-[#B4432F]">High</span>
+</td>
+<td class="py-3 px-4 text-right">
+<button class="p-1 rounded text-secondary hover:text-primary-container hover:bg-surface-variant transition-colors" title="View Full Ledger" type="button">
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Ledger Pagination Footer -->
+<div class="px-4 py-3 bg-surface-container-low border-t border-outline-variant flex flex-col sm:flex-row items-center justify-between gap-space-md">
+<div class="font-body-sm text-body-sm text-secondary">
+        Showing <span class="font-semibold text-primary-container">1-10</span> of <span class="font-semibold text-primary-container">2,600</span> students
+      </div>
+<div class="flex items-center gap-1.5">
+<button class="px-3 py-1.5 bg-surface-container-lowest text-primary-container border border-outline-variant rounded-[6px] font-label-sm text-label-sm hover:bg-surface-variant transition-colors flex items-center gap-1 opacity-60 cursor-not-allowed" type="button">
+<span class="material-symbols-outlined text-[16px]">chevron_left</span>
+<span>Previous</span>
+</button>
+<div class="flex items-center gap-1 px-1">
+<button class="w-8 h-8 rounded-[6px] bg-primary-container text-surface font-label-sm text-label-sm font-semibold flex items-center justify-center" type="button">1</button>
+<button class="w-8 h-8 rounded-[6px] bg-surface-container-lowest text-primary-container border border-outline-variant font-label-sm text-label-sm hover:bg-surface-variant transition-colors flex items-center justify-center" type="button">2</button>
+<button class="w-8 h-8 rounded-[6px] bg-surface-container-lowest text-primary-container border border-outline-variant font-label-sm text-label-sm hover:bg-surface-variant transition-colors flex items-center justify-center" type="button">3</button>
+<span class="text-secondary px-1 text-center font-body-sm">...</span>
+<button class="w-8 h-8 rounded-[6px] bg-surface-container-lowest text-primary-container border border-outline-variant font-label-sm text-label-sm hover:bg-surface-variant transition-colors flex items-center justify-center" type="button">260</button>
+</div>
+<button class="px-3 py-1.5 bg-surface-container-lowest text-primary-container border border-outline-variant rounded-[6px] font-label-sm text-label-sm hover:bg-surface-variant transition-colors flex items-center gap-1" type="button">
+<span>Next</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Dedicated Institutional States Showcase (A, B, C) -->
+<div class="flex flex-col gap-space-lg pt-4 border-t border-outline-variant/60">
+<div class="flex items-center justify-between">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary">Interface Reference Specification</span>
+<h3 class="font-headline-sm text-headline-sm text-primary-container font-semibold">State Variants & Responsive Layouts</h3>
+</div>
+<div class="flex items-center gap-1 bg-surface-variant px-2.5 py-1 rounded-[6px] border border-outline-variant text-secondary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">verified</span>
+<span>Institutional Standard Spec</span>
+</div>
+</div>
+<!-- Bento Grid of 3 Dedicated State Panes -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- PANEL (A): Loading Skeleton State -->
+<div class="lg:col-span-6 bg-surface-container-lowest border border-outline-variant rounded-[8px] p-space-md shadow-sm">
+<div class="flex items-center justify-between pb-3 border-b border-outline-variant mb-4">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+<span class="font-label-md text-label-md text-primary-container font-semibold">A · Loading Skeleton State</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary bg-surface-variant px-2 py-0.5 rounded">Async Fetch Simulation</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary mb-4">Employs low-cadence pulsing lines in high-contrast neutral values for high-frequency queries.</p>
+<!-- Skeleton Frame -->
+<div class="border border-outline-variant rounded-[6px] overflow-hidden bg-surface">
+<!-- Skeleton Header -->
+<div class="bg-surface-container-low px-4 py-3 border-b border-outline-variant flex items-center justify-between">
+<div class="h-3 w-16 bg-outline-variant/50 rounded animate-pulse"></div>
+<div class="h-3 w-28 bg-outline-variant/50 rounded animate-pulse"></div>
+<div class="h-3 w-20 bg-outline-variant/50 rounded animate-pulse"></div>
+<div class="h-3 w-14 bg-outline-variant/50 rounded animate-pulse"></div>
+</div>
+<!-- Skeleton Row 1 -->
+<div class="px-4 py-3.5 border-b border-outline-variant flex items-center justify-between bg-surface-container-lowest">
+<div class="h-4 w-20 bg-outline-variant/40 rounded animate-pulse"></div>
+<div class="h-4 w-32 bg-outline-variant/60 rounded animate-pulse"></div>
+<div class="h-4 w-16 bg-outline-variant/40 rounded animate-pulse"></div>
+<div class="h-5 w-12 bg-tertiary-fixed/70 rounded animate-pulse"></div>
+</div>
+<!-- Skeleton Row 2 -->
+<div class="px-4 py-3.5 border-b border-outline-variant flex items-center justify-between bg-surface-container-lowest">
+<div class="h-4 w-16 bg-outline-variant/40 rounded animate-pulse"></div>
+<div class="h-4 w-36 bg-outline-variant/60 rounded animate-pulse"></div>
+<div class="h-4 w-20 bg-outline-variant/40 rounded animate-pulse"></div>
+<div class="h-5 w-12 bg-outline-variant/50 rounded animate-pulse"></div>
+</div>
+<!-- Skeleton Row 3 -->
+<div class="px-4 py-3.5 flex items-center justify-between bg-surface-container-lowest">
+<div class="h-4 w-20 bg-outline-variant/40 rounded animate-pulse"></div>
+<div class="h-4 w-28 bg-outline-variant/60 rounded animate-pulse"></div>
+<div class="h-4 w-14 bg-outline-variant/40 rounded animate-pulse"></div>
+<div class="h-5 w-12 bg-tertiary-fixed/70 rounded animate-pulse"></div>
+</div>
+</div>
+</div>
+<!-- PANEL (B): Empty State Preview -->
+<div class="lg:col-span-6 bg-surface-container-lowest border border-outline-variant rounded-[8px] p-space-md shadow-sm">
+<div class="flex items-center justify-between pb-3 border-b border-outline-variant mb-4">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-[#B4432F]"></span>
+<span class="font-label-md text-label-md text-primary-container font-semibold">B · Empty State Preview</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary bg-surface-variant px-2 py-0.5 rounded">Filter Mismatch</span>
+</div>
+<div class="border border-outline-variant rounded-[6px] p-8 text-center bg-surface flex flex-col items-center justify-center">
+<div class="w-12 h-12 rounded-full bg-surface-variant border border-outline-variant flex items-center justify-center text-primary-container mb-3">
+<span class="material-symbols-outlined text-[24px]">filter_alt_off</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-primary-container font-semibold mb-1">No students match these filters</h4>
+<p class="font-body-md text-body-md text-secondary max-w-sm mb-5">
+            Try clearing your search term or adjusting overdue filters to display active campus records.
+          </p>
+<button class="h-9 px-4 bg-primary-container text-surface-container-lowest rounded-[6px] font-label-md text-label-md font-medium hover:bg-primary transition-colors flex items-center gap-2 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">filter_alt</span>
+<span>Reset filters</span>
+</button>
+</div>
+</div>
+<!-- PANEL (C): Phone-Width Stacked Cards Preview -->
+<div class="lg:col-span-12 bg-surface-container-lowest border border-outline-variant rounded-[8px] p-space-md shadow-sm">
+<div class="flex items-center justify-between pb-3 border-b border-outline-variant mb-4">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-[#3E7B55]"></span>
+<span class="font-label-md text-label-md text-primary-container font-semibold">C · Phone-Width Stacked-Card Version</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary bg-surface-variant px-2 py-0.5 rounded">Mobile Reflow Preview (390px Viewport)</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary mb-4">Eliminates horizontal scrolling on mobile viewports by converting wide tabular records into high-density stacked cards.</p>
+<!-- Centered Mobile Container Preview (Max 390px) -->
+<div class="max-w-[390px] mx-auto bg-surface border border-outline-variant rounded-[12px] p-3 shadow-md flex flex-col gap-3">
+<div class="flex items-center justify-between pb-2 border-b border-outline-variant px-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary">Student Ledger View</span>
+<span class="font-tabular-num text-label-sm text-label-sm text-primary-container font-semibold">10 of 2,600</span>
+</div>
+<!-- Mobile Sample Card 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-[8px] p-3 shadow-sm flex flex-col gap-2">
+<div class="flex items-start justify-between">
+<div>
+<span class="font-tabular-num text-body-sm text-body-sm text-secondary block">STU-0587</span>
+<span class="font-label-md text-label-md font-semibold text-primary-container">Ishita Sharma</span>
+</div>
+<span class="inline-flex items-center justify-center font-label-sm text-label-sm px-2 py-0.5 rounded-[4px] font-medium bg-[#B4432F]/15 text-[#B4432F]">High</span>
+</div>
+<div class="text-body-sm text-body-sm text-secondary flex items-center justify-between border-t border-surface-variant pt-2 mt-1">
+<span>JEE 2027 Evening</span>
+<span>Malviya Nagar</span>
+</div>
+<div class="flex items-baseline justify-between pt-1 border-t border-outline-variant/40">
+<span class="font-label-sm text-label-sm text-secondary">Balance Due</span>
+<div class="text-right">
+<span class="font-tabular-num text-headline-sm text-headline-sm font-semibold text-primary-container block leading-tight">₹15,000</span>
+<span class="font-tabular-num text-label-sm text-label-sm text-error font-medium">Overdue by 23 days</span>
+</div>
+</div>
+</div>
+<!-- Mobile Sample Card 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-[8px] p-3 shadow-sm flex flex-col gap-2">
+<div class="flex items-start justify-between">
+<div>
+<span class="font-tabular-num text-body-sm text-body-sm text-secondary block">STU-0412</span>
+<span class="font-label-md text-label-md font-semibold text-primary-container">Aarav Meena</span>
+</div>
+<span class="inline-flex items-center justify-center font-label-sm text-label-sm px-2 py-0.5 rounded-[4px] font-medium bg-[#3E7B55]/15 text-[#3E7B55]">Low</span>
+</div>
+<div class="text-body-sm text-body-sm text-secondary flex items-center justify-between border-t border-surface-variant pt-2 mt-1">
+<span>Foundation 10th</span>
+<span>Vaishali Nagar</span>
+</div>
+<div class="flex items-baseline justify-between pt-1 border-t border-outline-variant/40">
+<span class="font-label-sm text-label-sm text-secondary">Balance Due</span>
+<div class="text-right">
+<span class="font-tabular-num text-headline-sm text-headline-sm font-semibold text-on-surface block leading-tight">₹0</span>
+<span class="font-tabular-num text-label-sm text-label-sm text-secondary">No overdue balance</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  (function() {
+    const searchInput = document.getElementById('studentSearchInput');
+    const centreFilter = document.getElementById('centreFilter');
+    const batchFilter = document.getElementById('batchFilter');
+    const overdueToggle = document.getElementById('overdueToggle');
+    const resetBtn = document.getElementById('resetBtn');
+    const tableBody = document.getElementById('studentsTableBody');
+    const rows = tableBody ? Array.from(tableBody.querySelectorAll('tr')) : [];
+
+    function applyFilters() {
+      const query = (searchInput.value || '').trim().toLowerCase();
+      const centreVal = centreFilter.value;
+      const batchVal = batchFilter.value;
+      const overdueOnly = overdueToggle.checked;
+
+      rows.forEach(row => {
+        const studentId = (row.cells[0]?.textContent || '').toLowerCase();
+        const studentName = (row.cells[1]?.textContent || '').toLowerCase();
+        const rowBatch = row.getAttribute('data-batch') || '';
+        const rowCentre = row.getAttribute('data-centre') || '';
+        const isOverdue = row.getAttribute('data-overdue') === 'true';
+
+        const matchesQuery = !query || studentId.includes(query) || studentName.includes(query);
+        const matchesCentre = centreVal === 'all' || rowCentre === centreVal;
+        const matchesBatch = batchVal === 'all' || rowBatch.includes(batchVal);
+        const matchesOverdue = !overdueOnly || isOverdue;
+
+        if (matchesQuery && matchesCentre && matchesBatch && matchesOverdue) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    if (searchInput) searchInput.addEventListener('input', applyFilters);
+    if (centreFilter) centreFilter.addEventListener('change', applyFilters);
+    if (batchFilter) batchFilter.addEventListener('change', applyFilters);
+    if (overdueToggle) overdueToggle.addEventListener('change', applyFilters);
+
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        if (searchInput) searchInput.value = '';
+        if (centreFilter) centreFilter.value = 'all';
+        if (batchFilter) batchFilter.value = 'all';
+        const statusFilter = document.getElementById('statusFilter');
+        if (statusFilter) statusFilter.value = 'all';
+        if (overdueToggle) overdueToggle.checked = false;
+        applyFilters();
+      });
+    }
+  })();
+</script></div></main></div></body></html>
