@@ -23,7 +23,7 @@ export default async function ParentHome({ searchParams }: { searchParams: Promi
     return (
       <main className="mx-auto flex min-h-dvh max-w-[480px] flex-col gap-8 px-4 py-4">
         <TopBar locale={locale} showSignOut />
-        <p className="text-muted">{t.parent.noChildren}</p>
+        <h1 className="font-normal text-muted">{t.parent.noChildren}</h1>
       </main>
     );
   }
@@ -78,7 +78,7 @@ export default async function ParentHome({ searchParams }: { searchParams: Promi
       {refund ? (
         <>
           <section className="mt-10">
-            <p>{t.home.refundFor(child.name)}</p>
+            <h1 className="font-normal">{t.home.refundFor(child.name)}</h1>
             <p className="mt-2 text-amount font-medium">{formatInr(refund.refundPaise)}</p>
             <p className="mt-2 text-lg leading-7 text-muted">
               {refund.refundPaise > 0
@@ -94,11 +94,13 @@ export default async function ParentHome({ searchParams }: { searchParams: Promi
           </div>
         </>
       ) : instalments.length === 0 ? (
-        <p className="mt-10 text-muted">{t.home.noPlan}</p>
+        <h1 className="mt-10 font-normal text-muted">{t.home.noPlan}</h1>
       ) : dues && status ? (
         <>
           <section className="mt-10">
-            <p>{isOverdue ? t.home.amountDueFor(child.name) : t.home.nextPaymentFor(child.name)}</p>
+            <h1 className="font-normal">
+              {isOverdue ? t.home.amountDueFor(child.name) : t.home.nextPaymentFor(child.name)}
+            </h1>
             <p className="mt-2 text-amount font-medium">{formatInr(balanceOf(dues.next))}</p>
             <p className={`mt-2 text-lg leading-7 ${isOverdue ? "font-medium text-overdue" : "text-muted"}`}>
               {t.home.dueOn(formatDate(dues.next.dueDate, locale))} · {timingLabel(status, t)}
@@ -122,7 +124,7 @@ export default async function ParentHome({ searchParams }: { searchParams: Promi
       ) : (
         <>
           <section className="mt-10">
-            <p>{child.name}</p>
+            <h1 className="font-normal">{child.name}</h1>
             <p className="mt-2 text-amount font-medium">{t.home.allPaid}</p>
             <p className="mt-2 text-lg leading-7 font-medium text-paid">{t.home.nothingDue}</p>
           </section>
