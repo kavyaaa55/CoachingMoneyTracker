@@ -49,9 +49,12 @@ Label each of these in the Technical Design Document. Add new ones here as they 
 | Academic term | 1 Jul 2026 to 30 Jun 2027, 365 days | The brief gives no dates. Instalments run to April |
 | Instalment plans | ₹1,20,000 as 4 × ₹30,000 or 3 × ₹40,000 | Fits the brief's average fee and its sample rows |
 | Batch schedules | Due dates are set per programme, and JEE 2028 and NEET 2028 batches exist | The brief gives only three sample due dates |
-| Sample data | 43 fictional students. Beyond the 3 brief rows, all fee records, attendance and scores are invented | The brief asks for realistic sample data you create |
+| Sample data | 49 fictional students. Beyond the 3 brief rows, all fee records, attendance and scores are invented | The brief asks for realistic sample data you create |
 | Demo date | `APP_TODAY=2026-11-02` | The sample's "23 days overdue" and "Due in 13 days" both point to this date |
 | Reminder schedule | 7 and 1 days before, on the day, 3 and 7 days after | The brief says before, on and after, without days |
+| Reminder delivery | Sent to the registered number whether or not the parent has used the portal, and includes the student's name so a parent of two knows which child | Fee reminders are the service itself, and the brief wants them automatic |
+| Missed job days | Only the latest due stage goes out | A parent should never get several messages at once |
+| Individual due dates | 6 sample students have their own due dates, so every stage falls on the demo date | Otherwise nothing would be due on the fixed demo date |
 | Ageing buckets | 0–30, 31–60, 60+ days | The brief's success measure uses 60 days |
 | Centre names | Centre 1 to Centre 4 | The brief does not name them |
 | Counsellor | The accounts role handles call tasks | The brief lists only two roles |

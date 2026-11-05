@@ -44,6 +44,7 @@ You need Node 22 or later and Postgres.
 | `DATABASE_URL` | Yes | Postgres connection string. Write a special character in the password as a URL code, such as `%40` for `@` |
 | `SESSION_SECRET` | Yes | Signs sessions and pay links. At least 32 characters |
 | `GATEWAY_WEBHOOK_SECRET` | Yes | Signs mock gateway webhooks. At least 32 characters |
+| `CRON_SECRET` | Yes | Protects the daily reminders route. At least 32 characters |
 | `APP_URL` | In production | Public address of the app. Defaults to `http://localhost:3000` |
 | `DEMO_MODE` | For the demo | `true` shows the OTP on screen and enables the test gateway. Never use with real users |
 | `APP_TODAY` | For the demo | Fixes today's date. Use `2026-11-02` to match the brief's sample data |
@@ -64,7 +65,7 @@ Pick a language, enter a number, and the code appears on screen.
 | `9000000003` | Parent | Mohit Gurjar: due in 13 days |
 | `9000000001` | Parent | Aarav Meena: up to date |
 | `9000001035` | Parent | Two children |
-| `9000000100` | Accounts staff | Student list, ledgers and manual payments |
+| `9000000100` | Accounts staff | Student list, ledgers, manual payments and reminders |
 
 All people and numbers are fictional.
 
@@ -75,6 +76,7 @@ All people and numbers are fictional.
 1. Create the database and set the variables above on the host.
 2. Run `npm run db:migrate` and `npm run db:seed` against it.
 3. Build with `npm run build` and start with `npm start`.
+4. Schedule a daily call to `GET /api/cron/reminders` with the header `Authorization: Bearer <CRON_SECRET>`.
 
 ## Checks
 

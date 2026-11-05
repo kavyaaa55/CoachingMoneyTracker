@@ -11,7 +11,7 @@ Run these in order, one at a time. Each one ends with a working app and a commit
 - [x] 2. Sign-in and consent
 - [x] 3. Parent home and payment
 - [x] 4. Fee ledger
-- [ ] 5. Reminders
+- [x] 5. Reminders
 - [ ] 6. Refund calculator
 - [ ] 7. Dues dashboard
 - [ ] 8. Dropout-risk flag

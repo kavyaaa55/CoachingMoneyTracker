@@ -2,7 +2,7 @@
 
 **GitHub:** https://github.com/Siddhesh-source/coaching_institute
 **Live app:** not deployed yet (see [deployment.md](../deployment.md))
-**Status:** in progress, last updated 5 Nov 2026 (staff ledger added). Sections marked *Planned* are designed but not built.
+**Status:** in progress, last updated 5 Nov 2026 (reminders added). Sections marked *Planned* are designed but not built.
 
 ---
 
@@ -29,11 +29,11 @@ Fee Tracker gives parents their dues on a phone in five seconds, in Hindi or Eng
 | Payment marks instalment paid | Built | Signed webhook only |
 | Unmatched payments never mark paid | Built | Stored for the queue. Staff screen is planned |
 | Receipts show GST | Built | Printable, Hindi and English |
-| Realistic sample data | Built | 43 students, 4 centres, 9 batches |
+| Realistic sample data | Built | 49 students, 4 centres, 9 batches |
 | Pro-rata refund rules | Rules built | Tested logic. Screen is planned |
 | Fee ledger for staff | Built | Search, plan, discount, instalments, payments, balance, days overdue |
 | Manual payments | Built | Same matching code as the webhook |
-| Reminders that stop on payment | Planned | Table ready |
+| Reminders that stop on payment | Built | Hindi and English, before, on and after, with a mock sender |
 | Dues dashboard, ageing, Tally export | Planned | |
 | AI dropout-risk flag | Planned | Input data seeded, including test cases |
 | Bulk upload, parent attendance and scores | Optional | Outside the core build |
@@ -87,6 +87,8 @@ The money rules are the hard part of this brief, so they sit in `src/domain` whe
 | Paid amount is calculated from payments | One source of truth. Balance can never disagree with history | A stored `paid` column |
 | One function marks instalments paid | `recordPayment` is the single place to audit | Updates spread across routes |
 | Manual entry uses the same `recordPayment` | One matching rule for all money. A mismatch is refused inside the same lock, so it cannot race | A separate staff write path |
+| Stop reminders in two places | The payment cancels queued reminders in the same step, and the job rechecks the balance at send time | Checking only when scheduling |
+| Job and payments share one lock | A payment cannot slip in during a send, and two runs cannot send twice | A separate job lock |
 | Only a signed webhook can record a gateway payment | The browser is never trusted to say it paid | Marking paid on the redirect |
 | `gateway_ref` is unique | A repeated webhook changes nothing | Checking in code alone |
 | Lock the instalment row while matching | Two payments cannot both use the same balance | Hoping they never collide |
@@ -98,7 +100,7 @@ The money rules are the hard part of this brief, so they sit in `src/domain` whe
 
 ## 5. Data Model
 
-13 tables, 4 migrations. The core of it:
+13 tables, 5 migrations. The core of it:
 
 ```mermaid
 erDiagram
@@ -183,16 +185,35 @@ Fee used is ₹1,20,000 × 104 ÷ 365 = ₹34,192. Refund is **₹10,808**, due 
 
 Tests also cover discounts, exit before term, exit after term, and a parent who paid less than the fee used.
 
-### Reminders (planned)
+### Reminders
 
-A daily job finds instalments at 7 and 1 days before, on the day, and 3 and 7 days after. It sends through a mock sender in the parent's language, with a pay link. The balance is checked again at send time, so a payment made a minute earlier still stops the message.
+```mermaid
+flowchart TD
+  J[Daily cron or Run reminders button] --> Q[Queue stages for instalments due within 14 days]
+  Q --> L[Lock each instalment with a reminder due]
+  L --> B{Balance left?}
+  B -- No --> S[Stop: paid]
+  B -- Yes --> T{Student left?}
+  T -- Yes --> X[Stop: student left]
+  T -- No --> D[Send the latest due stage in the parent language]
+  D --> R{Sent?}
+  R -- Yes --> M[Mark sent and keep the text]
+  R -- No --> K[Stays queued, retried next run]
+```
+
+- **Stages:** 7 and 1 days before, on the due date, and 3 and 7 days after.
+- **Stopping:** a full payment stops queued reminders in the same database step. The job also rechecks the balance at send time.
+- **Part payments:** reminders continue, for the amount still left.
+- **Missed days:** only the latest stage goes out, and older ones are marked replaced.
+- **Failures:** a failed send stays queued and is retried on the next run.
+- **Trigger:** a daily route protected by a secret, or the staff button. Both run the same job.
 
 ## 7. AI and Automation
 
 | Automation | Status | When it is wrong or unsure |
 |---|---|---|
 | Payment matching | Built | Unmatched payments go to a queue and mark nothing paid |
-| Reminders | Planned | Balance rechecked at send time |
+| Reminders | Built | Balance rechecked at send time. Failed sends are retried |
 | Dropout-risk flag | Planned | Creates a call task only. Counsellors mark false flags |
 
 **Dropout-risk flag (planned design).** It combines missed instalments, attendance trend and test trend into a band: none, watch or high.
@@ -216,6 +237,7 @@ The seed already holds three students who should trigger the flag, one with too 
 | OTP abuse | Hashed, 5 minute expiry, 5 tries per code, 5 codes per 10 minutes |
 | Parallel guessing | Attempts are counted in one statement. 12 parallel guesses stopped at exactly 5 |
 | Session theft | httpOnly, SameSite=Lax, secure in production, signed, 7 day limit |
+| Scheduled job | The reminders route refuses any call without the secret |
 | Forged webhooks | Signature checked in constant time. Changed bodies are refused |
 | Token reuse | Session and pay link tokens use separate signing keys |
 | DPDP Act 2023 | Consent recorded per child with a notice version. A new version asks again |
@@ -243,12 +265,12 @@ The 31 mockups are kept in `docs/mockups` as layout reference only. They contain
 
 ## 10. Testing
 
-103 tests pass, and CI runs lint, types, tests and a build on every push.
+132 tests pass, and CI runs lint, types, tests and a build on every push.
 
 | Suite | Tests | Covers |
 |---|---|---|
-| Unit | 76 | Fee, refund, OTP, GST, matching, ledger totals, sessions, sample data |
-| Database | 27 | Duplicates, races, part payments, unmatched cases, manual entry, webhook signatures, student search |
+| Unit | 89 | Fee, refund, OTP, GST, matching, ledger totals, reminder rules, sessions, sample data |
+| Database | 43 | Duplicates, races, part payments, unmatched cases, manual entry, reminder stages and stopping, webhook and cron security, student search |
 
 Tests use the brief's own rows, so Aarav, Ishita and Mohit must produce exactly the brief's statuses. Main flows were also walked through in a real browser at 360px, in both languages.
 
@@ -270,6 +292,9 @@ The brief does not state these. Each one is my judgement.
 | Parent home amount | Oldest unpaid instalment, other overdue amounts on one line | Pay links are per instalment |
 | GST | 18% inside the fee, 9% CGST and 9% SGST, sample GSTIN | No rate or number given |
 | Reminder days | 7 and 1 before, on the day, 3 and 7 after | The brief says before, on and after |
+| Reminder delivery | Sent to the registered number whether or not the parent has used the portal, with the student's name | Reminders are the service itself, and a parent of two needs to know which child |
+| Missed job days | Only the latest due stage goes out | A parent should not get several messages at once |
+| Individual due dates | 6 sample students have their own due dates | So every stage falls on the fixed demo date |
 | Ageing buckets | 0–30, 31–60, 60+ days | The success measure uses 60 days |
 | OTP limits | 5 minutes, 5 tries, 5 codes per 10 minutes | Not specified |
 | Consent proof | OTP on the registered number, plus a stored record | Method not specified |
@@ -285,6 +310,9 @@ The brief does not state these. Each one is my judgement.
 - Consent withdrawal goes through the centre's office. There is no in-app button.
 - A saved manual payment cannot be edited or reversed yet. That needs a reversal entry, not a delete.
 - Every accounts user can see all centres. There is no per-centre access yet.
+- Reminders end after the 7 days after stage. A long-overdue account gets no further messages, so it needs staff follow-up.
+- Pay links are about 230 characters. Real SMS needs a short link service.
+- The job holds the instalment lock while sending. That is fine for a mock, but a real provider should be called with a timeout.
 - OTP limits are per phone number, with no limit per IP address.
 - Signing out clears the cookie on that device. It does not cancel a copied session token.
 - Hindi text needs review by a native speaker before real use.
@@ -293,4 +321,4 @@ The brief does not state these. Each one is my judgement.
 
 **Cut from the core build:** bulk upload, parent attendance and test score pages, audit log.
 
-**Next, in order:** reminders, refund screen and policy page, dues dashboard with Tally export, risk flag, full polish pass, deployment.
+**Next, in order:** refund screen and policy page, dues dashboard with Tally export, risk flag, full polish pass, deployment.
