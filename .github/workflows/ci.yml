@@ -8,10 +8,23 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_PASSWORD: ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
     env:
-      # Placeholders so the build can load. CI never connects or signs anything real.
-      DATABASE_URL: postgres://ci:ci@localhost:5432/ci
+      # Placeholders for a throwaway CI database. Nothing here is a real secret.
+      DATABASE_URL: postgres://postgres:ci@localhost:5432/postgres
       SESSION_SECRET: ci-placeholder-not-used-for-anything-real
+      GATEWAY_WEBHOOK_SECRET: ci-placeholder-not-used-for-anything-real
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -22,4 +35,5 @@ jobs:
       - run: npm run lint
       - run: npm run typecheck
       - run: npm test
+      - run: npm run test:db
       - run: npm run build
