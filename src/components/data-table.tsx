@@ -18,7 +18,7 @@ export function DataTable<T>({ columns, rows, rowKey }: Props<T>) {
   return (
     <div className="overflow-x-auto rounded-md border border-divider bg-surface">
       <table className="block w-full md:table">
-        <thead className="hidden md:table-header-group">
+        <thead className="hidden bg-canvas md:table-header-group">
           <tr>
             {columns.map((column) => (
               <th
