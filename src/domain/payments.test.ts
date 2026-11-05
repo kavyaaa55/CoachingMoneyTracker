@@ -17,6 +17,13 @@ describe("matchPayment", () => {
     });
   });
 
+  it("sends any payment for a student who has left to the queue", () => {
+    expect(matchPayment(rupees(15000), rupees(15000), true)).toEqual({
+      status: "unmatched",
+      reason: "student-left",
+    });
+  });
+
   it("sends a payment with no instalment to the queue", () => {
     expect(matchPayment(null, rupees(15000))).toEqual({
       status: "unmatched",

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { rupees } from "./money";
-import { calculateRefund } from "./refund";
+import { calculateRefund, canSaveExit, isPlausibleExitDate } from "./refund";
 
 const term = { termStart: "2026-07-01", termEnd: "2027-06-30" };
 const ishita = { ...term, netFee: rupees(120000), paid: rupees(45000) };
@@ -49,5 +49,28 @@ describe("calculateRefund", () => {
     expect(() =>
       calculateRefund({ ...ishita, termEnd: "2026-01-01", exitDate: "2026-10-12" }),
     ).toThrow("Term must end after it starts");
+  });
+});
+
+describe("isPlausibleExitDate", () => {
+  const plausible = (date: string) => isPlausibleExitDate(date, term.termStart, term.termEnd);
+
+  it("accepts dates in term and either side of it", () => {
+    expect(plausible("2026-10-12")).toBe(true);
+    expect(plausible("2026-06-20")).toBe(true);
+    expect(plausible("2027-08-01")).toBe(true);
+  });
+
+  it("rejects a mistyped year", () => {
+    expect(plausible("2006-10-12")).toBe(false);
+    expect(plausible("9999-12-31")).toBe(false);
+  });
+});
+
+describe("canSaveExit", () => {
+  it("allows today and earlier, and refuses the future", () => {
+    expect(canSaveExit("2026-11-01", "2026-11-02")).toBe(true);
+    expect(canSaveExit("2026-11-02", "2026-11-02")).toBe(true);
+    expect(canSaveExit("2026-11-03", "2026-11-02")).toBe(false);
   });
 });

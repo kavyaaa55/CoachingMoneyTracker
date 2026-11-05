@@ -22,6 +22,19 @@ export type RefundResult = {
   dueBy: IsoDate;
 };
 
+/** Keeps a mistyped year out of the working. Far wider than any real exit. */
+const EXIT_DATE_MARGIN_DAYS = 365;
+
+export function isPlausibleExitDate(exitDate: IsoDate, termStart: IsoDate, termEnd: IsoDate) {
+  return (
+    daysBetween(termStart, exitDate) >= -EXIT_DATE_MARGIN_DAYS &&
+    daysBetween(termEnd, exitDate) <= EXIT_DATE_MARGIN_DAYS
+  );
+}
+
+/** Assumption, see CLAUDE.md: a future date can be previewed, but only a real exit is saved. */
+export const canSaveExit = (exitDate: IsoDate, today: IsoDate) => exitDate <= today;
+
 const toWholeRupee = (paise: number): Paise => Math.round(paise / 100) * 100;
 
 /**
