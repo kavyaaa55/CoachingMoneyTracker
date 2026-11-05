@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+/* Tokens mirror DESIGN.md. Change them there first. */
+@theme {
+  --color-primary: #1f5673;
+  --color-primary-hover: #184560;
+  --color-on-primary: #ffffff;
+  --color-ink: #1f2f3a;
+  --color-muted: #546672;
+  --color-canvas: #f4f7f8;
+  --color-surface: #ffffff;
+  --color-highlight: #e3edf1;
+  --color-divider: #d5dee3;
+  --color-control: #7c8e99;
+  --color-paid: #256b57;
+  --color-paid-tint: #e6f2ee;
+  --color-overdue: #94501a;
+  --color-overdue-tint: #fbf1e6;
+  --color-error: #a63a2e;
+  --color-error-tint: #fbecea;
+
+  --font-sans: var(--font-noto-sans), sans-serif;
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+
+  --text-amount: 52px;
+  --text-amount--line-height: 64px;
+}
+
+body {
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  line-height: 1.5;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}
