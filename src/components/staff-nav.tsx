@@ -9,7 +9,7 @@ export function StaffNav({ links }: Props) {
   const pathname = usePathname();
 
   return (
-    <nav className="mt-4 flex gap-2 md:flex-col md:gap-1">
+    <nav className="mt-4 flex flex-wrap gap-2 md:flex-col md:flex-nowrap md:gap-1">
       {links.map((link) => {
         const active = pathname.startsWith(link.href);
         return (
@@ -17,7 +17,7 @@ export function StaffNav({ links }: Props) {
             key={link.href}
             href={link.href}
             aria-current={active ? "page" : undefined}
-            className={`block min-h-12 flex-1 rounded-sm px-3 py-3 md:flex-none ${
+            className={`block min-h-12 flex-1 rounded-sm px-3 py-3 whitespace-nowrap md:flex-none ${
               active ? "bg-highlight font-medium" : "text-muted hover:bg-highlight"
             }`}
           >
