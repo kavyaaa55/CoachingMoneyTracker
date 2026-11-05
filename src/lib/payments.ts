@@ -1,7 +1,7 @@
 import { and, eq, sql } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db/client";
-import { instalments, payments } from "@/db/schema";
+import { instalments, payments, reminders } from "@/db/schema";
 import { matchPayment } from "@/domain/payments";
 import { isUuid } from "./ledger";
 
@@ -103,6 +103,14 @@ export async function recordPayment(
       })
       .onConflictDoNothing({ target: payments.gatewayRef })
       .returning();
+
+    if (inserted && matched && event.amountPaise === balance) {
+      // Fully paid: stop what is queued in the same step, so no reminder can follow.
+      await tx
+        .update(reminders)
+        .set({ status: "stopped", stoppedReason: "paid" })
+        .where(and(eq(reminders.instalmentId, instalment.id), eq(reminders.status, "queued")));
+    }
 
     if (inserted) return { row: inserted, duplicate: false };
 

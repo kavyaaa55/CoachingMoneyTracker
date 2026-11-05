@@ -25,6 +25,7 @@ jobs:
       DATABASE_URL: postgres://postgres:ci@localhost:5432/postgres
       SESSION_SECRET: ci-placeholder-not-used-for-anything-real
       GATEWAY_WEBHOOK_SECRET: ci-placeholder-not-used-for-anything-real
+      CRON_SECRET: ci-placeholder-not-used-for-anything-real
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

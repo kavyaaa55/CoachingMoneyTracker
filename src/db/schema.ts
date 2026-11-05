@@ -179,6 +179,9 @@ export const reminders = pgTable(
     status: reminderStatusEnum("status").notNull().default("queued"),
     sendOn: date("send_on").notNull(),
     sentAt: timestamp("sent_at", { withTimezone: true }),
+    /** The text as sent, kept as a record. */
+    message: text("message"),
+    stoppedReason: text("stopped_reason"),
   },
   (t) => [unique().on(t.instalmentId, t.dayOffset), index().on(t.status, t.sendOn)],
 );
