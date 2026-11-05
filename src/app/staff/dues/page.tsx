@@ -1,14 +1,21 @@
 import Link from "next/link";
-import { buttonStyles } from "@/components/button-styles";
+import { buttonStyles, rowLink } from "@/components/button-styles";
 import { DataTable } from "@/components/data-table";
 import { TextField } from "@/components/text-field";
 import { AGEING_BUCKETS, duesByBatch, summariseDues } from "@/domain/dues";
+import type { UnmatchedReason } from "@/domain/payments";
 import { formatInr } from "@/domain/money";
 import { defaultExportFrom } from "@/domain/tally";
-import { messages } from "@/i18n";
+import { formatDate, messages } from "@/i18n";
 import { requireUser } from "@/lib/auth";
 import { today } from "@/lib/clock";
-import { allBatchNames, countStudentsLeft, duesInstalments } from "@/lib/dues";
+import {
+  allBatchNames,
+  countStudentsLeft,
+  duesInstalments,
+  QUEUE_LIMIT,
+  unmatchedQueue,
+} from "@/lib/dues";
 import { getLocale } from "@/lib/locale";
 import { allCentres } from "@/lib/staff-students";
 
@@ -29,7 +36,8 @@ const dateOr = (value: string | string[] | undefined, fallback: string) =>
 export default async function DuesPage({ searchParams }: { searchParams: Promise<Query> }) {
   await requireUser("accounts");
   const query = await searchParams;
-  const t = messages(await getLocale());
+  const locale = await getLocale();
+  const t = messages(locale);
   const d = t.staff.dues;
   const date = today();
 
@@ -41,9 +49,10 @@ export default async function DuesPage({ searchParams }: { searchParams: Promise
   const filters = { centreId, batch };
   const filtering = Boolean(centreId || batch);
 
-  const [instalments, studentsLeft] = await Promise.all([
+  const [instalments, studentsLeft, queue] = await Promise.all([
     duesInstalments(filters),
     countStudentsLeft(filters),
+    unmatchedQueue(),
   ]);
   const summary = summariseDues(instalments, date);
   const rows = duesByBatch(instalments, date);
@@ -170,6 +179,52 @@ export default async function DuesPage({ searchParams }: { searchParams: Promise
           </section>
         </>
       )}
+
+      <section className="flex flex-col gap-3">
+        <h2 className="text-xl leading-7 font-medium">
+          {d.queueTitle} ({queue.total})
+        </h2>
+        <p className="text-muted">{d.queueIntro}</p>
+        {queue.rows.length === 0 ? (
+          <p className="rounded-md border border-divider bg-surface p-6 text-muted">
+            {d.queueEmpty}
+          </p>
+        ) : (
+          <DataTable
+            rows={queue.rows}
+            rowKey={(row) => row.id}
+            columns={[
+              {
+                header: d.queueDate,
+                cell: (row) => formatDate(row.paidAt.toISOString().slice(0, 10), locale),
+              },
+              { header: d.queueAmount, align: "right", cell: (row) => formatInr(row.amount) },
+              {
+                header: d.queueReference,
+                cell: (row) => <span className="break-all">{row.reference}</span>,
+              },
+              {
+                header: d.queueReason,
+                cell: (row) => row.reason && d.queueReasons[row.reason as UnmatchedReason],
+              },
+              {
+                header: d.queueStudent,
+                cell: (row) =>
+                  row.studentId ? (
+                    <Link href={`/staff/students/${row.studentId}`} className={rowLink}>
+                      {row.studentCode}
+                    </Link>
+                  ) : (
+                    d.queueNoStudent
+                  ),
+              },
+            ]}
+          />
+        )}
+        {queue.total > QUEUE_LIMIT && (
+          <p className="text-sm text-muted">{d.queueMore(QUEUE_LIMIT, queue.total)}</p>
+        )}
+      </section>
 
       <section className="flex flex-col gap-3 pb-8">
         <h2 className="text-xl leading-7 font-medium">{d.exportTitle}</h2>

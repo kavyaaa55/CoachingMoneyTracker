@@ -4,7 +4,13 @@ import { db, sqlClient } from "@/db/client";
 import { batches, centres, instalments, students, users } from "@/db/schema";
 import { duesByBatch, summariseDues } from "@/domain/dues";
 import { rupees } from "@/domain/money";
-import { allBatchNames, countStudentsLeft, duesInstalments, tallyReceipts } from "./dues";
+import {
+  allBatchNames,
+  countStudentsLeft,
+  duesInstalments,
+  tallyReceipts,
+  unmatchedQueue,
+} from "./dues";
 import { recordPayment } from "./payments";
 import { saveRefund } from "./refunds";
 
@@ -138,6 +144,24 @@ describe("countStudentsLeft", () => {
 describe("allBatchNames", () => {
   it("lists each name once", async () => {
     expect(await allBatchNames()).toEqual(["JEE 2027 Morning", "NEET 2027 Evening"]);
+  });
+});
+
+describe("unmatchedQueue", () => {
+  it("lists only unmatched money, with why it is there and who it was for", async () => {
+    await recordPayment({
+      gatewayRef: "TEST-D-NO-REF",
+      instalmentRef: null,
+      amountPaise: rupees(700),
+      paidAt: "2026-10-20T06:00:00.000Z",
+    });
+
+    const { rows, total } = await unmatchedQueue();
+
+    expect(total).toBe(2);
+    expect(rows.map((row) => row.reason)).toEqual(["no-instalment", "amount-too-high"]);
+    expect(rows[0].studentCode).toBeNull();
+    expect(rows[1]).toMatchObject({ amount: rupees(500), studentCode: "STU-A" });
   });
 });
 

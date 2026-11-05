@@ -1,4 +1,4 @@
-import { and, asc, count, eq, gte, isNotNull, isNull, lt, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, gte, isNotNull, isNull, lt, sql } from "drizzle-orm";
 import { db } from "@/db/client";
 import { batches, centres, instalments, payments, students } from "@/db/schema";
 import { addDays, type IsoDate } from "@/domain/dates";
@@ -48,6 +48,35 @@ export async function allBatchNames() {
     .from(batches)
     .orderBy(asc(batches.name));
   return rows.map((row) => row.name);
+}
+
+export const QUEUE_LIMIT = 25;
+
+/** The accounts queue from the brief. Read only: nothing here has been applied to a fee. */
+export async function unmatchedQueue() {
+  const unmatched = eq(payments.status, "unmatched");
+
+  const [rows, [{ total }]] = await Promise.all([
+    db
+      .select({
+        id: payments.id,
+        reference: payments.gatewayRef,
+        amount: payments.amountPaise,
+        reason: payments.unmatchedReason,
+        paidAt: payments.paidAt,
+        studentId: students.id,
+        studentCode: students.code,
+      })
+      .from(payments)
+      .leftJoin(instalments, sql`${instalments.id}::text = ${payments.claimedRef}`)
+      .leftJoin(students, eq(students.id, instalments.studentId))
+      .where(unmatched)
+      .orderBy(desc(payments.paidAt))
+      .limit(QUEUE_LIMIT),
+    db.select({ total: count() }).from(payments).where(unmatched),
+  ]);
+
+  return { rows, total };
 }
 
 type ExportRange = DuesFilters & { from: IsoDate; to: IsoDate };
