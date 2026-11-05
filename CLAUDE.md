@@ -58,7 +58,10 @@ Label each of these in the Technical Design Document. Add new ones here as they 
 | OTP delivery | SMS is mocked. With `DEMO_MODE=true` the code shows on screen | The brief says to mock messages |
 | OTP limits | 5 minutes, 5 tries per code, 5 codes per number in 10 minutes | The brief asks for OTP login, not its limits |
 | Consent proof | OTP sign-in on the registered number, plus a stored, versioned record per child | The brief requires verifiable consent, not the method |
-| GST rate | Set in one place and stated as an assumption | The brief says receipts show GST, not the rate |
+| GST | 18%, included in the fee, split into 9% CGST and 9% SGST, with a sample GSTIN | The brief says receipts show GST, not the rate or number |
+| Payment matching | A payment up to the balance is applied, as a part payment if smaller. More than the balance goes to the queue | The brief says a wrong amount marks nothing paid, and its sample data has part payments |
+| Parent home amount | Shows the oldest unpaid instalment, and mentions any other overdue amount | The pay link is per instalment, so the button must match the amount shown |
+| Pay links | Signed, valid for 7 days, and show no student data | Reminders will carry them, so they must be safe outside a signed-in session |
 
 ## Stack
 
@@ -76,6 +79,7 @@ docs/        brief and mockups
 ```
 
 - Money is integer paise. Format it only with `formatInr`.
+- `recordPayment` in `lib/payments` is the only code that marks an instalment paid.
 - Dates are `YYYY-MM-DD` strings. Get today from `lib/clock`, never `new Date()`, so the demo date holds. Security timers such as OTP expiry use the real clock.
 - Call `requireUser` or `requireParent` from `lib/auth` first in every protected page and server action.
 - User-facing text comes from `src/i18n`, never hardcoded.
@@ -85,7 +89,8 @@ docs/        brief and mockups
 
 ```
 npm run dev          start the app
-npm test             run tests
+npm test             run unit tests
+npm run test:db      run database tests on a separate test database
 npm run typecheck    check types
 npm run lint         lint
 npm run build        production build
@@ -93,7 +98,7 @@ npm run db:migrate   apply migrations
 npm run db:seed      load sample data
 ```
 
-Before each commit: `npm test`, `npm run typecheck` and `npm run lint` must pass.
+Before each commit: `npm test`, `npm run test:db`, `npm run typecheck` and `npm run lint` must pass.
 
 ## How to work
 
