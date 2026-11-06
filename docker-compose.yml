@@ -1,0 +1,56 @@
+# Runs the whole system: docker compose up -d --build
+# Load the sample data once with: docker compose --profile demo run --rm seed
+x-app-env: &app-env
+  env_file: .env
+  environment:
+    DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@db:5432/fee_tracker
+
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: fee_tracker
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d fee_tracker"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  migrate:
+    build:
+      context: .
+      target: tools
+    <<: *app-env
+    depends_on:
+      db:
+        condition: service_healthy
+
+  seed:
+    profiles: [demo]
+    build:
+      context: .
+      target: tools
+    <<: *app-env
+    command: ["npm", "run", "db:seed"]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  app:
+    build:
+      context: .
+      target: runner
+    restart: unless-stopped
+    <<: *app-env
+    ports:
+      - "${PORT:-3000}:3000"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+volumes:
+  db-data:

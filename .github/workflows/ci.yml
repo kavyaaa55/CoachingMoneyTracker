@@ -38,3 +38,30 @@ jobs:
       - run: npm test
       - run: npm run test:db
       - run: npm run build
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create a throwaway env file
+        run: |
+          cp .env.example .env
+          for name in SESSION_SECRET GATEWAY_WEBHOOK_SECRET CRON_SECRET POSTGRES_PASSWORD; do
+            sed -i "s|^$name=.*|$name=$(openssl rand -hex 32)|" .env
+          done
+      - name: Build and start everything
+        run: docker compose up -d --build
+      - name: Load the sample data
+        run: docker compose --profile demo run --rm seed
+      - name: Wait for the app to be healthy
+        run: |
+          for attempt in $(seq 1 30); do
+            curl -fsS http://localhost:3000/api/health && exit 0
+            sleep 2
+          done
+          exit 1
+      - name: Check the app serves pages
+        run: curl -fsS http://localhost:3000/login -o /dev/null
+      - name: Show logs on failure
+        if: failure()
+        run: docker compose logs --no-color --tail 80
