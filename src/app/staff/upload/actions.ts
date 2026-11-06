@@ -102,13 +102,13 @@ export async function checkUpload(_: UploadState, formData: FormData): Promise<U
 }
 
 export async function saveBatchUpload(_: FormState, formData: FormData): Promise<FormState> {
-  await requireUser("accounts");
+  const user = await requireUser("accounts");
   const u = messages(await getLocale()).staff.upload;
 
   const form = saveSchema.safeParse(Object.fromEntries(formData));
   if (!form.success) return { error: u.invalidNow };
 
-  const outcome = await saveUpload(form.data);
+  const outcome = await saveUpload(form.data, undefined, user.id);
   if (!outcome.saved) return { error: u.invalidNow };
 
   redirect(`/staff/upload?added=${outcome.added}&changed=${outcome.changed}`);

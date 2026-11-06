@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { buttonStyles, rowLink } from "@/components/button-styles";
 import { DataTable } from "@/components/data-table";
+import { ReverseForm } from "@/components/reverse-form";
 import { RiskChip } from "@/components/risk-chip";
 import { StatusChip } from "@/components/status-chip";
 import { balanceOf, instalmentStatus, summariseLedger } from "@/domain/instalments";
@@ -9,6 +10,7 @@ import { formatInr } from "@/domain/money";
 import { formatDate, messages, riskReasonLabel } from "@/i18n";
 import { requireUser } from "@/lib/auth";
 import { today } from "@/lib/clock";
+import { istDate } from "@/lib/clock";
 import { instalmentsOf, paymentHistoryOf } from "@/lib/ledger";
 import { getLocale } from "@/lib/locale";
 import { riskOf } from "@/lib/risk";
@@ -176,7 +178,7 @@ export default async function StudentLedgerPage({ params, searchParams }: Props)
             columns={[
               {
                 header: l.date,
-                cell: (row) => formatDate(row.paidAt.toISOString().slice(0, 10), locale),
+                cell: (row) => formatDate(istDate(row.paidAt), locale),
               },
               { header: t.receipt.paidFor, cell: (row) => t.receipt.instalment(row.sequence) },
               { header: l.method, cell: (row) => t.paymentMethods[row.method] },
@@ -192,6 +194,19 @@ export default async function StudentLedgerPage({ params, searchParams }: Props)
                     {row.receiptNo}
                   </Link>
                 ),
+              },
+              {
+                header: l.reverse.column,
+                cell: (row) =>
+                  row.status === "reversed" ? (
+                    <span className="text-overdue">
+                      {l.reverse.done(formatDate(row.reversedOn!, locale), row.reversalNote ?? "")}
+                    </span>
+                  ) : student.exitDate ? (
+                    "-"
+                  ) : (
+                    <ReverseForm paymentId={row.id} studentId={id} t={t} />
+                  ),
               },
             ]}
           />

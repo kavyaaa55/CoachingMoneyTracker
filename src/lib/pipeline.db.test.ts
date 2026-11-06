@@ -17,6 +17,8 @@ import { instalmentStatus } from "@/domain/instalments";
 import { RULE_VERSION } from "@/domain/risk";
 import { replayRule, summariseReplay } from "@/domain/risk-lab";
 import { lateShare } from "@/domain/scoreboard";
+import { latestClose, monthReport } from "./books";
+import { istDate } from "./clock";
 import { env } from "./env";
 import { instalmentsOf } from "./ledger";
 import { runDay } from "./pipeline";
@@ -49,7 +51,8 @@ describe("the replayed term", () => {
   it("issues real receipt numbers from one series", async () => {
     const rows = await db.select().from(payments).where(eq(payments.status, "matched"));
     const paid = buildSampleData().students.flatMap((s) => s.instalments.filter((i) => i.paidOn));
-    expect(rows).toHaveLength(paid.length);
+    // One counter entry is reversed in October, so it no longer counts as matched.
+    expect(rows).toHaveLength(paid.length - 1);
     expect(rows.every((row) => /^RCT-\d{6}$/.test(row.receiptNo ?? ""))).toBe(true);
   });
 
@@ -75,7 +78,7 @@ describe("the replayed term", () => {
       .select({ sentAt: reminders.sentAt, sendOn: reminders.sendOn })
       .from(reminders)
       .where(eq(reminders.status, "sent"));
-    expect(sent.sentAt?.toISOString().slice(0, 10)).toBe(sent.sendOn);
+    expect(istDate(sent.sentAt!)).toBe(sent.sendOn);
   });
 
   it("leaves the demo date's reminders for someone to run", async () => {
@@ -144,6 +147,16 @@ describe("the replayed term", () => {
     const health = await matchingHealth(SAMPLE_TODAY);
     expect(health.queued).toBe(3);
     expect(health.oldestDays).toBe(5);
+  });
+
+  it("closes the three finished months, and October cannot close with money queued", async () => {
+    expect(await latestClose()).toEqual({ month: "2026-09", days: 1 });
+    expect((await monthReport("2026-09")).close).not.toBeNull();
+
+    const october = await monthReport("2026-10");
+    expect(october.close).toBeNull();
+    const failed = october.checks.filter((item) => !item.passed).map((item) => item.check);
+    expect(failed).toEqual(["queue"]);
   });
 
   it("gives the same outcome when run twice", async () => {

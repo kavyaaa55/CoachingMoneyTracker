@@ -11,6 +11,7 @@ import {
 } from "@/db/schema";
 import type { IsoDate } from "@/domain/dates";
 import { assessRisk, decideTask, latestWeekByBatch, RULE_VERSION } from "@/domain/risk";
+import { audit } from "./audit";
 import { today } from "./clock";
 import { instalmentsOf, instalmentsOfMany } from "./ledger";
 
@@ -194,5 +195,14 @@ export async function reviewTask(
     .set({ taskStatus: outcome, reviewNote: note, reviewedOn: date, reviewedBy })
     .where(and(eq(riskFlags.id, taskId), eq(riskFlags.taskStatus, "open")))
     .returning({ id: riskFlags.id });
+
+  if (updated.length > 0) {
+    await audit(db, {
+      actorId: reviewedBy,
+      action: "task.reviewed",
+      entityId: taskId,
+      detail: { outcome, note },
+    });
+  }
   return updated.length > 0;
 }

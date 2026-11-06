@@ -84,8 +84,8 @@ beforeAll(async () => {
   const gone = await addStudent("STU-GONE", neetTwo.id);
 
   await pay(a.first.id, 30000);
-  await pay(b.first.id, 10000, "2026-09-30T23:59:59.000Z");
-  await pay(c.first.id, 5000, "2026-11-01T00:00:00.000Z");
+  await pay(b.first.id, 10000, "2026-09-30T18:29:59.000Z");
+  await pay(c.first.id, 5000, "2026-10-31T18:30:00.000Z");
   await pay(gone.first.id, 20000);
   await pay(a.first.id, 500);
 

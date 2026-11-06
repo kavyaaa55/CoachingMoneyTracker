@@ -19,6 +19,8 @@ export type PipelineEvent = { on: IsoDate } & (
   | { kind: "exit"; code: string }
   | { kind: "refund-approved"; code: string }
   | { kind: "refund-paid"; code: string; reference: string }
+  | { kind: "reversal"; gatewayRef: string; note: string }
+  | { kind: "month-closed"; month: string }
 );
 
 export type PipelineCounts = {
@@ -56,9 +58,11 @@ const ORDER: PipelineEvent["kind"][] = [
   "upload",
   "counter",
   "gateway",
+  "reversal",
   "exit",
   "refund-approved",
   "refund-paid",
+  "month-closed",
 ];
 
 export const inDayOrder = (events: PipelineEvent[]) =>

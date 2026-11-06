@@ -15,6 +15,7 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 import type { PipelineCounts, PipelineSource } from "@/domain/pipeline";
+import type { AuditAction } from "@/lib/audit";
 import type { RiskReason } from "@/domain/risk";
 
 export const roleEnum = pgEnum("role", ["parent", "accounts"]);
@@ -26,7 +27,7 @@ export const paymentMethodEnum = pgEnum("payment_method", [
   "cheque",
   "bank_transfer",
 ]);
-export const paymentStatusEnum = pgEnum("payment_status", ["matched", "unmatched"]);
+export const paymentStatusEnum = pgEnum("payment_status", ["matched", "unmatched", "reversed"]);
 export const reminderStatusEnum = pgEnum("reminder_status", ["queued", "sent", "stopped"]);
 export const riskBandEnum = pgEnum("risk_band", ["watch", "high"]);
 export const taskStatusEnum = pgEnum("task_status", ["open", "called", "false_flag"]);
@@ -159,13 +160,19 @@ export const payments = pgTable(
     claimedRef: text("claimed_ref"),
     unmatchedReason: text("unmatched_reason"),
     paidAt: timestamp("paid_at", { withTimezone: true }).notNull(),
+    /** The person who applied this from the queue. */
+    appliedBy: uuid("applied_by").references(() => users.id),
+    /** A wrong payment is never deleted. The row and its receipt stay, marked reversed. */
+    reversedBy: uuid("reversed_by").references(() => users.id),
+    reversedOn: date("reversed_on"),
+    reversalNote: text("reversal_note"),
   },
   (t) => [
     index().on(t.instalmentId),
     check("payment_amount_positive", sql`${t.amountPaise} > 0`),
     check(
-      "matched_has_instalment",
-      sql`(${t.status} = 'matched') = (${t.instalmentId} is not null)`,
+      "unmatched_has_no_instalment",
+      sql`(${t.status} = 'unmatched') = (${t.instalmentId} is null)`,
     ),
   ],
 );
@@ -251,6 +258,29 @@ export const riskFlags = pgTable(
     uniqueIndex("risk_flags_one_open_task").on(t.studentId).where(sql`${t.taskStatus} = 'open'`),
   ],
 );
+
+/** Append only: a database trigger refuses every update and delete. */
+export const auditEvents = pgTable(
+  "audit_events",
+  {
+    id: id(),
+    at: timestamp("at", { withTimezone: true }).notNull().defaultNow(),
+    actorId: uuid("actor_id").references(() => users.id),
+    action: text("action").$type<AuditAction>().notNull(),
+    entityId: uuid("entity_id").notNull(),
+    detail: jsonb("detail").$type<Record<string, unknown>>().notNull().default({}),
+  },
+  (t) => [index().on(t.at)],
+);
+
+export const monthCloses = pgTable("month_closes", {
+  id: id(),
+  month: text("month").notNull().unique(),
+  closedOn: date("closed_on").notNull(),
+  closedBy: uuid("closed_by")
+    .notNull()
+    .references(() => users.id),
+});
 
 /** What each day's pipeline run took in and did, so staff can see that it ran. */
 export const pipelineRuns = pgTable(

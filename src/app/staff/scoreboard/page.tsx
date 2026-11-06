@@ -11,6 +11,7 @@ import {
 } from "@/domain/scoreboard";
 import { formatDate, messages } from "@/i18n";
 import { requireUser } from "@/lib/auth";
+import { latestClose } from "@/lib/books";
 import { today } from "@/lib/clock";
 import { getLocale } from "@/lib/locale";
 import { recentRuns } from "@/lib/pipeline";
@@ -24,12 +25,13 @@ export default async function ScoreboardPage() {
   const s = t.staff.scoreboard;
   const date = today();
 
-  const [instalments, response, matching, refundRows, runs] = await Promise.all([
+  const [instalments, response, matching, refundRows, runs, close] = await Promise.all([
     scoredInstalments(),
     reminderResponse(),
     matchingHealth(date),
     listRefunds(),
     recentRuns(),
+    latestClose(),
   ]);
 
   const late = lateShare(instalments, date);
@@ -52,11 +54,12 @@ export default async function ScoreboardPage() {
       name: s.closeName,
       from: s.days(BRIEF_CLOSE_DAYS.baseline),
       to: s.days(BRIEF_CLOSE_DAYS.target),
-      now: s.autoNow(autoPercent),
-      detail:
+      now: close ? s.days(close.days) : s.notYet,
+      detail: `${close ? s.closeDetail(close.month) : s.closeEmpty} ${s.autoDetail(autoPercent)} ${
         matching.oldestDays === null
           ? s.queueClear
-          : s.queueDetail(matching.queued, matching.oldestDays),
+          : s.queueDetail(matching.queued, matching.oldestDays)
+      }`,
     },
     {
       name: s.callsName,

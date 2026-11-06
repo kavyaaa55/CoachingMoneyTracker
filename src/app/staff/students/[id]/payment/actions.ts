@@ -9,7 +9,7 @@ import { requireUser } from "@/lib/auth";
 import { today } from "@/lib/clock";
 import { instalmentById } from "@/lib/ledger";
 import { getLocale } from "@/lib/locale";
-import { MANUAL_METHODS, recordPayment } from "@/lib/payments";
+import { isMonthClosed, MANUAL_METHODS, recordPayment } from "@/lib/payments";
 import { studentById } from "@/lib/staff-students";
 
 const formSchema = z.object({
@@ -33,6 +33,7 @@ export async function recordManualPayment(_: FormState, formData: FormData): Pro
   const amountPaise = parseRupees(amount);
   if (!amountPaise) return { error: t.invalidAmount };
   if (paidOn > today()) return { error: t.futureDate };
+  if (await isMonthClosed(paidOn)) return { error: t.monthClosed };
 
   const instalment = await instalmentById(instalmentId);
   if (instalment?.studentId !== studentId) return { error: t.invalid };

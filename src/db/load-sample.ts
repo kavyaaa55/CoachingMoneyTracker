@@ -22,7 +22,7 @@ export async function loadSampleData() {
 
   await db.transaction(async (tx) => {
     await tx.execute(
-      sql`truncate table otp_codes, pipeline_runs, refunds, risk_flags, test_scores, attendance,
+      sql`truncate table otp_codes, audit_events, month_closes, pipeline_runs, refunds, risk_flags, test_scores, attendance,
           reminders, payments, instalments, consents, students, users, batches, centres cascade`,
     );
     await tx.execute(sql`alter sequence receipt_no_seq restart`);

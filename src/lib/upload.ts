@@ -15,6 +15,7 @@ import {
   type UploadKind,
   type UploadStudent,
 } from "@/domain/upload";
+import { audit } from "./audit";
 import { today } from "./clock";
 import { isUuid } from "./ledger";
 
@@ -108,7 +109,11 @@ export type SaveOutcome = { saved: false } | { saved: true; added: number; chang
  * saves every row or none. This only ever writes attendance and test scores: the risk
  * check reads them on its own schedule, and no fee or parent message follows from here.
  */
-export async function saveUpload(input: UploadInput, date: IsoDate = today()): Promise<SaveOutcome> {
+export async function saveUpload(
+  input: UploadInput,
+  date: IsoDate = today(),
+  actorId?: string,
+): Promise<SaveOutcome> {
   const inspection = await inspectUpload(input, date);
   if (inspection.errors.length > 0) return { saved: false };
 
@@ -137,6 +142,22 @@ export async function saveUpload(input: UploadInput, date: IsoDate = today()): P
           maxScore: sql`excluded.max_score`,
         },
       });
+  }
+
+  // Replaced values are kept here, so a correction can always be traced.
+  if (actorId && outcome.changed > 0) {
+    const replaced = inspection.changes.filter((change) => change.status === "changed");
+    await audit(db, {
+      actorId,
+      action: "upload.saved",
+      entityId: input.batchId,
+      detail: {
+        kind: inspection.kind,
+        added: outcome.added,
+        changed: outcome.changed,
+        replaced: replaced.slice(0, 20).map(({ before, record }) => ({ before, after: record })),
+      },
+    });
   }
 
   return outcome;

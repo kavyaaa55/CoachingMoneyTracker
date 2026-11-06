@@ -1,9 +1,12 @@
-import { and, asc, count, desc, eq, gte, isNotNull, isNull, lt, lte, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, gte, inArray, isNotNull, isNull, lt, lte, sql } from "drizzle-orm";
 import { db } from "@/db/client";
 import { batches, centres, instalments, payments, refunds, students } from "@/db/schema";
 import { addDays, type IsoDate } from "@/domain/dates";
 import type { TallyReceipt } from "@/domain/tally";
+import { istDate } from "./clock";
 import { instalmentFields } from "./ledger";
+
+const startOfIndiaDay = (date: IsoDate) => new Date(`${date}T00:00:00+05:30`);
 
 export type DuesFilters = { centreId: string | null; batch: string | null };
 
@@ -135,9 +138,9 @@ export async function tallyReceipts({ from, to, ...filters }: ExportRange): Prom
     .innerJoin(centres, eq(centres.id, batches.centreId))
     .where(
       and(
-        eq(payments.status, "matched"),
-        gte(payments.paidAt, new Date(`${from}T00:00:00.000Z`)),
-        lt(payments.paidAt, new Date(`${addDays(to, 1)}T00:00:00.000Z`)),
+        inArray(payments.status, ["matched", "reversed"]),
+        gte(payments.paidAt, startOfIndiaDay(from)),
+        lt(payments.paidAt, startOfIndiaDay(addDays(to, 1))),
         inScope(filters),
       ),
     )
@@ -145,6 +148,35 @@ export async function tallyReceipts({ from, to, ...filters }: ExportRange): Prom
 
   return rows.map(({ paidAt, ...row }) => ({
     ...row,
-    paidOn: paidAt.toISOString().slice(0, 10),
+    paidOn: istDate(paidAt),
+  }));
+}
+
+/** A reversal is its own voucher on its own day, so a month already imported stays as it was. */
+export async function tallyReversals({ from, to, ...filters }: ExportRange): Promise<TallyReceipt[]> {
+  const rows = await db
+    .select({
+      receiptNo: payments.receiptNo,
+      reversedOn: payments.reversedOn,
+      centre: centres.name,
+      batch: batches.name,
+      studentCode: students.code,
+      sequence: instalments.sequence,
+      method: payments.method,
+      reference: sql<string>`coalesce(${payments.externalRef}, ${payments.gatewayRef})`,
+      amount: payments.amountPaise,
+    })
+    .from(payments)
+    .innerJoin(instalments, eq(instalments.id, payments.instalmentId))
+    .innerJoin(students, eq(students.id, instalments.studentId))
+    .innerJoin(batches, eq(batches.id, students.batchId))
+    .innerJoin(centres, eq(centres.id, batches.centreId))
+    .where(and(gte(payments.reversedOn, from), lte(payments.reversedOn, to), inScope(filters)))
+    .orderBy(asc(payments.reversedOn));
+
+  return rows.map(({ reversedOn, ...row }) => ({
+    ...row,
+    paidOn: reversedOn!,
+    voucher: "Reversal" as const,
   }));
 }

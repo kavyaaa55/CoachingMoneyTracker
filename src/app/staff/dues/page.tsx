@@ -8,7 +8,7 @@ import { formatInr } from "@/domain/money";
 import { defaultExportFrom } from "@/domain/tally";
 import { formatDate, messages } from "@/i18n";
 import { requireUser } from "@/lib/auth";
-import { today } from "@/lib/clock";
+import { istDate, today } from "@/lib/clock";
 import {
   allBatchNames,
   countStudentsLeft,
@@ -185,6 +185,9 @@ export default async function DuesPage({ searchParams }: { searchParams: Promise
           {d.queueTitle} ({queue.total})
         </h2>
         <p className="text-muted">{d.queueIntro}</p>
+        <Link href="/staff/books" className="min-h-12 self-start py-3 font-medium underline underline-offset-4">
+          {d.queueResolve}
+        </Link>
         {queue.rows.length === 0 ? (
           <p className="rounded-md border border-divider bg-surface p-6 text-muted">
             {d.queueEmpty}
@@ -196,7 +199,7 @@ export default async function DuesPage({ searchParams }: { searchParams: Promise
             columns={[
               {
                 header: d.queueDate,
-                cell: (row) => formatDate(row.paidAt.toISOString().slice(0, 10), locale),
+                cell: (row) => formatDate(istDate(row.paidAt), locale),
               },
               { header: d.queueAmount, align: "right", cell: (row) => formatInr(row.amount) },
               {

@@ -11,6 +11,7 @@ import {
 } from "@/db/schema";
 import type { IsoDate } from "@/domain/dates";
 import { calculateRefund, canSaveExit, isPlausibleExitDate, refundStage } from "@/domain/refund";
+import { audit } from "./audit";
 import { today } from "./clock";
 import { isUuid } from "./ledger";
 
@@ -64,7 +65,7 @@ export async function saveRefund(
       exitDate,
     });
 
-    await tx.insert(refunds).values({
+    const [saved] = await tx.insert(refunds).values({
       studentId,
       exitDate,
       netFeePaise: netFee,
@@ -75,6 +76,13 @@ export async function saveRefund(
       refundPaise: result.refund,
       dueBy: result.dueBy,
       createdBy,
+    }).returning({ id: refunds.id });
+
+    await audit(tx, {
+      actorId: createdBy,
+      action: "refund.saved",
+      entityId: saved.id,
+      detail: { student: student.code, exitDate, refundPaise: result.refund },
     });
 
     await tx.update(students).set({ exitDate }).where(eq(students.id, studentId));
@@ -106,6 +114,12 @@ export async function approveRefund(
       .update(refunds)
       .set({ status: "approved", approvedBy, approvedOn: date })
       .where(eq(refunds.id, refundId));
+    await audit(tx, {
+      actorId: approvedBy,
+      action: "refund.approved",
+      entityId: refundId,
+      detail: { refundPaise: refund.refundPaise },
+    });
     return "approved";
   });
 }
@@ -145,6 +159,12 @@ export async function markRefundPaid(
         creditNoteNo: sql`'CN-' || lpad(nextval('credit_note_no_seq')::text, 6, '0')`,
       })
       .where(eq(refunds.id, refundId));
+    await audit(tx, {
+      actorId: paidBy,
+      action: "refund.paid",
+      entityId: refundId,
+      detail: { refundPaise: refund.refundPaise, reference, paidOn },
+    });
     return "paid";
   });
 }

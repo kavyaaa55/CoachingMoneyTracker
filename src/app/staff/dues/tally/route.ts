@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { tallyCsv } from "@/domain/tally";
 import { requireUser } from "@/lib/auth";
-import { tallyCreditNotes, tallyReceipts } from "@/lib/dues";
+import { tallyCreditNotes, tallyReceipts, tallyReversals } from "@/lib/dues";
 
 const querySchema = z.object({
   centre: z.uuid().optional(),
@@ -26,11 +26,14 @@ export async function GET(request: Request) {
   const { centre, batch, from, to } = query.data;
 
   const range = { from, to, centreId: centre ?? null, batch: batch ?? null };
-  const [receipts, creditNotes] = await Promise.all([
+  const [receipts, reversals, creditNotes] = await Promise.all([
     tallyReceipts(range),
+    tallyReversals(range),
     tallyCreditNotes(range),
   ]);
-  const vouchers = [...receipts, ...creditNotes].sort((a, b) => a.paidOn.localeCompare(b.paidOn));
+  const vouchers = [...receipts, ...reversals, ...creditNotes].sort((a, b) =>
+    a.paidOn.localeCompare(b.paidOn),
+  );
   if (vouchers.length === 0) redirect(backTo("empty"));
 
   return new Response(tallyCsv(vouchers), {

@@ -13,7 +13,7 @@ export type TallyReceipt = {
   reference: string;
   amount: Paise;
   /** Amounts stay positive: the voucher type says which way the money went. */
-  voucher?: "Receipt" | "Credit Note";
+  voucher?: "Receipt" | "Reversal" | "Credit Note";
 };
 
 /**
@@ -59,9 +59,11 @@ function voucherRow(receipt: TallyReceipt): string[] {
     receipt.centre,
     receipt.batch,
     receipt.studentCode,
-    voucher === "Receipt"
-      ? `Instalment ${receipt.sequence}, ${receipt.studentCode}`
-      : `Refund, ${receipt.studentCode}`,
+    {
+      Receipt: `Instalment ${receipt.sequence}, ${receipt.studentCode}`,
+      Reversal: `Reversal of ${receipt.receiptNo}, ${receipt.studentCode}`,
+      "Credit Note": `Refund, ${receipt.studentCode}`,
+    }[voucher],
     receipt.method === "cash" ? "Cash" : "Bank",
     receipt.reference,
     toRupees(taxable),

@@ -2,6 +2,7 @@ import { GST_RATE_PERCENT, SAMPLE_GSTIN, splitGst } from "@/domain/gst";
 import { formatInr } from "@/domain/money";
 import { formatDate, type Locale } from "@/i18n";
 import type { Messages } from "@/i18n/en";
+import { istDate } from "@/lib/clock";
 import type { Receipt } from "@/lib/ledger";
 import { PrintButton } from "./print-button";
 
@@ -10,7 +11,7 @@ type Props = { receipt: Receipt; locale: Locale; t: Messages };
 export function ReceiptView({ receipt, locale, t }: Props) {
   const { taxable, cgst, sgst } = splitGst(receipt.amount);
   const halfRate = String(GST_RATE_PERCENT / 2);
-  const paidOn = receipt.paidAt.toISOString().slice(0, 10);
+  const paidOn = istDate(receipt.paidAt);
 
   const details = [
     [t.receipt.number, receipt.receiptNo],
@@ -31,6 +32,11 @@ export function ReceiptView({ receipt, locale, t }: Props) {
   return (
     <>
       <article className="rounded-md border border-divider bg-surface p-6">
+        {receipt.reversedOn && (
+          <p role="status" className="mb-4 rounded-md bg-overdue-tint px-4 py-3 text-overdue">
+            {t.receipt.cancelled(formatDate(receipt.reversedOn, locale))}
+          </p>
+        )}
         <header>
           <p className="text-sm text-muted">
             {t.institute}, {t.city} · {t.receipt.gstin} {SAMPLE_GSTIN}

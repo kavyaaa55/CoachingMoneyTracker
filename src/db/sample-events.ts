@@ -88,6 +88,23 @@ function studentEvents(student: SampleStudent): PipelineEvent[] {
   ];
 }
 
+/** Month ends that accounts had already closed by the demo date. October is still open. */
+const MONTH_CLOSES: PipelineEvent[] = [
+  { on: "2026-08-03", kind: "month-closed", month: "2026-07" },
+  { on: "2026-09-02", kind: "month-closed", month: "2026-08" },
+  { on: "2026-10-01", kind: "month-closed", month: "2026-09" },
+];
+
+/** A counter entry that went against the wrong student, found and put right in October. */
+const REVERSALS: PipelineEvent[] = [
+  {
+    on: "2026-10-20",
+    kind: "reversal",
+    gatewayRef: "SEED-STU-1048-1",
+    note: "Counter entry made against the wrong student",
+  },
+];
+
 /** Turns the sample into the stream of events that would have produced it. */
 export function buildEvents(
   students: SampleStudent[],
@@ -96,6 +113,8 @@ export function buildEvents(
   return inDayOrder([
     ...byBatch(students).flatMap((batch) => [...attendanceFiles(batch), ...scoreFiles(batch)]),
     ...students.flatMap(studentEvents),
+    ...MONTH_CLOSES,
+    ...REVERSALS,
     ...unmatched.map(
       (item): PipelineEvent => ({
         on: item.paidOn,

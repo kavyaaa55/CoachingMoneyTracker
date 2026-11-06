@@ -71,6 +71,20 @@
       "when": 1793978076622,
       "tag": "0009_risk_rule_version",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1793978486495,
+      "tag": "0010_close_the_books",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1793978489163,
+      "tag": "0011_audit_append_only",
+      "breakpoints": true
     }
   ]
 }

@@ -1,6 +1,6 @@
 import { and, desc, eq } from "drizzle-orm";
 import { db } from "@/db/client";
-import { batches, centres, instalments, pipelineRuns, students, users } from "@/db/schema";
+import { batches, centres, instalments, payments, pipelineRuns, students, users } from "@/db/schema";
 import { addDays, type IsoDate } from "@/domain/dates";
 import {
   addCounts,
@@ -10,8 +10,9 @@ import {
   type PipelineEvent,
   type PipelineSource,
 } from "@/domain/pipeline";
+import { closeMonth } from "./books";
 import { today } from "./clock";
-import { recordPayment } from "./payments";
+import { recordPayment, reversePayment } from "./payments";
 import { approveRefund, markRefundPaid, refundOf, saveRefund } from "./refunds";
 import { runReminders } from "./reminders";
 import { runRiskCheck } from "./risk";
@@ -104,6 +105,21 @@ async function applyEvent(event: PipelineEvent): Promise<Partial<PipelineCounts>
         event.on,
       );
       return outcome === "saved" ? { studentsLeft: 1 } : {};
+    }
+    case "reversal": {
+      const [payment] = await db
+        .select({ id: payments.id })
+        .from(payments)
+        .where(eq(payments.gatewayRef, event.gatewayRef));
+      await reversePayment(
+        { paymentId: payment.id, note: event.note, reversedBy: await staffId(MAKER_PHONE) },
+        event.on,
+      );
+      return {};
+    }
+    case "month-closed": {
+      await closeMonth({ month: event.month, closedBy: await staffId(CHECKER_PHONE) }, event.on);
+      return {};
     }
     case "refund-approved": {
       const refundId = await refundIdOf(event.code);

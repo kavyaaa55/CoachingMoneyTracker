@@ -21,7 +21,14 @@ export const istDate = (moment: Date): IsoDate => indiaDate.format(moment);
 
 /** The current time of day on a given date, so replayed events land on their own day. */
 export function timeOn(date: IsoDate): Date {
-  return new Date(`${date}T${new Date().toISOString().slice(11)}`);
+  const time = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Asia/Kolkata",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hourCycle: "h23",
+  }).format(new Date());
+  return new Date(`${date}T${time}+05:30`);
 }
 
 /** The current time on the app's date, so demo payments land on the demo day. */

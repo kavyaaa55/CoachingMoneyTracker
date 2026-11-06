@@ -8,6 +8,9 @@ export const isUuid = (value: string) => UUID.test(value);
 
 const paidSum = sql<number>`coalesce(sum(${payments.amountPaise}) filter (where ${payments.status} = 'matched'), 0)::int`;
 
+/** A reversed payment keeps its receipt, shown as cancelled. It no longer counts as paid. */
+const hasReceipt = inArray(payments.status, ["matched", "reversed"]);
+
 export const instalmentFields = {
   id: instalments.id,
   studentId: instalments.studentId,
@@ -72,10 +75,13 @@ export function paymentHistoryOf(studentId: string) {
       reference: sql<string>`coalesce(${payments.externalRef}, ${payments.gatewayRef})`,
       receiptNo: payments.receiptNo,
       paidAt: payments.paidAt,
+      status: payments.status,
+      reversedOn: payments.reversedOn,
+      reversalNote: payments.reversalNote,
     })
     .from(payments)
     .innerJoin(instalments, eq(instalments.id, payments.instalmentId))
-    .where(and(eq(instalments.studentId, studentId), eq(payments.status, "matched")))
+    .where(and(eq(instalments.studentId, studentId), hasReceipt))
     .orderBy(desc(payments.paidAt));
 }
 
@@ -89,6 +95,7 @@ async function findReceipt(paymentId: string, ownerCheck?: SQL) {
       method: payments.method,
       amount: payments.amountPaise,
       paidAt: payments.paidAt,
+      reversedOn: payments.reversedOn,
       sequence: instalments.sequence,
       studentId: students.id,
       studentName: students.name,
@@ -99,7 +106,7 @@ async function findReceipt(paymentId: string, ownerCheck?: SQL) {
     .innerJoin(instalments, eq(instalments.id, payments.instalmentId))
     .innerJoin(students, eq(students.id, instalments.studentId))
     .innerJoin(batches, eq(batches.id, students.batchId))
-    .where(and(eq(payments.id, paymentId), eq(payments.status, "matched"), ownerCheck));
+    .where(and(eq(payments.id, paymentId), hasReceipt, ownerCheck));
   return row ?? null;
 }
 
