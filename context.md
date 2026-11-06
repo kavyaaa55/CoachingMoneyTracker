@@ -15,7 +15,7 @@ Fee Tracker: a 7-day solo assessment build for Company A, a Jaipur coaching inst
 3. `DESIGN.md`: read before any UI work
 4. `docs/brief.txt`: the client brief, which wins over everything else
 5. `docs/TDD.md`: architecture, decisions, limits
-6. `docs/decisions.md` and `docs/mistakes.md`: why things are as they are, and what went wrong
+6. `docs/decisions.md`, `docs/mistakes.md` and `docs/security.md`: why things are as they are, what went wrong, and what was attacked
 7. `public/guide/index.html`: the visual guide, served at `/guide/index.html`
 
 ## Ground rules
@@ -45,7 +45,7 @@ Fee Tracker: a 7-day solo assessment build for Company A, a Jaipur coaching inst
 | 11. Optional depth: parent attendance and scores, bulk upload | Done |
 | 12. Level-up: event pipeline and five differentiators | Done |
 
-Last verified: 412 tests pass (242 unit, 170 database), lint, types and the production build are clean, and the AI layer was exercised with live Gemini calls.
+Last verified: 426 tests pass (243 unit, 183 database), 65 live attack checks pass, lint, types and the production build are clean, and the AI layer was exercised with live Gemini calls.
 
 ## Run it
 

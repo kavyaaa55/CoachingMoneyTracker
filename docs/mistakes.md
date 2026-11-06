@@ -110,29 +110,50 @@ Passing tests did not catch the worst ones. Three times a test agreed with the b
 - **Fix:** an empty value now means "no key".
 - **Lesson:** optional must mean optional in every form it can arrive.
 
+### 15. Month-end would have crashed on real data
+
+- **What happened:** monthly totals were cast to a 32-bit integer. The 60-student sample never got near the limit, but this client's real months would pass about ₹2.1 crore, and Close the Books would stop with `integer out of range`.
+- **How it was caught:** asking what happens at the client's real volume, then proving it with a test that failed.
+- **Fix:** totals are no longer cast down.
+- **Lesson:** sample data hides scale. Test with the client's numbers, not your own.
+
+### 16. A long note could lose real money
+
+- **What happened:** the webhook refused a note over 200 characters with a 400, so the payment was dropped instead of reaching the queue.
+- **How it was caught:** a hostile webhook in the attack script.
+- **Fix:** a long note is trimmed, and an oversized reference goes to the queue.
+- **Lesson:** validation that refuses input is safe for a form and dangerous for money that has already moved.
+
+### 17. "Closed means closed" had three holes
+
+- **What happened:** a late webhook, a refund date, or a date before the first close could still change a closed month.
+- **How it was caught:** reading every path that writes a date after building the check on only two of them.
+- **Fix:** every path now respects the close, and late money posts on today's date.
+- **Lesson:** a rule is only as strong as the write path you forgot.
+
 ## Process mistakes
 
-### 15. A commit went in with two failing tests
+### 18. A commit went in with two failing tests
 
 - **What happened:** one long command used `;` between steps, so the commit ran after tests had failed.
 - **How it was caught:** reading the output straight after.
 - **Fix:** it had not been pushed, so the commit was amended after the fix, and the history never carried a failing commit.
 - **Lesson:** gate commits with `&&`, so a failure stops the chain.
 
-### 16. Test data did not match its own story
+### 19. Test data did not match its own story
 
 - **What happened:** a test for "two weeks behind" failed. The code was right, but the test miscounted its own weeks.
 - **Fix:** corrected the test data after checking which side was wrong.
 - **Lesson:** a failing test is a question, not a verdict.
 
-### 17. Tests relied on local settings
+### 20. Tests relied on local settings
 
 - **What happened:** the time-machine tests passed locally only because `.env` turns demo mode on. CI has no such setting, so they would have failed after the push.
 - **How it was caught:** reading the CI file before pushing, then running the suite with CI's settings.
 - **Fix:** the tests now set up their own environment.
 - **Lesson:** check that tests pass with CI's settings, not only your own.
 
-### 18. Tooling friction
+### 21. Tooling friction
 
 | Problem | Recovery |
 |---|---|

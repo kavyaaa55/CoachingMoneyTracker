@@ -115,6 +115,17 @@ The brief says "an AI flag", and asks that it works, including when it is wrong 
 | `gemini-2.5-flash`, called with `fetch` | About 2 seconds, and no new dependency. A newer model hung in testing | An SDK, or the newest model by default |
 | On demand, not on page load | Staff choose when to spend a call, and pages stay fast | Drafting on every render |
 
+## Security
+
+The full results are in [security.md](security.md).
+
+| Decision | Why | Rejected |
+|---|---|---|
+| Never refuse real money over a detail | A payment that already happened must reach the queue | Strict validation on the webhook |
+| Sign-out raises a version in the database | A stolen token dies at once, with one integer per user | A session table, or waiting for expiry |
+| Late money posts on today's date | A closed month stays closed, and the money is still recorded | Reopening the month |
+| Fix what is cheap and real, and list what is accepted | A short honest list beats claiming nothing is left | Claiming the app is secure |
+
 ## Foundations, kept from the core build
 
 | Decision | Why |

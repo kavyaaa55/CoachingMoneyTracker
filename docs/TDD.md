@@ -108,7 +108,7 @@ The core choices are below. The level-up and data pipeline choices are in [decis
 
 ## 5. Data Model
 
-16 tables, 15 migrations. The core of it:
+16 tables, 16 migrations. The core of it:
 
 ```mermaid
 erDiagram
@@ -363,6 +363,8 @@ The thresholds were set by judgement against sample data I wrote myself, so thes
 
 ## 8. Security and Compliance
 
+The app was attacked live with 65 checks. 10 failed at first, and all pass now. [security.md](security.md) lists what held, what broke and what is still accepted.
+
 | Requirement | How it is met |
 |---|---|
 | No secrets in the repo | `.env` is ignored by git. Only variable names are committed |
@@ -402,12 +404,12 @@ The 31 mockups are kept in `docs/mockups` as layout reference only. They contain
 
 ## 10. Testing
 
-412 tests pass, and CI runs lint, types, tests and a build on every push.
+426 tests pass, and CI runs lint, types, tests and a build on every push.
 
 | Suite | Tests | Covers |
 |---|---|---|
-| Unit | 242 | Fee, refund, exit dates, OTP, GST, matching, ledger totals, reminder rules, dues and ageing, Tally format, risk bands and missing data, replay and look-ahead, batch baseline, learned thresholds, AI guardrails, late share, suggestions, sessions, sample data, language files |
-| Database | 170 | The whole replayed term, AI drafts and fallbacks with the network faked, time machine, refund approval and credit notes, reversals, queue, month close, audit trigger, uploads, races, part payments, reminder stages and stopping, and that the flag changes nothing else |
+| Unit | 243 | Fee, refund, exit dates, OTP, GST, matching, ledger totals, reminder rules, dues and ageing, Tally format, risk bands and missing data, replay and look-ahead, batch baseline, learned thresholds, AI guardrails, late share, suggestions, sessions, sample data, language files |
+| Database | 183 | The whole replayed term, AI drafts and fallbacks with the network faked, time machine, refund approval and credit notes, reversals, queue, month close, audit trigger, uploads, races, part payments, reminder stages and stopping, and that the flag changes nothing else |
 
 Tests use the brief's own rows, so Aarav, Ishita and Mohit must produce exactly the brief's statuses. Main flows were also walked through in a real browser at 360px, in both languages.
 
@@ -483,8 +485,7 @@ The brief does not state these. Each one is my judgement.
 - Queued money can be applied only if it fits one instalment, and only to a suggested instalment. Anything else is returned to the payer.
 - Pay links are about 230 characters. Real SMS needs a short link service.
 - The job holds the instalment lock while sending. That is fine for a mock, but a real provider should be called with a timeout.
-- OTP limits are per phone number, with no limit per IP address.
-- Signing out clears the cookie on that device. It does not cancel a copied session token.
+- OTP limits are per phone number, with no limit per IP address, so someone can use up a number's codes for 10 minutes.
 - Hindi text needs review by a native speaker before real use. Its layout has been checked, its wording has not.
 - Screen behaviour such as forms keeping their values is checked in a browser, not by automated tests. Adding component tests would need a new dependency.
 - The error page and loading placeholders were reviewed in code, not forced in a browser.

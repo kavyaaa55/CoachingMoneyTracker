@@ -44,6 +44,14 @@
 - Gemini drafts call guides in the parent's language, and reads payer notes in Hindi and English
 - Names are masked, output is checked and labelled, and everything falls back to plain rules
 
+### Security
+
+- Attacked live with 65 checks, and every finding fixed or listed in [docs/security.md](docs/security.md)
+- Month-end totals no longer overflow at real volume
+- A webhook never drops real money over a long note or reference
+- Closed months can no longer be changed by any path
+- The OTP limit holds under parallel requests, sign-out ends every session, and security headers are set
+
 ### Docs
 
 - A visual guide, key decisions, and mistakes and recovery
@@ -60,7 +68,7 @@
 
 ### Quality
 
-- 412 tests: 242 unit and 170 database
+- 426 tests: 243 unit and 183 database
 - A hands-on test guide in [docs/demo.md](docs/demo.md), with sample files in `docs/samples`
 
 ## 1.0.0 (5 Nov 2026)

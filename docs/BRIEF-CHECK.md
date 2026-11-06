@@ -88,9 +88,9 @@ The client's measures need live use for real results. The Scoreboard already wor
 | Requirement | Status | Notes |
 |---|---|---|
 | Frontend, backend, database, sign-in | Met | |
-| Tests for the important logic | Met | 412 tests |
+| Tests for the important logic | Met | 426 tests |
 | No secrets in the repository | Met | Full history checked |
-| Validated inputs and access control | Met | Checked on every read and write |
+| Validated inputs and access control | Met | Checked on every read and write, and attacked live with 65 checks in [security.md](security.md) |
 | Sample data so it does not look empty | Met | 60 fictional students, replayed through the real pipeline |
 | Keep the commit history | Met | |
 | Label every assumption | Met | [TDD section 11](TDD.md#11-assumptions) |

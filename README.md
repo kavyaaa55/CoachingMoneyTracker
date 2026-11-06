@@ -115,6 +115,7 @@ npm run lint
 | [Visual guide](public/guide/index.html) | The whole product in screenshots, with live calculators. Open `/guide/index.html` on the running app |
 | [Key decisions](docs/decisions.md) | What was chosen, why, and what was turned down |
 | [Mistakes and recovery](docs/mistakes.md) | What went wrong, how it was caught, and what changed |
+| [Security testing](docs/security.md) | What was attacked, what broke, what was fixed, what is accepted |
 | [Test guide](docs/demo.md) | Step-by-step missions for trying every workflow, with no technical knowledge needed |
 | [Technical design](docs/TDD.md) | Architecture, data model, flows, how the risk flag works, assumptions, limits |
 | [Brief check](docs/BRIEF-CHECK.md) | Every brief requirement, its status and where to find it |
