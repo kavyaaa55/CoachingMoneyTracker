@@ -1,5 +1,6 @@
 # Dependencies, shared by the stages below.
-FROM node:25-alpine AS deps
+# An LTS release. Odd-numbered Node versions are short-lived, so never use them here.
+FROM node:26-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
@@ -20,7 +21,7 @@ FROM build AS tools
 CMD ["npm", "run", "db:migrate"]
 
 # The web server: only what it needs, running as a non-root user.
-FROM node:25-alpine AS runner
+FROM node:26-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production PORT=3000 HOSTNAME=0.0.0.0
 COPY --from=build --chown=node:node /app/.next/standalone ./

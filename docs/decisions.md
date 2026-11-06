@@ -137,6 +137,7 @@ The figures are in [operations.md](operations.md).
 | Keep sending inside the row lock, in parallel with a timeout | "Check at send time" is the brief's sharpest rule, and 8 at a time was 7 times faster | A send queue, which this size doesn't need yet |
 | Limits and locks live in Postgres | They hold across several servers with no new service | Redis |
 | Stateless app, signed sessions | Any server can answer, so scaling out needs no redesign | Server-side sessions |
+| Node 26 LTS everywhere, chosen by hand | Tests run on the version production uses, and Dependabot would otherwise offer short-lived releases | Accepting every major bump |
 | CI builds and boots the Docker image | Docker isn't on the dev machine, so CI is the proof | Trusting an untested Dockerfile |
 
 ## Foundations, kept from the core build

@@ -58,6 +58,7 @@
 - A lock so two daily runs cannot overlap, housekeeping for old codes and limits, and a sign-in limit per address
 - A health route, JSON logs and a configurable connection pool
 - Docker, Compose, Dependabot, and a CI job that builds and boots the image
+- Node 26 LTS in Docker and CI
 
 ### Docs
 

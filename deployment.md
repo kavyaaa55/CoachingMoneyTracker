@@ -184,10 +184,10 @@ sudo swapon /swapfile
 echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 ```
 
-Install Node 22, Postgres and Caddy.
+Install Node 26, Postgres and Caddy.
 
 ```
-curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+curl -fsSL https://deb.nodesource.com/setup_26.x | sudo -E bash -
 sudo apt-get install -y nodejs postgresql caddy git
 ```
 

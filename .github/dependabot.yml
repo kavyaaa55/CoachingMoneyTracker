@@ -19,3 +19,7 @@ updates:
     directory: /
     schedule:
       interval: monthly
+    ignore:
+      # Major Node versions alternate between LTS and short-lived, so choose them by hand.
+      - dependency-name: node
+        update-types: [version-update:semver-major]
