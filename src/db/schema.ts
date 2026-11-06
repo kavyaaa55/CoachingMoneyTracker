@@ -14,7 +14,7 @@ import {
   uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
-import type { DraftSource, NoteHints } from "@/domain/ai";
+import type { DecidedBy, DraftSource, NoteHints } from "@/domain/ai";
 import type { PipelineCounts, PipelineSource } from "@/domain/pipeline";
 import type { AuditAction } from "@/lib/audit";
 import type { RiskReason } from "@/domain/risk";
@@ -256,6 +256,10 @@ export const riskFlags = pgTable(
     taskStatus: taskStatusEnum("task_status").notNull().default("open"),
     reviewNote: text("review_note"),
     ruleVersion: text("rule_version").notNull().default("v1"),
+    /** Who gave this flag, what the rule alone said, and the model's reason. */
+    decidedBy: text("decided_by").$type<DecidedBy>().notNull().default("rules"),
+    ruleBand: riskBandEnum("rule_band"),
+    aiWhy: text("ai_why"),
     /** A guide for the call, drafted by the model or taken from the template. */
     callBrief: text("call_brief"),
     briefSource: text("brief_source").$type<DraftSource>(),

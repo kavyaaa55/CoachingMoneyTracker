@@ -140,6 +140,51 @@ function weeksMissing(attendance: AttendanceWeek[], batchLatestWeek?: IsoDate | 
   return weeks >= MISSING_WEEKS ? weeks : 0;
 }
 
+/** Below this fall, beyond the batch, there is nothing for anyone to judge. */
+const SIGN_OF_CONCERN = 5;
+
+export type RiskFacts = {
+  enoughData: boolean;
+  attendance: { from: number; to: number } | null;
+  tests: { from: number; to: number } | null;
+  weeksMissing: number;
+  missed: number;
+  /** Late fees are not a sign here, so a student with none of these can never be flagged. */
+  hasAcademicSign: boolean;
+};
+
+/** Worked out by code, so the figures on a flag are always real records. */
+export function riskFacts({
+  instalments,
+  attendance,
+  scores,
+  today,
+  batchLatestWeek,
+  baseline,
+}: RiskInput): RiskFacts {
+  const attendanceTrend = attendanceTrendOf(attendance);
+  const testTrend = testTrendOf(scores);
+  const weeks = weeksMissing(attendance, batchLatestWeek);
+  const fellBeyondBatch = (
+    trendItem: { from: number; to: number } | null,
+    batchFall = 0,
+  ) => trendItem !== null && trendItem.from - trendItem.to - batchFall >= SIGN_OF_CONCERN;
+
+  return {
+    enoughData: instalments.length > 0 && attendanceTrend !== null && testTrend !== null,
+    attendance: attendanceTrend,
+    tests: testTrend,
+    weeksMissing: weeks,
+    missed: instalments.filter(
+      (item) => balanceOf(item) > 0 && daysBetween(item.dueDate, today) > 0,
+    ).length,
+    hasAcademicSign:
+      weeks > 0 ||
+      fellBeyondBatch(attendanceTrend, baseline?.attendanceFall) ||
+      fellBeyondBatch(testTrend, baseline?.testFall),
+  };
+}
+
 export function assessRisk({
   instalments,
   attendance,

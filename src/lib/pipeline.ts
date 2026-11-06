@@ -189,7 +189,9 @@ export async function runDay(
   }
 
   try {
-    const { flagged } = await runRiskCheck(date);
+    // Replays stay offline. The time machine asks only when new records have arrived.
+    const useAi = source !== "replay" && (source !== "time-machine" || counts.recordsUploaded > 0);
+    const { flagged } = await runRiskCheck(date, { useAi });
     counts = addCounts(counts, { tasksCreated: flagged });
   } catch {
     failed.push("risk");

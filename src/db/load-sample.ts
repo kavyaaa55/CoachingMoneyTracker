@@ -102,7 +102,7 @@ export async function loadSampleData() {
     buildEvents(sample.students, sample.unmatchedPayments),
     "replay",
   );
-  await runRiskCheck(SAMPLE_TODAY);
+  await runRiskCheck(SAMPLE_TODAY, { useAi: true });
 
   return { students: sample.students.length };
 }

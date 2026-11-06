@@ -1,4 +1,4 @@
-import type { RiskBand, RiskReason } from "./risk";
+import type { Baseline, RiskBand, RiskFacts, RiskReason, RiskResult } from "./risk";
 
 /**
  * The rules around the model. It only ever drafts or reads: nothing here can change a fee, send a
@@ -103,4 +103,121 @@ export function readHints(reply: string, tokens: Record<string, string>): NoteHi
   const programme = data.programme === "JEE" || data.programme === "NEET" ? data.programme : null;
 
   return { names, instalment, programme };
+}
+
+export type RiskCase = {
+  id: string;
+  attendance: { from: number; to: number };
+  tests: { from: number; to: number };
+  batchFall: Baseline;
+  weeksWithoutRecords: number;
+  overdueInstalments: number;
+};
+
+/** Anonymous on purpose: an id we made, percentages and a count. No name, ID, phone or rupees. */
+export const riskCase = (id: string, facts: RiskFacts, batchFall: Baseline): RiskCase => ({
+  id,
+  attendance: facts.attendance!,
+  tests: facts.tests!,
+  batchFall,
+  weeksWithoutRecords: facts.weeksMissing,
+  overdueInstalments: facts.missed,
+});
+
+export function riskPrompt(cases: RiskCase[]) {
+  return [
+    "You help an Indian coaching institute notice students who may be at risk of dropping out.",
+    "A flag only asks a counsellor to phone the parent. It never affects fees and no parent sees it.",
+    "For each student: attendance and tests are the student's average in percent, earlier and recent. batchFall is how far the typical student in their batch fell, so a fall the whole batch shares matters less. weeksWithoutRecords counts weeks with no attendance while the batch has records. overdueInstalments alone is not a sign of leaving.",
+    `Students: ${JSON.stringify(cases)}`,
+    'Return JSON only: {"verdicts":[{"id":"S1","band":"none"|"watch"|"high","confidence":"low"|"medium"|"high","signs":["attendance","tests","missing","missed"],"why":"one short sentence for a counsellor"}]}.',
+    'Use "high" only for strong signs together, and "none" when a fall is small or shared by the batch. Use confidence "low" if the records do not support a clear view. Do not use ids or names in why.',
+  ].join("\n");
+}
+
+export type AiVerdict = {
+  band: "none" | "watch" | "high";
+  confidence: "low" | "medium" | "high";
+  signs: string[];
+  why: string | null;
+};
+
+const MAX_WHY = 220;
+
+/** A reason is shown to staff, so anything odd is dropped rather than displayed. */
+const cleanWhy = (why: unknown) =>
+  typeof why === "string" &&
+  why.length > 0 &&
+  why.length <= MAX_WHY &&
+  !/https?:|www\.|\d{5,}|[[\]{}<>]|\bS\d+\b/.test(why)
+    ? why
+    : null;
+
+/** Trusts nothing from the model: an unknown id or value is ignored, not guessed at. */
+export function readVerdicts(reply: string, ids: string[]): Map<string, AiVerdict> | null {
+  let data: { verdicts?: unknown };
+  try {
+    data = JSON.parse(reply);
+  } catch {
+    return null;
+  }
+  if (!Array.isArray(data.verdicts)) return null;
+
+  const verdicts = new Map<string, AiVerdict>();
+  for (const item of data.verdicts) {
+    const { id, band, confidence, signs, why } = item ?? {};
+    if (!ids.includes(id)) continue;
+    if (!["none", "watch", "high"].includes(band)) continue;
+    if (!["low", "medium", "high"].includes(confidence)) continue;
+    verdicts.set(id, {
+      band,
+      confidence,
+      signs: Array.isArray(signs) ? signs.filter((sign) => typeof sign === "string") : [],
+      why: cleanWhy(why),
+    });
+  }
+  return verdicts;
+}
+
+export type DecidedBy = "ai" | "rules";
+
+export type RiskDecision = RiskResult & { decidedBy: DecidedBy; why: string | null };
+
+function reasonsFrom(facts: RiskFacts, signs: string[]): RiskReason[] {
+  const fell = (item: { from: number; to: number } | null) => item !== null && item.from > item.to;
+  const all: RiskReason[] = [
+    ...(facts.weeksMissing > 0 ? [{ kind: "missing" as const, weeks: facts.weeksMissing }] : []),
+    ...(fell(facts.attendance) ? [{ kind: "attendance" as const, ...facts.attendance! }] : []),
+    ...(fell(facts.tests) ? [{ kind: "tests" as const, ...facts.tests! }] : []),
+    ...(facts.missed > 0 ? [{ kind: "missed" as const, count: facts.missed }] : []),
+  ];
+  const chosen = all.filter((reason) => signs.includes(reason.kind));
+  return chosen.length > 0 ? chosen : all;
+}
+
+/**
+ * The AI gives the flag. Code keeps the brief's hard lines around it: too little data is never
+ * judged, late fees alone never flag anyone, and every figure comes from our own records. If the
+ * model is unsure, unavailable or breaks a line, the rule decides instead, and the flag says so.
+ */
+export function decideBand(
+  rule: RiskResult,
+  facts: RiskFacts,
+  verdict: AiVerdict | undefined,
+): RiskDecision {
+  const byRule: RiskDecision = { ...rule, decidedBy: "rules", why: null };
+
+  if (!facts.enoughData || !verdict) return byRule;
+  if (verdict.confidence === "low") return { ...byRule, why: verdict.why };
+  if (verdict.band === "none") {
+    return { band: "none", reasons: [], decidedBy: "ai", why: verdict.why };
+  }
+  if (!facts.hasAcademicSign) return byRule;
+
+  return {
+    band: verdict.band,
+    reasons: reasonsFrom(facts, verdict.signs),
+    decidedBy: "ai",
+    why: verdict.why,
+  };
 }

@@ -46,7 +46,9 @@ export const en = {
     usesTitle: "What we use",
     uses: "Fee records, payments, attendance and test scores, and your mobile number.",
     whyTitle: "Why",
-    why: "To show you dues and receipts, and to send fee reminders.",
+    why: "To show you dues and receipts, to send fee reminders, and to help a counsellor notice if a student may need support.",
+    aiTitle: "Use of AI",
+    ai: "An AI service from Google helps with that last part. It gets attendance and test percentages and a count of overdue instalments, never a name, ID or phone number. A person always decides what to do, and it never changes fees.",
     choiceTitle: "Your choice",
     choice: "You can withdraw this permission at any time through your centre's accounts office.",
     confirm: "I am the parent or guardian and I agree",
@@ -596,7 +598,7 @@ export const en = {
       intro:
         "Replays the rule over the term, using only what was known on each day, and shows who it would have flagged and how early. Changing a number here changes nothing live.",
       caveat:
-        "This sample is invented, so these figures show the tool works, not that the rule predicts dropouts. The real test is Company A's own history.",
+        "This replays the rule, which is the fallback when AI cannot decide. The AI is not replayed. The sample is invented, so these figures show the tool works, not that anything predicts dropouts. The real test is Company A's own history.",
       back: "Back to call tasks",
       learn: "Learn from what happened",
       learnThin: (evidence: number) =>
@@ -657,6 +659,13 @@ export const en = {
         aboutClasses: "Ask how the student has been finding classes lately, and listen first.",
         aboutTests: "Ask how the student has been finding classes and tests lately, and listen first.",
         close: "Ask what would help, and offer a meeting with a teacher.",
+      },
+      decided: {
+        ai: "AI gave this band, and the rule agrees.",
+        aiChanged: (band: string) => `AI gave this band. The rule alone said ${band}.`,
+        aiOnly: "AI gave this flag. The rule alone would not have.",
+        rules: "The rule gave this band, because AI gave no firm verdict.",
+        notConfirmed: (why: string) => `The rule gave this band, and AI did not confirm it: ${why}`,
       },
       openLab: "Open risk lab",
       title: "Call tasks",

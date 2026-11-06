@@ -1,5 +1,17 @@
 import { describe, expect, it } from "vitest";
-import { briefPrompt, isSafeBrief, maskNote, notePrompt, readHints } from "./ai";
+import {
+  briefPrompt,
+  decideBand,
+  isSafeBrief,
+  maskNote,
+  notePrompt,
+  readHints,
+  readVerdicts,
+  riskCase,
+  riskPrompt,
+  type AiVerdict,
+} from "./ai";
+import type { RiskFacts, RiskResult } from "./risk";
 
 const reasons = [
   { kind: "attendance" as const, from: 83, to: 42 },
@@ -85,3 +97,97 @@ describe("readHints", () => {
     expect(readHints("Sorry, I cannot help", tokens)).toBeNull();
   });
 });
+
+describe("the AI gives the flag", () => {
+  const facts: RiskFacts = {
+    enoughData: true,
+    attendance: { from: 90, to: 60 },
+    tests: { from: 70, to: 68 },
+    weeksMissing: 0,
+    missed: 1,
+    hasAcademicSign: true,
+  };
+  const rule: RiskResult = {
+    band: "watch",
+    reasons: [{ kind: "attendance", from: 90, to: 60 }],
+  };
+  const verdict = (overrides: Partial<AiVerdict> = {}): AiVerdict => ({
+    band: "high",
+    confidence: "high",
+    signs: ["attendance", "missed"],
+    why: "Attendance fell sharply while the batch held.",
+    ...overrides,
+  });
+
+  it("lets the AI set the band, and fills the figures from our own records", () => {
+    expect(decideBand(rule, facts, verdict())).toEqual({
+      band: "high",
+      reasons: [
+        { kind: "attendance", from: 90, to: 60 },
+        { kind: "missed", count: 1 },
+      ],
+      decidedBy: "ai",
+      why: "Attendance fell sharply while the batch held.",
+    });
+  });
+
+  it("lets the AI clear a student the rule would flag", () => {
+    expect(decideBand(rule, facts, verdict({ band: "none" }))).toMatchObject({
+      band: "none",
+      decidedBy: "ai",
+    });
+  });
+
+  it("lets the AI flag a student the rule would not", () => {
+    const quiet: RiskResult = { band: "none", reasons: [] };
+    expect(decideBand(quiet, facts, verdict({ band: "watch" }))).toMatchObject({
+      band: "watch",
+      decidedBy: "ai",
+    });
+  });
+
+  it("uses the rule when the AI is unsure or has no verdict", () => {
+    expect(decideBand(rule, facts, verdict({ confidence: "low" }))).toMatchObject({
+      band: "watch",
+      decidedBy: "rules",
+    });
+    expect(decideBand(rule, facts, undefined)).toMatchObject({ band: "watch", decidedBy: "rules" });
+  });
+
+  it("never flags on late fees alone, whatever the model says", () => {
+    const feesOnly = { ...facts, hasAcademicSign: false, missed: 3 };
+    const quiet: RiskResult = { band: "none", reasons: [] };
+    expect(decideBand(quiet, feesOnly, verdict())).toMatchObject({ band: "none", decidedBy: "rules" });
+  });
+
+  it("never judges a student with too little data", () => {
+    const thin: RiskResult = { band: "not-enough-data", reasons: [] };
+    expect(decideBand(thin, { ...facts, enoughData: false }, verdict())).toMatchObject({
+      band: "not-enough-data",
+      decidedBy: "rules",
+    });
+  });
+
+  it("sends percentages and a count, and nothing that identifies anyone", () => {
+    const base = { attendanceFall: 0, testFall: 0 };
+    const prompt = riskPrompt([riskCase("S1", facts, base)]);
+    expect(prompt).toContain('"id":"S1"');
+    expect(prompt).toContain('"overdueInstalments":1');
+    expect(prompt).not.toMatch(/₹|STU-|\+91/);
+  });
+
+  it("ignores anything the model invents", () => {
+    const reply = JSON.stringify({
+      verdicts: [
+        { id: "S9", band: "high", confidence: "high", signs: [], why: "x" },
+        { id: "S1", band: "severe", confidence: "high", signs: [], why: "x" },
+        { id: "S2", band: "watch", confidence: "high", signs: ["tests"], why: "See https://x.com" },
+      ],
+    });
+    const verdicts = readVerdicts(reply, ["S1", "S2"])!;
+    expect([...verdicts.keys()]).toEqual(["S2"]);
+    expect(verdicts.get("S2")?.why).toBeNull();
+    expect(readVerdicts("not json", ["S1"])).toBeNull();
+  });
+});
+

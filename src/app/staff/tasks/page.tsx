@@ -121,6 +121,19 @@ export default async function TasksPage({ searchParams }: { searchParams: Promis
                 ))}
               </ul>
 
+              <p className="text-sm text-muted">
+                {task.decidedBy === "rules"
+                  ? task.aiWhy
+                    ? k.decided.notConfirmed(task.aiWhy)
+                    : k.decided.rules
+                  : task.ruleBand === task.band
+                    ? k.decided.ai
+                    : task.ruleBand
+                      ? k.decided.aiChanged(t.staff.tasks.bands[task.ruleBand])
+                      : k.decided.aiOnly}
+                {task.decidedBy === "ai" && task.aiWhy && ` ${task.aiWhy}`}
+              </p>
+
               <p>
                 {k.call(task.parentName)} ·{" "}
                 <a href={`tel:${task.parentPhone}`} className={rowLink}>

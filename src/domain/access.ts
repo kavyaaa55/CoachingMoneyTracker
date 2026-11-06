@@ -2,7 +2,7 @@ export type Role = "parent" | "accounts";
 export type AccessDecision = "allow" | "login" | "wrong-role";
 
 /** Bump this when the consent notice changes, so parents are asked again. */
-export const CONSENT_NOTICE_VERSION = "2026-11-v1";
+export const CONSENT_NOTICE_VERSION = "2026-11-v2";
 
 export const homeFor = (role: Role) => (role === "parent" ? "/parent" : "/staff");
 

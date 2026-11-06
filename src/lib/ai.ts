@@ -1,7 +1,16 @@
 import { eq } from "drizzle-orm";
 import { db } from "@/db/client";
 import { payments, riskFlags, students, users } from "@/db/schema";
-import { briefPrompt, isSafeBrief, maskNote, notePrompt, readHints } from "@/domain/ai";
+import {
+  briefPrompt,
+  isSafeBrief,
+  maskNote,
+  notePrompt,
+  readHints,
+  readVerdicts,
+  riskPrompt,
+  type RiskCase,
+} from "@/domain/ai";
 import { callBriefTemplate, messages } from "@/i18n";
 import { audit } from "./audit";
 import { env } from "./env";
@@ -10,7 +19,11 @@ const TIMEOUT_MS = 12_000;
 const URL_BASE = "https://generativelanguage.googleapis.com/v1beta/models";
 
 /** One call to Gemini. Any failure returns null, so the caller falls back to plain rules. */
-async function askGemini(prompt: string, json = false): Promise<string | null> {
+async function askGemini(
+  prompt: string,
+  json = false,
+  timeoutMs = TIMEOUT_MS,
+): Promise<string | null> {
   if (!env.GEMINI_API_KEY) return null;
 
   try {
@@ -21,12 +34,12 @@ async function askGemini(prompt: string, json = false): Promise<string | null> {
         contents: [{ parts: [{ text: prompt }] }],
         generationConfig: {
           temperature: 0.3,
-          maxOutputTokens: 1024,
+          maxOutputTokens: 4096,
           thinkingConfig: { thinkingBudget: 0 },
           ...(json ? { responseMimeType: "application/json" } : {}),
         },
       }),
-      signal: AbortSignal.timeout(TIMEOUT_MS),
+      signal: AbortSignal.timeout(timeoutMs),
     });
     if (!response.ok) return null;
 
@@ -36,6 +49,21 @@ async function askGemini(prompt: string, json = false): Promise<string | null> {
   } catch {
     return null;
   }
+}
+
+const JUDGE_TIMEOUT_MS = 30_000;
+
+/** One call for everyone who shows a sign. Returns null if the model cannot give a verdict. */
+export async function judgeRisk(cases: RiskCase[]) {
+  if (cases.length === 0) return null;
+
+  const reply = await askGemini(riskPrompt(cases), true, JUDGE_TIMEOUT_MS);
+  return reply === null
+    ? null
+    : readVerdicts(
+        reply,
+        cases.map((item) => item.id),
+      );
 }
 
 /**

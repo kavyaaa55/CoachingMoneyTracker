@@ -24,6 +24,7 @@ export default async function ConsentPage() {
   const sections = [
     { title: t.consent.usesTitle, body: t.consent.uses },
     { title: t.consent.whyTitle, body: t.consent.why },
+    { title: t.consent.aiTitle, body: t.consent.ai },
     { title: t.consent.choiceTitle, body: t.consent.choice },
   ];
 

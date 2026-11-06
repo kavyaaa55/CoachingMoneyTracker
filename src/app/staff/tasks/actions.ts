@@ -17,7 +17,7 @@ const formSchema = z.object({
 
 export async function runRiskCheckNow() {
   await requireUser("accounts");
-  const { checked, flagged, notEnoughData } = await runRiskCheck();
+  const { checked, flagged, notEnoughData } = await runRiskCheck(undefined, { useAi: true });
 
   redirect(`/staff/tasks?checked=${checked}&flagged=${flagged}&thin=${notEnoughData}`);
 }

@@ -10,5 +10,5 @@ export async function GET(request: Request) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  return Response.json(await runRiskCheck());
+  return Response.json(await runRiskCheck(undefined, { useAi: true }));
 }

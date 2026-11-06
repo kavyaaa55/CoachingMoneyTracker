@@ -10,13 +10,16 @@ import {
   users,
 } from "@/db/schema";
 import type { IsoDate } from "@/domain/dates";
+import { decideBand, riskCase } from "@/domain/ai";
 import {
   assessRisk,
   batchBaseline,
   decideTask,
   latestWeekByBatch,
+  riskFacts,
   RULE_VERSION,
 } from "@/domain/risk";
+import { judgeRisk } from "./ai";
 import { audit } from "./audit";
 import { today } from "./clock";
 import { instalmentsOf, instalmentsOfMany } from "./ledger";
@@ -35,7 +38,10 @@ const groupBy = <T extends { studentId: string }>(rows: T[]) => {
  * The daily job, used by the cron route and the "Run risk check" button. The hard rule from
  * the brief lives here: it reads fee records, but the only table it ever writes is risk_flags.
  */
-export async function runRiskCheck(date: IsoDate = today()): Promise<RiskRunResult> {
+export async function runRiskCheck(
+  date: IsoDate = today(),
+  { useAi = false }: { useAi?: boolean } = {},
+): Promise<RiskRunResult> {
   const active = await db
     .select({ id: students.id, batchId: students.batchId })
     .from(students)
@@ -77,15 +83,33 @@ export async function runRiskCheck(date: IsoDate = today()): Promise<RiskRunResu
 
   const result: RiskRunResult = { checked: ids.length, flagged: 0, notEnoughData: 0 };
 
-  for (const studentId of ids) {
-    const risk = assessRisk({
+  const assessed = ids.map((studentId) => {
+    const input = {
       instalments: instalmentsBy.get(studentId) ?? [],
       attendance: attendanceBy.get(studentId) ?? [],
       scores: scoresBy.get(studentId) ?? [],
       today: date,
       batchLatestWeek: latestWeeks.get(batchOf.get(studentId)!),
       baseline: baselines.get(batchOf.get(studentId)!),
-    });
+    };
+    return { studentId, rule: assessRisk(input), facts: riskFacts(input) };
+  });
+
+  // Only students with enough data and a real sign go to the model, under a made-up id.
+  const cases = useAi
+    ? assessed
+        .filter(({ facts }) => facts.enoughData && facts.hasAcademicSign)
+        .map(({ studentId, facts }, index) => ({
+          studentId,
+          item: riskCase(`S${index + 1}`, facts, baselines.get(batchOf.get(studentId)!)!),
+        }))
+    : [];
+  const verdicts = await judgeRisk(cases.map(({ item }) => item));
+  const caseIdOf = new Map(cases.map(({ studentId, item }) => [studentId, item.id]));
+
+  for (const { studentId, rule, facts } of assessed) {
+    const verdict = verdicts?.get(caseIdOf.get(studentId) ?? "");
+    const risk = decideBand(rule, facts, verdict);
     if (risk.band === "not-enough-data") result.notEnoughData += 1;
 
     const flags = flagsBy.get(studentId) ?? [];
@@ -96,24 +120,36 @@ export async function runRiskCheck(date: IsoDate = today()): Promise<RiskRunResu
         .sort()
         .at(-1) ?? null;
 
+    // A task someone may already be acting on stays, and says the AI did not confirm it.
+    if (open && risk.band === "none" && risk.decidedBy === "ai") {
+      await db
+        .update(riskFlags)
+        .set({ decidedBy: "rules", aiWhy: risk.why })
+        .where(eq(riskFlags.id, open.id));
+      continue;
+    }
+
     const action = decideTask(risk, { hasOpenTask: Boolean(open), lastReviewedOn }, date);
     if (action === "skip" || (risk.band !== "watch" && risk.band !== "high")) continue;
+
+    const record = {
+      band: risk.band,
+      reasons: risk.reasons,
+      ruleVersion: RULE_VERSION,
+      decidedBy: risk.decidedBy,
+      ruleBand: rule.band === "watch" || rule.band === "high" ? rule.band : null,
+      aiWhy: risk.why,
+    };
 
     if (action === "update" && open) {
       await db
         .update(riskFlags)
-        .set({ band: risk.band, reasons: risk.reasons, ruleVersion: RULE_VERSION })
+        .set(record)
         .where(eq(riskFlags.id, open.id));
     } else {
       const created = await db
         .insert(riskFlags)
-        .values({
-          studentId,
-          band: risk.band,
-          reasons: risk.reasons,
-          flaggedOn: date,
-          ruleVersion: RULE_VERSION,
-        })
+        .values({ ...record, studentId, flaggedOn: date })
         .onConflictDoNothing()
         .returning({ id: riskFlags.id });
       result.flagged += created.length;
@@ -146,6 +182,13 @@ export async function riskOf(studentId: string, date: IsoDate = today()) {
   ]);
   const attendanceBy = groupBy(attendanceRows);
   const scoresBy = groupBy(scoreRows);
+
+  // An open task shows what was decided, so the ledger and the task list always agree.
+  const [open] = await db
+    .select({ band: riskFlags.band, reasons: riskFlags.reasons })
+    .from(riskFlags)
+    .where(and(eq(riskFlags.studentId, studentId), eq(riskFlags.taskStatus, "open")));
+  if (open) return open;
 
   return assessRisk({
     instalments,
@@ -187,6 +230,9 @@ export async function listTasks(filter: TaskFilter, page: number) {
         note: riskFlags.reviewNote,
         flaggedOn: riskFlags.flaggedOn,
         reviewedOn: riskFlags.reviewedOn,
+        decidedBy: riskFlags.decidedBy,
+        ruleBand: riskFlags.ruleBand,
+        aiWhy: riskFlags.aiWhy,
         callBrief: riskFlags.callBrief,
         briefSource: riskFlags.briefSource,
       })
