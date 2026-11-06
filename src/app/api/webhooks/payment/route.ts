@@ -1,4 +1,5 @@
 import { env } from "@/lib/env";
+import { log } from "@/lib/log";
 import { paymentEventSchema, recordPayment } from "@/lib/payments";
 import { verifyBody } from "@/lib/signing";
 
@@ -24,11 +25,13 @@ export async function POST(request: Request) {
   const signature = request.headers.get(SIGNATURE_HEADER);
 
   if (!verifyBody(body, signature, env.GATEWAY_WEBHOOK_SECRET)) {
+    log("warn", "webhook.bad_signature");
     return Response.json({ error: "Invalid signature" }, { status: 401 });
   }
 
   const event = parse(body);
   if (!event?.success) {
+    log("error", "webhook.invalid_event");
     return Response.json({ error: "Invalid event" }, { status: 400 });
   }
 

@@ -46,6 +46,13 @@ export const creditNoteNoSeq = pgSequence("credit_note_no_seq");
 const id = () => uuid("id").primaryKey().defaultRandom();
 const createdAt = () => timestamp("created_at", { withTimezone: true }).notNull().defaultNow();
 
+/** Requests per address in a window. In Postgres, so it holds across several app servers. */
+export const rateLimits = pgTable("rate_limits", {
+  key: text("key").primaryKey(),
+  windowStart: timestamp("window_start", { withTimezone: true }).notNull(),
+  hits: integer("hits").notNull(),
+});
+
 /** Only a hash of the code is stored. */
 export const otpCodes = pgTable(
   "otp_codes",

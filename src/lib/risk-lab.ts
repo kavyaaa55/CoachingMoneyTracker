@@ -21,22 +21,27 @@ export async function labStudents(): Promise<{ students: LabStudent[]; termStart
     db.select().from(testScores),
   ]);
 
+  // Grouped once, because filtering per student was quadratic at real size.
+  const instalmentsBy = Map.groupBy(instalmentRows, (row) => row.studentId);
+  const paymentsBy = Map.groupBy(paymentRows, (row) => row.instalmentId);
+  const attendanceBy = Map.groupBy(attendanceRows, (row) => row.studentId);
+  const scoresBy = Map.groupBy(scoreRows, (row) => row.studentId);
+
   const list = studentRows.map((student) => ({
     code: student.code,
     name: student.name,
     batchId: student.batchId,
     exitDate: student.exitDate,
-    instalments: instalmentRows
-      .filter((item) => item.studentId === student.id)
-      .map((item) => ({
-        dueDate: item.dueDate,
-        amount: item.amountPaise,
-        payments: paymentRows
-          .filter((payment) => payment.instalmentId === item.id)
-          .map((payment) => ({ amount: payment.amount, paidOn: istDate(payment.paidAt) })),
+    instalments: (instalmentsBy.get(student.id) ?? []).map((item) => ({
+      dueDate: item.dueDate,
+      amount: item.amountPaise,
+      payments: (paymentsBy.get(item.id) ?? []).map((payment) => ({
+        amount: payment.amount,
+        paidOn: istDate(payment.paidAt),
       })),
-    attendance: attendanceRows.filter((row) => row.studentId === student.id),
-    scores: scoreRows.filter((row) => row.studentId === student.id),
+    })),
+    attendance: attendanceBy.get(student.id) ?? [],
+    scores: scoresBy.get(student.id) ?? [],
   }));
 
   const termStart = studentRows.map((row) => row.termStart).sort()[0] ?? "";

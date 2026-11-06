@@ -5,6 +5,7 @@ import {
   assessRisk,
   batchBaseline,
   DEFAULT_RULES,
+  riskFacts,
   type AttendanceWeek,
   type RiskInput,
   type RiskReason,
@@ -61,10 +62,10 @@ export function knownOn(student: LabStudent, date: IsoDate) {
   };
 }
 
-function batchLatestOn(students: LabStudent[], batchId: string, date: IsoDate) {
+function batchLatestOn(batch: LabStudent[], date: IsoDate) {
   let latest: IsoDate | null = null;
-  for (const student of students) {
-    if (student.batchId !== batchId || (student.exitDate && student.exitDate < date)) continue;
+  for (const student of batch) {
+    if (student.exitDate && student.exitDate < date) continue;
     for (const { weekStart } of student.attendance) {
       if (weekKnownOn(weekStart) <= date && (!latest || weekStart > latest)) latest = weekStart;
     }
@@ -83,17 +84,20 @@ type Snapshot = { code: string; input: Omit<RiskInput, "rules"> };
 /** What was known on each Monday. Worked out once, so many rules can be tried against it. */
 export function snapshots(students: LabStudent[], termStart: IsoDate, today: IsoDate): Snapshot[][] {
   const days: Snapshot[][] = [];
+  const everyBatch = Map.groupBy(students, (student) => student.batchId);
 
   for (let date = firstMonday(termStart); date <= today; date = addDays(date, 7)) {
     const enrolled = students.filter((student) => !student.exitDate || student.exitDate > date);
     const known = new Map(enrolled.map((student) => [student.code, knownOn(student, date)]));
 
-    const baselines = new Map(
-      [...new Set(enrolled.map((student) => student.batchId))].map((batchId) => [
+    // Worked out once per batch. Doing it per student made this quadratic at real size.
+    const batches = new Map(
+      [...Map.groupBy(enrolled, (student) => student.batchId)].map(([batchId, members]) => [
         batchId,
-        batchBaseline(
-          enrolled.filter((s) => s.batchId === batchId).map((s) => known.get(s.code)!),
-        ),
+        {
+          baseline: batchBaseline(members.map((student) => known.get(student.code)!)),
+          latest: batchLatestOn(everyBatch.get(batchId)!, date),
+        },
       ]),
     );
 
@@ -103,8 +107,8 @@ export function snapshots(students: LabStudent[], termStart: IsoDate, today: Iso
         input: {
           ...known.get(student.code)!,
           today: date,
-          batchLatestWeek: batchLatestOn(students, student.batchId, date),
-          baseline: baselines.get(student.batchId),
+          batchLatestWeek: batches.get(student.batchId)!.latest,
+          baseline: batches.get(student.batchId)!.baseline,
         },
       })),
     );
@@ -206,7 +210,10 @@ export function suggestRules(
   if (evidence < MIN_EVIDENCE) return { kind: "too-little-evidence", evidence };
 
   const falseCodes = new Set(falseFlagCodes);
-  const days = snapshots(students, termStart, today);
+  // A student with no sign can never be flagged by any numbers tried here, so skip them.
+  const days = snapshots(students, termStart, today).map((day) =>
+    day.filter(({ input }) => riskFacts(input).hasAcademicSign),
+  );
   const live = replayRule(students, termStart, today, DEFAULT_RULES, days);
   let best = { rules: DEFAULT_RULES, rows: live, score: scoreRows(live, falseCodes) };
 

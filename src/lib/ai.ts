@@ -14,15 +14,20 @@ import {
 import { callBriefTemplate, messages } from "@/i18n";
 import { audit } from "./audit";
 import { env } from "./env";
+import { errorName, log } from "./log";
 
 const TIMEOUT_MS = 12_000;
 const URL_BASE = "https://generativelanguage.googleapis.com/v1beta/models";
 
-/** One call to Gemini. Any failure returns null, so the caller falls back to plain rules. */
+const RETRY_AFTER_MS = 1_000;
+const isBusy = (status: number) => status === 429 || status >= 500;
+
+/** One call to Gemini, with one retry if it is busy. Failure returns null for the plain rules. */
 async function askGemini(
   prompt: string,
   json = false,
   timeoutMs = TIMEOUT_MS,
+  retry = true,
 ): Promise<string | null> {
   if (!env.GEMINI_API_KEY) return null;
 
@@ -41,12 +46,20 @@ async function askGemini(
       }),
       signal: AbortSignal.timeout(timeoutMs),
     });
-    if (!response.ok) return null;
+    if (!response.ok) {
+      if (retry && isBusy(response.status)) {
+        await new Promise((resolve) => setTimeout(resolve, RETRY_AFTER_MS));
+        return askGemini(prompt, json, timeoutMs, false);
+      }
+      log("warn", "ai.call_failed", { status: response.status });
+      return null;
+    }
 
     const data = await response.json();
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
     return typeof text === "string" ? text.trim() : null;
-  } catch {
+  } catch (error) {
+    log("warn", "ai.call_failed", { error: errorName(error) });
     return null;
   }
 }

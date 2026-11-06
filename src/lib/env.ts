@@ -6,6 +6,8 @@ const schema = z.object({
   GATEWAY_WEBHOOK_SECRET: z.string().min(32),
   CRON_SECRET: z.string().min(32),
   APP_URL: z.url().default("http://localhost:3000"),
+  /** Connections per app server. Keep the sum across servers under Postgres's limit. */
+  DATABASE_POOL_MAX: z.coerce.number().int().min(2).max(100).default(10),
   /** Optional. Without it, every AI step falls back to plain rules. */
   GEMINI_API_KEY: z
     .string()

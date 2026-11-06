@@ -16,9 +16,12 @@ import {
 } from "@/lib/auth";
 import { getLocale } from "@/lib/locale";
 import { requestOtp, verifyOtp } from "@/lib/otp-service";
+import { clientIp, withinLimit } from "@/lib/rate-limit";
 
 async function sendCode(phone: string): Promise<FormState> {
   const t = messages(await getLocale());
+  if (!(await withinLimit(`otp-request:${await clientIp()}`))) return { error: t.login.tooManyCodes };
+
   const result = await requestOtp(phone);
 
   if (result.status === "rate-limited") return { error: t.login.tooManyCodes };
@@ -46,6 +49,8 @@ export async function confirmCode(_: FormState, formData: FormData): Promise<For
   const t = messages(locale);
   const { phone } = await readPendingLogin();
   if (!phone) redirect("/login");
+
+  if (!(await withinLimit(`otp-verify:${await clientIp()}`))) return { error: t.verify.locked };
 
   const code = String(formData.get("code") ?? "").trim();
   if (!isOtpFormat(code)) return { error: t.verify.wrong };

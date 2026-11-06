@@ -10,9 +10,39 @@ import {
 import { reminderMessage } from "@/i18n";
 import { timeOn, today } from "./clock";
 import { env } from "./env";
+import { errorName, log } from "./log";
 import { payLinkFor } from "./pay-links";
 
 export const REMINDERS_PER_PAGE = 25;
+
+/**
+ * A real provider takes about 200 ms a message, so one at a time would take 9 minutes on a busy
+ * day. Each send holds a row lock and a connection, so this stays below the connection pool.
+ */
+const SEND_CONCURRENCY = 8;
+
+/** A provider that hangs must not hold the lock on an instalment for ever. */
+const SEND_TIMEOUT_MS = 10_000;
+
+function withTimeout(work: Promise<void>, ms: number) {
+  let timer: NodeJS.Timeout;
+  const timeout = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => reject(new Error("Send timed out")), ms);
+  });
+  return Promise.race([work, timeout]).finally(() => clearTimeout(timer));
+}
+
+async function forEachLimited<T>(items: T[], limit: number, work: (item: T) => Promise<void>) {
+  let next = 0;
+  const worker = async () => {
+    while (next < items.length) {
+      const item = items[next];
+      next += 1;
+      await work(item);
+    }
+  };
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));
+}
 
 export type Sender = (message: { phone: string; text: string }) => Promise<void>;
 export type RunResult = { sent: number; stopped: number; failed: number };
@@ -59,6 +89,7 @@ async function processInstalment(
   instalmentId: string,
   date: IsoDate,
   send: Sender,
+  timeoutMs: number,
 ): Promise<RunResult> {
   return db.transaction(async (tx) => {
     // The same lock recordPayment takes, so a payment cannot slip in during a send,
@@ -119,9 +150,10 @@ async function processInstalment(
     });
 
     try {
-      await send({ phone: recipient.phone, text });
-    } catch {
+      await withTimeout(send({ phone: recipient.phone, text }), timeoutMs);
+    } catch (error) {
       // Stays queued, so the next run tries again.
+      log("warn", "reminder.send_failed", { instalmentId, error: errorName(error) });
       return { sent: 0, stopped, failed: 1 };
     }
 
@@ -143,6 +175,7 @@ async function processInstalment(
 export async function runReminders(
   date: IsoDate = today(),
   send: Sender = mockSender,
+  timeoutMs = SEND_TIMEOUT_MS,
 ): Promise<RunResult> {
   await planReminders(date);
 
@@ -152,12 +185,12 @@ export async function runReminders(
     .where(and(eq(reminders.status, "queued"), lte(reminders.sendOn, date)));
 
   const total: RunResult = { sent: 0, stopped: 0, failed: 0 };
-  for (const { id } of due) {
-    const result = await processInstalment(id, date, send);
+  await forEachLimited(due, SEND_CONCURRENCY, async ({ id }) => {
+    const result = await processInstalment(id, date, send, timeoutMs);
     total.sent += result.sent;
     total.stopped += result.stopped;
     total.failed += result.failed;
-  }
+  });
   return total;
 }
 

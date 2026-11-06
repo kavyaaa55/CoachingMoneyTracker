@@ -1,9 +1,10 @@
-import { and, count, desc, eq } from "drizzle-orm";
-import { db } from "@/db/client";
+import { and, count, desc, eq, lt } from "drizzle-orm";
+import { db, sqlClient } from "@/db/client";
 import {
   batches,
   centres,
   instalments,
+  otpCodes,
   payments,
   pipelineRuns,
   reminders,
@@ -21,7 +22,9 @@ import {
 } from "@/domain/pipeline";
 import { closeMonth } from "./books";
 import { today } from "./clock";
+import { errorName, log } from "./log";
 import { recordPayment, reversePayment } from "./payments";
+import { forgetOldLimits } from "./rate-limit";
 import { approveRefund, markRefundPaid, refundOf, saveRefund } from "./refunds";
 import { runReminders } from "./reminders";
 import { runRiskCheck } from "./risk";
@@ -30,6 +33,10 @@ import { saveUpload } from "./upload";
 /** The sample's two accounts users, who act for the events that need a person. */
 export const MAKER_PHONE = "+919000000100";
 export const CHECKER_PHONE = "+919000000101";
+
+/** Any fixed number: it only has to be the same for every server. */
+const PIPELINE_LOCK = 720_260_1;
+const DAY_MS = 86_400_000;
 
 async function staffId(phone: string) {
   const [user] = await db.select({ id: users.id }).from(users).where(eq(users.phone, phone));
@@ -178,14 +185,36 @@ export async function runDay(
   source: PipelineSource = "cron",
   events: PipelineEvent[] = [],
 ) {
+  // A lock on its own connection, so two servers or a double-fired schedule cannot both run.
+  const connection = await sqlClient.reserve();
+  try {
+    const [{ locked }] = await connection`select pg_try_advisory_lock(${PIPELINE_LOCK}) as locked`;
+    if (!locked) {
+      log("warn", "pipeline.skipped_already_running", { date, source });
+      return { counts: emptyCounts(), failed: [], skipped: true };
+    }
+
+    try {
+      return { ...(await runStages(date, source, events)), skipped: false };
+    } finally {
+      await connection`select pg_advisory_unlock(${PIPELINE_LOCK})`;
+    }
+  } finally {
+    connection.release();
+  }
+}
+
+async function runStages(date: IsoDate, source: PipelineSource, events: PipelineEvent[]) {
+  const started = Date.now();
   let counts = await applyEvents(events);
   const failed: string[] = [];
 
   try {
     const { sent, failed: notSent } = await runReminders(date);
     counts = addCounts(counts, { remindersSent: sent, remindersFailed: notSent });
-  } catch {
+  } catch (error) {
     failed.push("reminders");
+    log("error", "pipeline.stage_failed", { stage: "reminders", date, error: errorName(error) });
   }
 
   try {
@@ -193,12 +222,31 @@ export async function runDay(
     const useAi = source !== "replay" && (source !== "time-machine" || counts.recordsUploaded > 0);
     const { flagged } = await runRiskCheck(date, { useAi });
     counts = addCounts(counts, { tasksCreated: flagged });
-  } catch {
+  } catch (error) {
     failed.push("risk");
+    log("error", "pipeline.stage_failed", { stage: "risk", date, error: errorName(error) });
+  }
+
+  try {
+    await forgetOldLimits();
+    await db.delete(otpCodes).where(lt(otpCodes.expiresAt, new Date(Date.now() - DAY_MS)));
+  } catch (error) {
+    failed.push("housekeeping");
+    log("error", "pipeline.stage_failed", { stage: "housekeeping", error: errorName(error) });
   }
 
   counts = { ...counts, ...(await stoppedSinceLastRun()) };
   await db.insert(pipelineRuns).values({ runOn: date, source, counts, failed });
+  if (source !== "replay") {
+    log(failed.length > 0 ? "error" : "info", "pipeline.finished", {
+      date,
+      source,
+      failed,
+      ms: Date.now() - started,
+      sent: counts.remindersSent,
+      tasks: counts.tasksCreated,
+    });
+  }
   return { counts, failed };
 }
 
