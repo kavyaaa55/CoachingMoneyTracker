@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { cache } from "react";
@@ -24,11 +24,11 @@ const cookieOptions = {
 /** The role always comes from the database, so a change applies on the next request. */
 export const currentUser = cache(async () => {
   const token = (await cookies()).get(SESSION_COOKIE)?.value;
-  const userId = token ? readSession(token, env.SESSION_SECRET, Date.now()) : null;
-  if (!userId) return null;
+  const session = token ? readSession(token, env.SESSION_SECRET, Date.now()) : null;
+  if (!session) return null;
 
-  const [user] = await db.select().from(users).where(eq(users.id, userId));
-  return user ?? null;
+  const [user] = await db.select().from(users).where(eq(users.id, session.userId));
+  return user?.sessionVersion === session.version ? user : null;
 });
 
 /** Call this at the top of every protected page and server action. */
@@ -56,9 +56,9 @@ export async function requireParent() {
   return { user, children };
 }
 
-export async function startSession(userId: string) {
+export async function startSession(user: { id: string; sessionVersion: number }) {
   const token = signSession(
-    { userId, expiresAt: Date.now() + SESSION_TTL_MS },
+    { userId: user.id, version: user.sessionVersion, expiresAt: Date.now() + SESSION_TTL_MS },
     env.SESSION_SECRET,
   );
   (await cookies()).set(SESSION_COOKIE, token, {
@@ -67,7 +67,15 @@ export async function startSession(userId: string) {
   });
 }
 
+/** Ends every session this user has, so a copied token dies too. */
 export async function endSession() {
+  const user = await currentUser();
+  if (user) {
+    await db
+      .update(users)
+      .set({ sessionVersion: sql`${users.sessionVersion} + 1` })
+      .where(eq(users.id, user.id));
+  }
   (await cookies()).delete(SESSION_COOKIE);
 }
 

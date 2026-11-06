@@ -3,11 +3,11 @@ import { readSession, signSession } from "./session";
 
 const secret = "a-test-secret-that-is-long-enough-000";
 const now = 1_000_000;
-const token = signSession({ userId: "user-1", expiresAt: now + 1000 }, secret);
+const token = signSession({ userId: "user-1", version: 0, expiresAt: now + 1000 }, secret);
 
 describe("session tokens", () => {
   it("reads a valid token", () => {
-    expect(readSession(token, secret, now)).toBe("user-1");
+    expect(readSession(token, secret, now)).toEqual({ userId: "user-1", version: 0 });
   });
 
   it("rejects an expired token", () => {

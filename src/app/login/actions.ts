@@ -60,7 +60,7 @@ export async function confirmCode(_: FormState, formData: FormData): Promise<For
     .returning();
   if (!user) return { error: t.verify.wrong };
 
-  await startSession(user.id);
+  await startSession(user);
   await clearPendingLogin();
   redirect(homeFor(user.role));
 }

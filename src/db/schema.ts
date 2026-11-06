@@ -84,6 +84,8 @@ export const users = pgTable("users", {
   name: text("name").notNull(),
   role: roleEnum("role").notNull(),
   language: languageEnum("language").notNull().default("en"),
+  /** Raised on sign-out, so every token issued before it stops working, even a stolen copy. */
+  sessionVersion: integer("session_version").notNull().default(0),
   createdAt: createdAt(),
 });
 

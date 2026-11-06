@@ -22,7 +22,15 @@ export async function GET(request: Request) {
   };
 
   const query = querySchema.safeParse(Object.fromEntries(params));
-  if (!query.success || query.data.from > query.data.to) redirect(backTo("dates"));
+  const sensible = (date: string) => date >= "2000-01-01" && date <= "2100-12-31";
+  if (
+    !query.success ||
+    query.data.from > query.data.to ||
+    !sensible(query.data.from) ||
+    !sensible(query.data.to)
+  ) {
+    redirect(backTo("dates"));
+  }
   const { centre, batch, from, to } = query.data;
 
   const range = { from, to, centreId: centre ?? null, batch: batch ?? null };

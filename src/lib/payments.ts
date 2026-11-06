@@ -1,25 +1,41 @@
-import { and, eq, gt, sql } from "drizzle-orm";
+import { and, eq, gt, max, sql } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db/client";
 import { instalments, monthCloses, payments, reminders, students } from "@/db/schema";
 import type { IsoDate } from "@/domain/dates";
 import { matchPayment } from "@/domain/payments";
 import { audit } from "./audit";
-import { istDate, today } from "./clock";
+import { istDate, timeOn, today } from "./clock";
 import { isUuid } from "./ledger";
 
+const MAX_REF = 100;
+const MAX_NOTE = 200;
+
+/** The amount column is a 32-bit integer, about ₹2.1 crore, far above any single fee payment. */
+const MAX_PAYMENT_PAISE = 2_147_483_647;
+
+/**
+ * Real money must never be refused over a detail. A reference too long to be ours cannot match,
+ * so it becomes no reference and reaches the queue. A long or odd note is trimmed or dropped.
+ */
 export const paymentEventSchema = z.object({
-  gatewayRef: z.string().min(1).max(100),
-  instalmentRef: z.string().max(100).nullable(),
-  amountPaise: z.number().int().positive(),
+  gatewayRef: z.string().min(1).max(MAX_REF),
+  instalmentRef: z
+    .string()
+    .nullable()
+    .transform((ref) => (ref && ref.length <= MAX_REF ? ref : null)),
+  amountPaise: z.number().int().positive().max(MAX_PAYMENT_PAISE),
   paidAt: z.iso.datetime(),
   /** What the payer wrote, if the gateway passes it on. */
-  note: z.string().trim().max(200).optional(),
+  note: z
+    .unknown()
+    .transform((note) => (typeof note === "string" ? note.trim().slice(0, MAX_NOTE) : undefined))
+    .optional(),
 });
 
 export const MANUAL_METHODS = ["cash", "upi", "cheque", "bank_transfer"] as const;
 
-export type PaymentEvent = z.infer<typeof paymentEventSchema>;
+export type PaymentEvent = z.input<typeof paymentEventSchema>;
 
 type ManualDetails = {
   method: (typeof MANUAL_METHODS)[number];
@@ -63,6 +79,12 @@ export async function recordPayment(
   event: PaymentEvent,
   manual?: ManualDetails,
 ): Promise<RecordedPayment> {
+  // Closed means closed: money reported late is posted today, so a closed month never changes.
+  const paidAt = (await isMonthClosed(istDate(new Date(event.paidAt))))
+    ? timeOn(today())
+    : new Date(event.paidAt);
+  const note = typeof event.note === "string" ? event.note : null;
+
   const outcome = await db.transaction(async (tx) => {
     const findExisting = () =>
       tx.select().from(payments).where(eq(payments.gatewayRef, event.gatewayRef));
@@ -111,9 +133,9 @@ export async function recordPayment(
           ? sql`'RCT-' || lpad(nextval('receipt_no_seq')::text, 6, '0')`
           : null,
         claimedRef: event.instalmentRef,
-        payerNote: event.note ?? null,
+        payerNote: note,
         unmatchedReason: matched ? null : match.reason,
-        paidAt: new Date(event.paidAt),
+        paidAt,
       })
       .onConflictDoNothing({ target: payments.gatewayRef })
       .returning();
@@ -147,12 +169,10 @@ export async function recordPayment(
   return toResult(outcome.row, outcome.duplicate);
 }
 
+/** Everything up to the latest closed month is closed, even a month nobody ever closed by name. */
 export async function isMonthClosed(date: IsoDate) {
-  const [closed] = await db
-    .select({ id: monthCloses.id })
-    .from(monthCloses)
-    .where(eq(monthCloses.month, date.slice(0, 7)));
-  return Boolean(closed);
+  const [{ latest }] = await db.select({ latest: max(monthCloses.month) }).from(monthCloses);
+  return latest !== null && date.slice(0, 7) <= latest;
 }
 
 export type ApplyOutcome = "applied" | "not-queued" | "does-not-fit" | "month-closed";

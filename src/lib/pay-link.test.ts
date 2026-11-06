@@ -21,7 +21,7 @@ describe("pay links", () => {
   });
 
   it("does not accept a session token as a pay link", () => {
-    const session = signSession({ userId: "user-1", expiresAt: now + 1000 }, secret);
+    const session = signSession({ userId: "user-1", version: 0, expiresAt: now + 1000 }, secret);
     expect(readPayLink(session, now, secret)).toBeNull();
   });
 });

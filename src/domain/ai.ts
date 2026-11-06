@@ -69,7 +69,12 @@ export function maskNote(note: string, knownNames: string[]): MaskedNote {
     masked = masked.replace(pattern, token);
   }
 
-  return { masked: masked.replace(/\d{7,}/g, "NUMBER"), tokens };
+  return {
+    masked: masked
+      .replace(/\S+@\S+\.\S+/g, "EMAIL")
+      .replace(/\+?\d[\d\s-]{5,}\d/g, "NUMBER"),
+    tokens,
+  };
 }
 
 export function notePrompt(masked: string) {

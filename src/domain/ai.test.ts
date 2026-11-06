@@ -67,6 +67,11 @@ describe("maskNote", () => {
     expect(Object.values(tokens).sort()).toEqual(["Gurjar", "Mohit"]);
   });
 
+  it("masks phone numbers however they are typed, and email addresses", () => {
+    const { masked } = maskNote("call +91 90000-00003 or a.parent@mail.com", []);
+    expect(masked).not.toMatch(/90000|mail\.com/);
+  });
+
   it("ignores case, and does not touch part of another word", () => {
     expect(maskNote("mohit paid", ["Mohit"]).masked).toMatch(/^NAME_\d+ paid$/);
     expect(maskNote("Devastating", ["Dev"]).masked).toBe("Devastating");

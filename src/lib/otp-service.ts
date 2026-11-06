@@ -25,14 +25,18 @@ export async function requestOtp(phone: string, now = new Date()): Promise<Reque
   if (!user) return { status: "sent", code: null };
 
   const since = new Date(now.getTime() - OTP_WINDOW_MS);
-  const [recent] = await db
-    .select({ total: count() })
-    .from(otpCodes)
-    .where(and(eq(otpCodes.phone, phone), gte(otpCodes.createdAt, since)));
-  if (recent.total >= OTP_MAX_PER_WINDOW) return { status: "rate-limited" };
-
   const code = generateOtp();
-  await db.transaction(async (tx) => {
+
+  const allowed = await db.transaction(async (tx) => {
+    // One request per number at a time, so parallel requests cannot all pass the limit.
+    await tx.execute(sql`select pg_advisory_xact_lock(hashtext(${phone}))`);
+
+    const [recent] = await tx
+      .select({ total: count() })
+      .from(otpCodes)
+      .where(and(eq(otpCodes.phone, phone), gte(otpCodes.createdAt, since)));
+    if (recent.total >= OTP_MAX_PER_WINDOW) return false;
+
     await tx
       .update(otpCodes)
       .set({ consumedAt: now })
@@ -43,9 +47,10 @@ export async function requestOtp(phone: string, now = new Date()): Promise<Reque
       expiresAt: new Date(now.getTime() + OTP_TTL_MS),
       createdAt: now,
     });
+    return true;
   });
 
-  return { status: "sent", code };
+  return allowed ? { status: "sent", code } : { status: "rate-limited" };
 }
 
 export async function verifyOtp(

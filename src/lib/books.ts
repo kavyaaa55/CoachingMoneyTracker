@@ -13,7 +13,8 @@ import { instalmentsOfMany } from "./ledger";
 
 const startOfIndiaDay = (date: IsoDate) => new Date(`${date}T00:00:00+05:30`);
 
-const total = sql<number>`coalesce(sum(${payments.amountPaise}), 0)::int`;
+/** Not cast to int: a real month's receipts run to crores, past what 32 bits can hold. */
+const total = sql`coalesce(sum(${payments.amountPaise}), 0)`.mapWith(Number);
 
 export type MonthCheck = "ledger-tally" | "credit-notes" | "reversals" | "queue" | "receipts";
 
@@ -47,7 +48,7 @@ export async function monthReport(month: string) {
           ),
         ),
       db
-        .select({ total: sql<number>`coalesce(sum(${refunds.refundPaise}), 0)::int` })
+        .select({ total: sql`coalesce(sum(${refunds.refundPaise}), 0)`.mapWith(Number) })
         .from(refunds)
         .where(and(gte(refunds.paidOn, from), lte(refunds.paidOn, to))),
       db

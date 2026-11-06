@@ -14,6 +14,7 @@ import { calculateRefund, canSaveExit, isPlausibleExitDate, refundStage } from "
 import { audit } from "./audit";
 import { today } from "./clock";
 import { isUuid } from "./ledger";
+import { isMonthClosed } from "./payments";
 
 export type SaveRefundOutcome =
   | "saved"
@@ -146,7 +147,9 @@ export async function markRefundPaid(
 
     if (!refund) return "not-found";
     if (refundStage(refund.refundPaise, refund.status) !== "to-pay") return "not-approved";
-    if (paidOn > date || paidOn < refund.exitDate) return "bad-date";
+    if (paidOn > date || paidOn < refund.exitDate || (await isMonthClosed(paidOn))) {
+      return "bad-date";
+    }
 
     await tx
       .update(refunds)

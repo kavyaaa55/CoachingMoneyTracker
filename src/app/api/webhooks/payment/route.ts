@@ -12,7 +12,14 @@ function parse(body: string) {
   }
 }
 
+const MAX_BODY_BYTES = 64_000;
+
 export async function POST(request: Request) {
+  // Checked before reading, so an unsigned request cannot make the server hold a huge body.
+  if (Number(request.headers.get("content-length")) > MAX_BODY_BYTES) {
+    return Response.json({ error: "Too large" }, { status: 413 });
+  }
+
   const body = await request.text();
   const signature = request.headers.get(SIGNATURE_HEADER);
 

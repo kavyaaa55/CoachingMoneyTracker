@@ -728,7 +728,7 @@ export const en = {
         paid: (date: string, reference: string) => `Paid on ${date}, reference ${reference}.`,
         creditNote: (number: string) => `View credit note ${number}`,
         needReference: "Enter the payment reference and a valid date.",
-        badDate: "The date cannot be in the future, or before the student left.",
+        badDate: "The date cannot be in the future, before the student left, or in a closed month.",
         invalid: "This refund has changed. Please reload the page.",
       },
       title: "Refund",
