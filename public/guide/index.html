@@ -1,0 +1,613 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fee Tracker Guide</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500&family=Noto+Sans+Devanagari:wght@400;500&display=swap">
+<style>
+/* Layout: a fixed contents rail beside one reading column, using the product's own design tokens. */
+:root {
+  --primary: #1F5673; --primary-hover: #184560; --on-primary: #FFFFFF;
+  --ink: #1F2F3A; --muted: #546672; --canvas: #F4F7F8; --surface: #FFFFFF;
+  --highlight: #E3EDF1; --divider: #D5DEE3; --control: #7C8E99;
+  --paid: #256B57; --paid-tint: #E6F2EE; --overdue: #94501A; --overdue-tint: #FBF1E6;
+  --font: "Noto Sans", "Noto Sans Devanagari", system-ui, sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 16px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; background: var(--canvas); color: var(--ink); font: 400 16px/1.6 var(--font); }
+.page { display: grid; grid-template-columns: 232px minmax(0, 1fr); gap: 48px; max-width: 1120px; margin: 0 auto;
+  padding-block: 32px 64px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+nav.toc { position: sticky; top: 16px; align-self: start; max-height: calc(100vh - 32px); overflow-y: auto; font-size: 14px; }
+nav.toc p { margin: 0 0 8px; font-weight: 500; font-size: 18px; }
+nav.toc a { display: block; padding: 6px 12px; color: var(--muted); text-decoration: none; border-radius: 6px; }
+nav.toc a:hover { background: var(--highlight); }
+nav.toc a.on { background: var(--highlight); color: var(--ink); font-weight: 500; }
+nav.toc .group { margin: 14px 0 2px; padding-left: 12px; font-size: 13px; color: var(--muted); font-weight: 500; }
+main { min-width: 0; display: flex; flex-direction: column; gap: 56px; }
+section { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+section[hidden] { display: none; }
+h1 { font-size: 40px; line-height: 48px; font-weight: 500; margin: 0; text-wrap: balance; }
+h2 { font-size: 28px; line-height: 36px; font-weight: 500; margin: 0; text-wrap: balance; }
+h3 { font-size: 20px; line-height: 28px; font-weight: 500; margin: 8px 0 0; }
+p { margin: 0; max-width: 68ch; }
+.lead { font-size: 18px; color: var(--muted); }
+a { color: var(--primary); text-underline-offset: 3px; }
+ul, ol { margin: 0; padding-left: 20px; max-width: 68ch; }
+li + li { margin-top: 4px; }
+code { font-size: 14px; background: var(--highlight); padding: 1px 5px; border-radius: 4px; word-break: break-word; }
+.tag { align-self: flex-start; font-size: 13px; font-weight: 500; color: var(--muted); }
+.note { background: var(--highlight); padding: 12px 16px; border-radius: 8px; max-width: 68ch; }
+.card { background: var(--surface); border: 1px solid var(--divider); border-radius: 8px; padding: 24px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+button, .btn { font: inherit; }
+.chip { min-height: 44px; padding: 8px 14px; border: 1px solid var(--control); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; font-weight: 500; }
+.chip:hover { background: var(--highlight); }
+.chip[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+figure { margin: 0; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+figure button { padding: 0; border: 1px solid var(--divider); border-radius: 8px; background: var(--surface); cursor: zoom-in; overflow: hidden; display: block; width: 100%; }
+figure img { display: block; width: 100%; height: auto; }
+figcaption { font-size: 14px; color: var(--muted); max-width: 68ch; }
+.pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 16px; }
+.phones { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 240px)); gap: 16px; }
+.swap img[hidden] { display: none; }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+.scroll { overflow-x: auto; background: var(--surface); border: 1px solid var(--divider); border-radius: 8px; }
+th { text-align: left; font-weight: 500; font-size: 14px; background: var(--canvas); }
+th, td { padding: 10px 14px; border-bottom: 1px solid var(--divider); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+.flow { display: grid; grid-template-columns: minmax(0, 1fr) 24px minmax(0, 1fr) 24px minmax(0, 1fr); gap: 8px; align-items: stretch; }
+.flow .col { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.flow .arrow { align-self: center; text-align: center; color: var(--control); }
+.flow .col h4 { margin: 0; font-size: 13px; font-weight: 500; color: var(--muted); }
+.node { border: 1px solid var(--divider); border-radius: 6px; padding: 8px 10px; background: var(--canvas); font-size: 14px; }
+.node.src { cursor: pointer; background: var(--surface); text-align: left; border-color: var(--control); color: var(--ink); min-height: 44px; }
+.node.src[aria-pressed="true"] { background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
+.node.lit { background: var(--highlight); border-color: var(--primary); font-weight: 500; }
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.field label { font-weight: 500; font-size: 14px; }
+.field input, .field select { height: 44px; padding: 0 12px; font: inherit; border: 1px solid var(--control); border-radius: 8px; background: var(--surface); color: var(--ink); width: 100%; }
+.fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr)); gap: 12px; }
+.line { display: flex; justify-content: space-between; gap: 16px; padding: 7px 0; border-bottom: 1px solid var(--divider); font-variant-numeric: tabular-nums; }
+.line span:first-child { color: var(--muted); }
+.big { font-size: 36px; line-height: 44px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.pill { display: inline-block; border-radius: 6px; padding: 2px 8px; font-size: 13px; font-weight: 500; background: var(--highlight); }
+.pill.good { background: var(--paid-tint); color: var(--paid); }
+.pill.late { background: var(--overdue-tint); color: var(--overdue); }
+input[type=range] { width: 100%; accent-color: var(--primary); height: 32px; }
+.ticks { position: relative; height: 26px; border-bottom: 2px solid var(--divider); }
+.ticks i { position: absolute; bottom: -5px; width: 8px; height: 8px; margin-left: -4px; border-radius: 2px; background: var(--control); }
+.ticks i.sent { background: var(--primary); }
+.ticks i.off { background: var(--divider); }
+.tour li { list-style: none; margin-left: -20px; }
+.tour label { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; cursor: pointer; }
+.tour input { width: 20px; height: 20px; margin-top: 3px; accent-color: var(--primary); flex: none; }
+.tour input:checked + span { color: var(--muted); text-decoration: line-through; }
+.figures { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 130px), 1fr)); gap: 16px; }
+.figures div b { display: block; font-size: 26px; line-height: 34px; font-weight: 500; }
+.figures div span { font-size: 14px; color: var(--muted); }
+dialog { border: 0; padding: 0; max-width: 96vw; max-height: 94vh; background: transparent; }
+dialog::backdrop { background: rgba(31, 47, 58, .75); }
+dialog img { display: block; max-width: 96vw; max-height: 90vh; width: auto; height: auto; border-radius: 8px; }
+dialog button { display: block; margin: 8px auto 0; }
+@media (max-width: 900px) {
+  .page { grid-template-columns: minmax(0, 1fr); gap: 24px; padding-block: 16px 48px; }
+  nav.toc { position: static; max-height: none; background: var(--surface); border: 1px solid var(--divider); border-radius: 8px; padding: 12px; }
+  nav.toc .links { display: flex; flex-wrap: wrap; gap: 2px; }
+  nav.toc .group { display: none; }
+  h1 { font-size: 32px; line-height: 40px; }
+  h2 { font-size: 24px; line-height: 32px; }
+}
+@media (max-width: 640px) {
+  .flow { grid-template-columns: minmax(0, 1fr); }
+  .flow .arrow { transform: rotate(90deg); }
+}
+</style>
+</head>
+<body>
+<div class="page">
+<nav class="toc" aria-label="Contents">
+  <p>Fee Tracker</p>
+  <div class="links">
+    <a href="#start">Start here</a>
+    <a href="#tour">3-minute tour</a>
+    <a href="#pipeline">Data pipeline</a>
+    <div class="group">Parents</div>
+    <a href="#signin">Sign-in and consent</a>
+    <a href="#home">Parent home</a>
+    <a href="#pay">Paying</a>
+    <a href="#records">Records</a>
+    <div class="group">Accounts</div>
+    <a href="#dues">Dues</a>
+    <a href="#ledger">Student ledger</a>
+    <a href="#reminders">Reminders</a>
+    <a href="#upload">Bulk upload</a>
+    <a href="#tasks">Call tasks</a>
+    <div class="group">What sets it apart</div>
+    <a href="#console">Reviewer console</a>
+    <a href="#scoreboard">Director scoreboard</a>
+    <a href="#refunds">Refund desk</a>
+    <a href="#lab">Risk lab</a>
+    <a href="#books">Close the books</a>
+    <div class="group">Reference</div>
+    <a href="#safety">Safety rules</a>
+    <a href="#phone">Phone and Hindi</a>
+    <a href="#docs">Other documents</a>
+  </div>
+</nav>
+
+<main>
+<section id="start" data-for="all">
+  <span class="tag">Company A, Jaipur · 4 centres · 2,600 students</span>
+  <h1>Fee Tracker, the visual guide</h1>
+  <p class="lead">Parents see what they owe and pay on a phone, in Hindi or English. Accounts staff get one view of dues, reminders that stop on payment, and refunds that follow the written policy.</p>
+  <p>Every picture here is the running product on fictional sample data. Pick who you are to see what matters to you.</p>
+  <div class="chips" role="group" aria-label="Show sections for">
+    <button class="chip" data-show="all" aria-pressed="true">Everything</button>
+    <button class="chip" data-show="parent" aria-pressed="false">Parent</button>
+    <button class="chip" data-show="accounts" aria-pressed="false">Accounts staff</button>
+    <button class="chip" data-show="director" aria-pressed="false">Director</button>
+    <button class="chip" data-show="reviewer" aria-pressed="false">Reviewer</button>
+  </div>
+  <div class="card figures">
+    <div><b>365</b><span>tests passing</span></div>
+    <div><b>60</b><span>fictional students</span></div>
+    <div><b>130</b><span>days replayed</span></div>
+    <div><b>81</b><span>receipts from real code</span></div>
+    <div><b>0</b><span>new dependencies</span></div>
+  </div>
+</section>
+
+<section id="tour" data-for="reviewer">
+  <h2>The 3-minute tour</h2>
+  <p>This product acts over days and weeks, so the tour moves time. Tick each step as you go. Your ticks stay in this browser.</p>
+  <div class="card">
+    <ul class="tour" id="tourList">
+      <li><label><input type="checkbox" id="t1"><span>Sign in as <code>9000000100</code>. The code appears on screen.</span></label></li>
+      <li><label><input type="checkbox" id="t2"><span>Open <b>Reviewer console</b> in the menu.</span></label></li>
+      <li><label><input type="checkbox" id="t3"><span>Open Ishita's pay link and pay ₹15,000 on the test gateway.</span></label></li>
+      <li><label><input type="checkbox" id="t4"><span>Press <b>Move 7 days</b>. Each day runs through the real pipeline.</span></label></li>
+      <li><label><input type="checkbox" id="t5"><span>Open stopped reminders. Hers stopped, and other parents still got theirs.</span></label></li>
+      <li><label><input type="checkbox" id="t6"><span>Open <b>Scoreboard</b>, then <b>Close the books</b>.</span></label></li>
+      <li><label><input type="checkbox" id="t7"><span>Press <b>Reset demo</b>, so the next person gets a clean copy.</span></label></li>
+    </ul>
+  </div>
+  <div class="scroll"><table>
+    <tr><th>Number</th><th>Who</th></tr>
+    <tr><td><code>9000000100</code></td><td>Accounts Executive</td></tr>
+    <tr><td><code>9000000101</code></td><td>Accounts Manager, who approves refunds</td></tr>
+    <tr><td><code>9000000002</code></td><td>Parent of Ishita Sharma, part paid, 23 days overdue</td></tr>
+    <tr><td><code>9000000003</code></td><td>Parent of Mohit Gurjar, due in 13 days</td></tr>
+    <tr><td><code>9000000001</code></td><td>Parent of Aarav Meena, up to date</td></tr>
+    <tr><td><code>9000001035</code></td><td>Parent of two children</td></tr>
+    <tr><td><code>9000001053</code></td><td>Parent of a student who left, refund paid</td></tr>
+  </table></div>
+</section>
+
+<section id="pipeline" data-for="reviewer director">
+  <h2>How data moves</h2>
+  <p>Nothing in the demo is typed into a table. Everything from outside enters as an event and goes to the same code a live day uses. Only enrolment is inserted directly, because admissions are outside this product.</p>
+  <p><b>Try it:</b> pick a source to follow it through.</p>
+  <div class="card">
+    <div class="flow">
+      <div class="col">
+        <h4>What arrives</h4>
+        <button class="node src" data-src="gateway" aria-pressed="true">Gateway webhook</button>
+        <button class="node src" data-src="counter" aria-pressed="false">Counter payment</button>
+        <button class="node src" data-src="upload" aria-pressed="false">Centre CSV</button>
+        <button class="node src" data-src="exit" aria-pressed="false">Student leaves</button>
+      </div>
+      <div class="arrow" aria-hidden="true">→</div>
+      <div class="col">
+        <h4>Real entry point</h4>
+        <div class="node" data-entry="recordPayment"><code>recordPayment</code></div>
+        <div class="node" data-entry="saveUpload"><code>saveUpload</code></div>
+        <div class="node" data-entry="saveRefund"><code>saveRefund</code></div>
+      </div>
+      <div class="arrow" aria-hidden="true">→</div>
+      <div class="col">
+        <h4>Every day, <code>runDay</code></h4>
+        <div class="node">Reminders, rechecked at send</div>
+        <div class="node">Risk check</div>
+        <div class="node">Run recorded</div>
+      </div>
+    </div>
+    <p id="srcText" aria-live="polite"></p>
+  </div>
+  <div class="scroll"><table>
+    <tr><th>Source of events</th><th>In production</th><th>In the demo</th></tr>
+    <tr><td>Payments</td><td>Gateway webhook, counter form</td><td>Replay, and simulated parents</td></tr>
+    <tr><td>Attendance and scores</td><td>A centre's CSV</td><td>Replay, and simulated centre files</td></tr>
+    <tr><td>Student leaves</td><td>Staff save the exit</td><td>Replay</td></tr>
+    <tr><td>The daily run</td><td>A schedule calls <code>/api/cron/daily</code></td><td>Replay, or the time machine</td></tr>
+  </table></div>
+  <p>The whole term replays in about 7 seconds. The result is 130 recorded days, 475 reminders sent and 189 stopped, none written by hand.</p>
+</section>
+
+<section id="signin" data-for="parent">
+  <h2>Sign-in and consent</h2>
+  <p>A parent picks a language, enters their number and types the code. SMS is mocked, so the code shows on screen in the demo. Most students are minors, so nothing is shown until a parent agrees, as the DPDP Act 2023 needs.</p>
+  <div class="phones">
+    <figure><button data-zoom aria-label="Enlarge sign-in"><img src="img/sign-in.png" alt="Sign-in screen with language choice and mobile number" loading="lazy"></button><figcaption>One field and a language choice.</figcaption></figure>
+    <figure><button data-zoom aria-label="Enlarge consent"><img src="img/consent.png" alt="Consent screen naming the child and the data used" loading="lazy"></button><figcaption>Consent is stored per child, with a notice version.</figcaption></figure>
+  </div>
+</section>
+
+<section id="home" data-for="parent">
+  <h2>Parent home</h2>
+  <p>The brief's test: understand your dues in five seconds. So this screen has the amount, the due date and a pay button, and nothing more.</p>
+  <div class="chips" role="group" aria-label="Language of the picture">
+    <button class="chip" data-swap="home" data-img="en" aria-pressed="true">English</button>
+    <button class="chip" data-swap="home" data-img="hi" aria-pressed="false">हिन्दी</button>
+  </div>
+  <div class="phones">
+    <figure class="swap" id="swap-home"><button data-zoom aria-label="Enlarge parent home">
+      <img data-v="en" src="img/parent-home.png" alt="Parent home: Ishita Sharma owes ₹15,000, 23 days overdue, with a pay button">
+      <img data-v="hi" src="img/parent-home-hindi.png" alt="The same screen in Hindi" hidden>
+    </button><figcaption>Same layout, same care, in both languages.</figcaption></figure>
+  </div>
+</section>
+
+<section id="pay" data-for="parent">
+  <h2>Paying</h2>
+  <p>Each instalment has its own signed pay link, which reminders carry. The test gateway sends a signed webhook, and only that marks anything paid. The browser is never trusted to say it paid.</p>
+  <div class="phones">
+    <figure><button data-zoom aria-label="Enlarge gateway"><img src="img/gateway.png" alt="Test gateway with pay, part pay and failure options" loading="lazy"></button><figcaption>Try the outcomes: part payment, too much, no reference, or failure.</figcaption></figure>
+    <figure><button data-zoom aria-label="Enlarge receipt"><img src="img/parent-receipt.png" alt="Receipt showing fee, CGST and SGST" loading="lazy"></button><figcaption>Receipts show GST, as the brief requires.</figcaption></figure>
+  </div>
+  <div class="scroll"><table>
+    <tr><th>What happens</th><th>Result</th></tr>
+    <tr><td>Exact balance, or less</td><td>Applied. Less is a part payment</td></tr>
+    <tr><td>More than the balance</td><td>Goes to the accounts queue, marks nothing paid</td></tr>
+    <tr><td>No reference</td><td>Goes to the accounts queue, marks nothing paid</td></tr>
+    <tr><td>Student has left</td><td>Goes to the accounts queue, marks nothing paid</td></tr>
+    <tr><td>The same webhook twice</td><td>The repeat changes nothing</td></tr>
+  </table></div>
+</section>
+
+<section id="records" data-for="parent">
+  <h2>Instalments, progress and refunds</h2>
+  <p>Everything else sits one link behind home. Attendance and scores are plain figures, with no risk wording. A parent never sees a risk flag.</p>
+  <div class="phones">
+    <figure><button data-zoom aria-label="Enlarge instalments"><img src="img/parent-instalments.png" alt="All instalments with status and receipts" loading="lazy"></button><figcaption>Every instalment, with receipts.</figcaption></figure>
+    <figure><button data-zoom aria-label="Enlarge progress"><img src="img/parent-progress.png" alt="Attendance and test scores" loading="lazy"></button><figcaption>The latest 12 weeks and tests.</figcaption></figure>
+    <figure><button data-zoom aria-label="Enlarge parent refund"><img src="img/parent-refund.png" alt="Parent home after a student left, showing the refund paid" loading="lazy"></button><figcaption>After leaving, the refund replaces dues.</figcaption></figure>
+    <figure><button data-zoom aria-label="Enlarge refund policy"><img src="img/refund-policy.png" alt="Public refund policy" loading="lazy"></button><figcaption>The published policy, open to everyone.</figcaption></figure>
+  </div>
+</section>
+
+<section id="dues" data-for="accounts director">
+  <h2>Dues dashboard</h2>
+  <p>One view across all centres, with ageing, a table by batch, the queue and the Tally export. Filter by centre or batch. Students who have left are not counted.</p>
+  <figure><button data-zoom aria-label="Enlarge dues"><img src="img/staff-dues.png" alt="Dues dashboard with totals, ageing and a table by batch" loading="lazy"></button><figcaption>Overdue is amber, a fact to state. Red is kept for real failures.</figcaption></figure>
+</section>
+
+<section id="ledger" data-for="accounts">
+  <h2>Student ledger</h2>
+  <p>The whole story when a parent calls: plan, discount, instalments, payments, balance, days overdue and any risk band.</p>
+  <div class="pair">
+    <figure><button data-zoom aria-label="Enlarge students"><img src="img/staff-students.png" alt="Student list with search" loading="lazy"></button><figcaption>Search by name, ID or phone.</figcaption></figure>
+    <figure><button data-zoom aria-label="Enlarge ledger"><img src="img/staff-ledger.png" alt="Ledger for Ishita Sharma" loading="lazy"></button><figcaption>Ishita, exactly as in the brief.</figcaption></figure>
+    <figure><button data-zoom aria-label="Enlarge payment form"><img src="img/staff-payment.png" alt="Record a payment form" loading="lazy"></button><figcaption>Counter payments use the same matching code. A wrong amount is refused.</figcaption></figure>
+    <figure><button data-zoom aria-label="Enlarge refund"><img src="img/staff-refund-preview.png" alt="Refund working, line by line" loading="lazy"></button><figcaption>Every line of the refund working.</figcaption></figure>
+  </div>
+</section>
+
+<section id="reminders" data-for="accounts reviewer">
+  <h2>Reminders</h2>
+  <p>Sent in the parent's language before, on and after each due date, and they stop the moment an instalment is paid. The balance is checked again at send time, under the same lock a payment takes, so a payment cannot slip in during a send.</p>
+  <p><b>Try it:</b> drag the slider to see which reminders have gone out, then mark the instalment paid.</p>
+  <div class="card">
+    <div class="field"><label for="dayRange">Days from the due date: <span id="dayLabel"></span></label>
+      <input type="range" id="dayRange" min="-10" max="120" value="23"></div>
+    <div class="ticks" id="ticks" aria-hidden="true"></div>
+    <label style="display:flex;gap:10px;align-items:center;min-height:44px;cursor:pointer"><input type="checkbox" id="paidBox" style="width:20px;height:20px;accent-color:var(--primary)"> The parent paid on day <span id="paidDay">10</span></label>
+    <p id="remText" aria-live="polite"></p>
+  </div>
+  <figure><button data-zoom aria-label="Enlarge reminders"><img src="img/staff-reminders.png" alt="Reminders page with sent, stopped and queued" loading="lazy"></button><figcaption>Every message is kept as sent. SMS is mocked.</figcaption></figure>
+</section>
+
+<section id="upload" data-for="accounts">
+  <h2>Bulk upload</h2>
+  <p>A CSV per batch, with a template, a preview showing old and new values, and clear errors by line. One bad row saves nothing, and a repeat upload changes nothing. Saving never touches fees, reminders or call tasks.</p>
+  <figure><button data-zoom aria-label="Enlarge upload"><img src="img/staff-upload.png" alt="Upload screen" loading="lazy"></button><figcaption>Corrections are now traceable in the audit log.</figcaption></figure>
+</section>
+
+<section id="tasks" data-for="accounts reviewer">
+  <h2>Call tasks: the dropout-risk flag</h2>
+  <p>The flag reads missed instalments, falling attendance and test trends. It only ever creates a call task. It never touches fees and never messages a parent. Counsellors mark false flags, and with too little data it says so and creates no task.</p>
+  <p><b>Try it:</b> see how points become a band. Late fees alone never flag anyone.</p>
+  <div class="card">
+    <div class="fields">
+      <div class="field"><label for="rAtt">Attendance fall, points</label><input id="rAtt" type="number" min="0" max="100" value="41"></div>
+      <div class="field"><label for="rTest">Test score fall, points</label><input id="rTest" type="number" min="0" max="100" value="22"></div>
+      <div class="field"><label for="rMiss">Instalments overdue</label><input id="rMiss" type="number" min="0" max="4" value="2"></div>
+    </div>
+    <p id="riskOut" aria-live="polite"></p>
+  </div>
+  <figure><button data-zoom aria-label="Enlarge tasks"><img src="img/staff-tasks.png" alt="Call tasks with bands and plain reasons" loading="lazy"></button><figcaption>A band with plain reasons, never a score like 72/100, because a precise number would overstate what the data can show.</figcaption></figure>
+</section>
+
+<section id="console" data-for="reviewer">
+  <span class="tag">What sets it apart · 1</span>
+  <h2>Reviewer console</h2>
+  <p>A reviewer cannot wait three weeks to see a reminder stop. So the date moves, and every day runs through the real pipeline, with simulated parents paying and centres sending files.</p>
+  <figure><button data-zoom aria-label="Enlarge console"><img src="img/staff-demo-moved.png" alt="Reviewer console after moving 7 days" loading="lazy"></button><figcaption>After 7 days: 34 reminders sent, 29 stopped, 16 payments matched. Messages show exactly what would have been sent.</figcaption></figure>
+  <ul>
+    <li>Demo mode only, refused at the lowest level, with a test to prove it.</li>
+    <li>Time only moves forward. Going back would leave reminders sent in the future.</li>
+    <li>Reset replays the term, so the next reviewer gets a clean copy.</li>
+  </ul>
+</section>
+
+<section id="scoreboard" data-for="director reviewer">
+  <span class="tag">What sets it apart · 2</span>
+  <h2>Director scoreboard</h2>
+  <p>The founder-director signs the deal, and the brief says what they are paying for. This page works those measures out from the records.</p>
+  <figure><button data-zoom aria-label="Enlarge scoreboard"><img src="img/staff-scoreboard.png" alt="Scoreboard with the three success measures" loading="lazy"></button><figcaption>Sample data, so these are a working example, not results.</figcaption></figure>
+  <ul>
+    <li><b>Value over 60 days late</b> counts per rupee, and only instalments due 60 or more days ago. Newer ones would flatter the figure.</li>
+    <li><b>Month-end</b> shows days to close from the recorded close.</li>
+    <li><b>Parent calls</b> says "Not tracked yet". The app has no call data, and metrics are never invented.</li>
+  </ul>
+</section>
+
+<section id="refunds" data-for="accounts reviewer director">
+  <span class="tag">What sets it apart · 3</span>
+  <h2>Refund desk</h2>
+  <p>Refunds are the brief's hard part and a legal duty: pro-rata, within 10 days of a student leaving. Every refund sits on one list, soonest deadline first.</p>
+  <p><b>Try it:</b> the same formula as the product. Try leaving on 12 Oct 2026 with ₹45,000 paid.</p>
+  <div class="card">
+    <div class="fields">
+      <div class="field"><label for="fFee">Net fee, ₹</label><input id="fFee" type="number" min="0" value="120000"></div>
+      <div class="field"><label for="fPaid">Paid, ₹</label><input id="fPaid" type="number" min="0" value="45000"></div>
+      <div class="field"><label for="fExit">Left on</label><input id="fExit" type="date" value="2026-10-12" min="2026-07-01" max="2027-06-30"></div>
+    </div>
+    <div id="refundLines"></div>
+    <div><p style="color:var(--muted)">Refund</p><p class="big" id="refundOut"></p><p id="refundDue"></p></div>
+  </div>
+  <div class="pair">
+    <figure><button data-zoom aria-label="Enlarge refund desk"><img src="img/staff-refunds.png" alt="Refund desk with deadlines" loading="lazy"></button><figcaption>The desk. One is past the 10 days, and it says so.</figcaption></figure>
+    <figure><button data-zoom aria-label="Enlarge needs second person"><img src="img/staff-refund-needs-second.png" alt="Refund saved by this user, needing a second person" loading="lazy"></button><figcaption>The person who saved it cannot approve it. The database refuses it too.</figcaption></figure>
+    <figure><button data-zoom aria-label="Enlarge pay refund"><img src="img/staff-refund-pay.png" alt="Recording a refund payment" loading="lazy"></button><figcaption>After approval, record the payment.</figcaption></figure>
+    <figure><button data-zoom aria-label="Enlarge credit note"><img src="img/staff-credit-note.png" alt="Credit note with GST split" loading="lazy"></button><figcaption>Paying issues a credit note, which reaches Tally. An accountant must confirm the treatment.</figcaption></figure>
+  </div>
+</section>
+
+<section id="lab" data-for="reviewer director">
+  <span class="tag">What sets it apart · 4</span>
+  <h2>Risk lab</h2>
+  <p>The flag is a set of rules, because there is no real dropout history to train on. A model on invented data would give a fake accuracy number. So this page tests the rule instead: it replays the term using only what was known each day, and shows who it caught and who it missed.</p>
+  <div class="pair">
+    <figure><button data-zoom aria-label="Enlarge lab"><img src="img/staff-lab-live.png" alt="Risk lab showing 4 of 6 leavers flagged" loading="lazy"></button><figcaption>4 of 6 leavers flagged, with 21 days' average warning. It shows the 2 it missed.</figcaption></figure>
+    <figure><button data-zoom aria-label="Enlarge what-if"><img src="img/staff-lab.png" alt="Risk lab with changed numbers showing who would be added" loading="lazy"></button><figcaption>Change a number to see who would be added or dropped. Nothing changes live.</figcaption></figure>
+  </div>
+  <p class="note">The sample is invented, so this shows the tool works, not that the rule predicts dropouts. The real test is Company A's own history.</p>
+</section>
+
+<section id="books" data-for="accounts reviewer director">
+  <span class="tag">What sets it apart · 5</span>
+  <h2>Close the books</h2>
+  <p>Money that can be corrected without being erased. Month end adds up the finished Tally file against the ledger, and a month closes only when they agree.</p>
+  <div class="pair">
+    <figure><button data-zoom aria-label="Enlarge books"><img src="img/staff-books.png" alt="Month-end checks and the accounts queue" loading="lazy"></button><figcaption>October cannot close with money in the queue. Each suggestion states its reason.</figcaption></figure>
+    <figure><button data-zoom aria-label="Enlarge closed month"><img src="img/staff-books-closed.png" alt="October closed" loading="lazy"></button><figcaption>Closed. Nothing can be backdated into it.</figcaption></figure>
+    <figure><button data-zoom aria-label="Enlarge reversal"><img src="img/staff-reversed.png" alt="Ledger with a reversed payment" loading="lazy"></button><figcaption>A reversal needs a reason. The balance reopens and the row stays.</figcaption></figure>
+    <figure><button data-zoom aria-label="Enlarge cancelled receipt"><img src="img/staff-receipt-cancelled.png" alt="Receipt marked cancelled" loading="lazy"></button><figcaption>The receipt stays, shown as cancelled.</figcaption></figure>
+  </div>
+  <figure><button data-zoom aria-label="Enlarge audit log"><img src="img/staff-audit.png" alt="Audit log" loading="lazy"></button><figcaption>The audit log. A database trigger refuses every update and delete.</figcaption></figure>
+</section>
+
+<section id="safety" data-for="reviewer director accounts">
+  <h2>What happens when something is wrong</h2>
+  <p>The brief asks what happens when the system is wrong or unsure. Each answer has a test behind it.</p>
+  <div class="scroll"><table>
+    <tr><th>Situation</th><th>What the system does</th></tr>
+    <tr><td>A payment cannot be matched</td><td>Goes to the queue and marks nothing paid</td></tr>
+    <tr><td>Queued money names a student</td><td>Offered only to that student</td></tr>
+    <tr><td>Several students owe the same amount</td><td>No suggestion, because that is a coincidence</td></tr>
+    <tr><td>The risk flag is wrong</td><td>It only made a call task. A counsellor marks it false, with a note</td></tr>
+    <tr><td>Too little data for a flag</td><td>Says so and creates no task</td></tr>
+    <tr><td>A parent pays just before a reminder</td><td>The balance is checked at send time, under a lock</td></tr>
+    <tr><td>A staff member typed the wrong amount</td><td>Refused, and nothing is saved</td></tr>
+    <tr><td>A payment was wrong</td><td>Reversed with a reason, never deleted</td></tr>
+    <tr><td>Someone approves their own refund</td><td>Refused by the code and by the database</td></tr>
+    <tr><td>A daily job fails</td><td>Recorded, and the next stage still runs</td></tr>
+    <tr><td>A CSV has one bad row</td><td>Nothing is saved, and the error is shown by line</td></tr>
+  </table></div>
+</section>
+
+<section id="phone" data-for="reviewer">
+  <h2>Phone and Hindi</h2>
+  <p>Every screen works at 360px and in both languages, including the staff screens. Tables become stacked rows on a phone.</p>
+  <div class="phones">
+    <figure><button data-zoom aria-label="Enlarge phone refunds"><img src="img/mobile-refunds.png" alt="Refund desk on a phone" loading="lazy"></button><figcaption>Refund desk at 360px.</figcaption></figure>
+    <figure><button data-zoom aria-label="Enlarge phone scoreboard"><img src="img/mobile-scoreboard.png" alt="Scoreboard on a phone" loading="lazy"></button><figcaption>Scoreboard at 360px.</figcaption></figure>
+  </div>
+  <div class="pair">
+    <figure><button data-zoom aria-label="Enlarge Hindi refunds"><img src="img/hi-refunds.png" alt="Refund desk in Hindi" loading="lazy"></button><figcaption>Refund desk in Hindi.</figcaption></figure>
+    <figure><button data-zoom aria-label="Enlarge Hindi books"><img src="img/hi-books.png" alt="Close the books in Hindi" loading="lazy"></button><figcaption>Close the books in Hindi.</figcaption></figure>
+  </div>
+  <p class="note">The Hindi wording still needs a native speaker's review before real use.</p>
+</section>
+
+<section id="docs" data-for="all">
+  <h2>Other documents</h2>
+  <div class="scroll"><table>
+    <tr><th>Document</th><th>Read it for</th></tr>
+    <tr><td><a href="https://github.com/Siddhesh-source/coaching_institute/blob/main/docs/decisions.md">Key decisions</a></td><td>What was chosen, why, and what was turned down</td></tr>
+    <tr><td><a href="https://github.com/Siddhesh-source/coaching_institute/blob/main/docs/mistakes.md">Mistakes and recovery</a></td><td>What went wrong, how it was caught, and what changed</td></tr>
+    <tr><td><a href="https://github.com/Siddhesh-source/coaching_institute/blob/main/docs/TDD.md">Technical design</a></td><td>Architecture, data model, flows, assumptions and limits</td></tr>
+    <tr><td><a href="https://github.com/Siddhesh-source/coaching_institute/blob/main/docs/BRIEF-CHECK.md">Brief check</a></td><td>Every requirement and its status</td></tr>
+    <tr><td><a href="https://github.com/Siddhesh-source/coaching_institute/blob/main/docs/demo.md">Test guide</a></td><td>Step-by-step missions through every workflow</td></tr>
+    <tr><td><a href="https://github.com/Siddhesh-source/coaching_institute/blob/main/deployment.md">Deployment</a></td><td>Running it locally, deploying it, demo sign-ins</td></tr>
+  </table></div>
+  <p>All people and phone numbers are fictional. Payments, SMS and Tally are mocked, as the brief allows.</p>
+</section>
+</main>
+</div>
+
+<dialog id="zoom" aria-label="Enlarged picture">
+  <img id="zoomImg" alt="">
+  <button class="chip" id="zoomClose">Close</button>
+</dialog>
+
+<script>
+(function () {
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var inr = function (rupees) { return "₹" + Math.round(rupees).toLocaleString("en-IN"); };
+
+  // Who is reading.
+  $$("[data-show]").forEach(function (chip) {
+    chip.addEventListener("click", function () {
+      var who = chip.dataset.show;
+      $$("[data-show]").forEach(function (c) { c.setAttribute("aria-pressed", String(c === chip)); });
+      $$("main section").forEach(function (s) {
+        var tags = s.dataset.for.split(" ");
+        s.hidden = !(who === "all" || tags.indexOf("all") > -1 || tags.indexOf(who) > -1);
+      });
+      $$("nav.toc .links a").forEach(function (a) {
+        var target = $(a.getAttribute("href"));
+        a.hidden = target.hidden;
+        a.style.display = target.hidden ? "none" : "";
+      });
+    });
+  });
+
+  // Contents highlight.
+  var links = $$("nav.toc .links a");
+  if ("IntersectionObserver" in window) {
+    var seen = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        links.forEach(function (a) { a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id); });
+      });
+    }, { rootMargin: "-10% 0px -80% 0px" });
+    $$("main section").forEach(function (s) { seen.observe(s); });
+  }
+
+  // Enlarge a picture.
+  var zoom = $("#zoom");
+  $$("[data-zoom]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var img = $$("img", b).filter(function (i) { return !i.hidden; })[0];
+      $("#zoomImg").src = img.src;
+      $("#zoomImg").alt = img.alt;
+      zoom.showModal();
+    });
+  });
+  $("#zoomClose").addEventListener("click", function () { zoom.close(); });
+  zoom.addEventListener("click", function (e) { if (e.target === zoom) zoom.close(); });
+
+  // Language of a picture.
+  $$("[data-swap]").forEach(function (chip) {
+    chip.addEventListener("click", function () {
+      $$('[data-swap="' + chip.dataset.swap + '"]').forEach(function (c) { c.setAttribute("aria-pressed", String(c === chip)); });
+      $$("#swap-" + chip.dataset.swap + " img").forEach(function (i) { i.hidden = i.dataset.v !== chip.dataset.img; });
+    });
+  });
+
+  // Tour ticks, a convenience for this browser only.
+  $$("#tourList input").forEach(function (box) {
+    try { box.checked = localStorage.getItem("tour-" + box.id) === "1"; } catch (e) {}
+    box.addEventListener("change", function () {
+      try { localStorage.setItem("tour-" + box.id, box.checked ? "1" : "0"); } catch (e) {}
+    });
+  });
+
+  // Pipeline explorer.
+  var sources = {
+    gateway: ["recordPayment", "The gateway sends a signed webhook. recordPayment locks the instalment and applies the rules. A full payment stops queued reminders in the same step. A repeat changes nothing, and anything that does not fit goes to the queue."],
+    counter: ["recordPayment", "Staff enter it on the ledger. It takes the same lock and the same rule as the gateway, but a wrong amount is a typing mistake, so it is refused and nothing is saved."],
+    upload: ["saveUpload", "A centre's CSV is checked as a whole, so one bad row saves nothing. It writes only attendance and scores. The risk check reads them on its next daily run."],
+    exit: ["saveRefund", "Saving the exit works out the refund from the database, closes the fee account and stops reminders, all under the same lock. Later money goes to the queue."]
+  };
+  function showSource(key) {
+    $$("[data-src]").forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.src === key)); });
+    $$("[data-entry]").forEach(function (n) { n.classList.toggle("lit", n.dataset.entry === sources[key][0]); });
+    $("#srcText").textContent = sources[key][1];
+  }
+  $$("[data-src]").forEach(function (b) { b.addEventListener("click", function () { showSource(b.dataset.src); }); });
+  showSource("gateway");
+
+  // Reminder schedule, the same stages as src/domain/reminders.ts.
+  var offsets = [-7, -1, 0, 3];
+  for (var w = 7; w <= 63; w += 7) offsets.push(w);
+  for (var f = 91; f <= 364; f += 28) offsets.push(f);
+  var shown = offsets.filter(function (o) { return o <= 120; });
+  var ticks = $("#ticks");
+  var min = -10, max = 120;
+  shown.forEach(function (o) {
+    var i = document.createElement("i");
+    i.dataset.o = o;
+    i.style.left = ((o - min) / (max - min)) * 100 + "%";
+    ticks.appendChild(i);
+  });
+  var PAID_ON = 10;
+  $("#paidDay").textContent = PAID_ON;
+  function drawReminders() {
+    var day = Number($("#dayRange").value);
+    var paid = $("#paidBox").checked;
+    $("#dayLabel").textContent = day === 0 ? "the due date" : day < 0 ? -day + " before" : day + " after";
+    var sent = 0, stopped = 0;
+    $$("i", ticks).forEach(function (t) {
+      var o = Number(t.dataset.o);
+      var off = paid && o > PAID_ON;
+      var out = o <= day && !off;
+      t.className = out ? "sent" : off ? "off" : "";
+      if (out) sent += 1;
+      if (off) stopped += 1;
+    });
+    var next = shown.filter(function (o) { return o > day; })[0];
+    $("#remText").textContent = paid
+      ? sent + " sent. Paid on day " + PAID_ON + ", so the other " + stopped + " shown here stopped and will never go out."
+      : sent + " sent so far." + (next === undefined ? "" : " The next goes out on day " + next + ".") + " They continue until paid.";
+  }
+  $("#dayRange").addEventListener("input", drawReminders);
+  $("#paidBox").addEventListener("change", drawReminders);
+  drawReminders();
+
+  // Risk points, the same numbers as src/domain/risk.ts.
+  function drawRisk() {
+    var att = Number($("#rAtt").value) || 0, test = Number($("#rTest").value) || 0, miss = Number($("#rMiss").value) || 0;
+    var pts = function (fall, mild, strong) { return fall >= strong ? 2 : fall >= mild ? 1 : 0; };
+    var academic = pts(att, 15, 30) + pts(test, 10, 20);
+    var total = Math.min(miss, 2) + academic;
+    var band = academic === 0 || total < 2 ? "No flag" : total >= 4 ? "High" : "Watch";
+    var why = academic === 0 && miss > 0
+      ? " Late fees alone never flag a student. Reminders handle money."
+      : " " + total + " points: " + academic + " from attendance and tests, " + Math.min(miss, 2) + " from missed instalments.";
+    $("#riskOut").innerHTML = '<span class="pill ' + (band === "No flag" ? "good" : "late") + '">' + band + "</span>" + why;
+  }
+  ["#rAtt", "#rTest", "#rMiss"].forEach(function (id) { $(id).addEventListener("input", drawRisk); });
+  drawRisk();
+
+  // Refund, the same formula as src/domain/refund.ts.
+  var TERM_START = Date.UTC(2026, 6, 1), TERM_DAYS = 365, DAY = 86400000;
+  function drawRefund() {
+    var fee = Math.max(0, Number($("#fFee").value) || 0);
+    var paid = Math.max(0, Number($("#fPaid").value) || 0);
+    var exit = Date.parse($("#fExit").value + "T00:00:00Z");
+    if (isNaN(exit)) return;
+    var used = Math.min(TERM_DAYS, Math.max(0, Math.round((exit - TERM_START) / DAY) + 1));
+    var feeUsed = Math.round((fee * used) / TERM_DAYS);
+    var refund = Math.max(0, paid - feeUsed);
+    var due = new Date(exit + 10 * DAY).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
+    var rows = [["Days used", used + " of " + TERM_DAYS], ["Fee used", inr(feeUsed)], ["Paid", inr(paid)]];
+    $("#refundLines").innerHTML = rows.map(function (r) { return '<div class="line"><span>' + r[0] + "</span><span>" + r[1] + "</span></div>"; }).join("");
+    $("#refundOut").textContent = inr(refund);
+    $("#refundDue").textContent = refund > 0 ? "Due by " + due + ", within 10 days of leaving." : "No refund due, because the fee used covers everything paid.";
+  }
+  ["#fFee", "#fPaid", "#fExit"].forEach(function (id) { $(id).addEventListener("input", drawRefund); });
+  drawRefund();
+})();
+</script>
+</body>
+</html>

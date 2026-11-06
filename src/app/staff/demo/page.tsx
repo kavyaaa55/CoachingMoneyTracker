@@ -63,6 +63,12 @@ export default async function DemoPage({ searchParams }: { searchParams: Promise
       <div className="max-w-[640px]">
         <h1 className="text-[32px] leading-10 font-medium">{c.title}</h1>
         <p className="mt-2 text-muted">{c.intro}</p>
+        <a
+          href="/guide/index.html"
+          className="inline-block min-h-12 py-3 font-medium underline underline-offset-4"
+        >
+          {c.guide}
+        </a>
       </div>
 
       <section className="flex flex-col gap-4 rounded-md border border-divider bg-surface p-6">

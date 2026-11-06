@@ -330,6 +330,7 @@ export const en = {
       title: "Reviewer console",
       intro:
         "This product acts over days and weeks. Move the date here and every day runs through the real pipeline: payments, uploads, reminders and risk checks. Demo mode only.",
+      guide: "Open the visual guide",
       dateLabel: "Demo date",
       moveDay: "Move 1 day",
       moveWeek: "Move 7 days",
