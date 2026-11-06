@@ -2,7 +2,7 @@
 
 Read this first, then continue from **Next step**.
 
-**Last updated:** 5 Nov 2026, version 1.0.0.
+**Last updated:** 6 Nov 2026, version 1.0.0 plus the level-up in the changelog.
 
 ## What this is
 
@@ -15,6 +15,8 @@ Fee Tracker: a 7-day solo assessment build for Company A, a Jaipur coaching inst
 3. `DESIGN.md`: read before any UI work
 4. `docs/brief.txt`: the client brief, which wins over everything else
 5. `docs/TDD.md`: architecture, decisions, limits
+6. `docs/decisions.md` and `docs/mistakes.md`: why things are as they are, and what went wrong
+7. `public/guide/index.html`: the visual guide, served at `/guide/index.html`
 
 ## Ground rules
 
@@ -41,8 +43,9 @@ Fee Tracker: a 7-day solo assessment build for Company A, a Jaipur coaching inst
 | 9. Polish check | Done |
 | 10. Submission files | Done |
 | 11. Optional depth: parent attendance and scores, bulk upload | Done |
+| 12. Level-up: event pipeline and five differentiators | Done |
 
-Last verified: 263 tests pass (167 unit, 96 database), and lint and types are clean.
+Last verified: 365 tests pass (213 unit, 152 database), and lint, types and the production build are clean. Every new flow was walked in a browser.
 
 ## Run it
 
@@ -55,7 +58,8 @@ Open http://localhost:3000. The server does not survive the session that started
 - **Postgres:** the Windows service runs on port **5433**, not 5432. Database is `fee_tracker`.
 - **`.env`:** already exists locally with all 7 variables. It is gitignored. Do not print it or copy its values anywhere.
 - **Demo date:** `APP_TODAY=2026-11-02`. The brief's sample data only works on this date.
-- **Reset data:** `npm run db:seed`. This also clears consent and test payments.
+- **Reset data:** `npm run db:seed`, or **Reset demo** on the Reviewer console. This replays the term in about 7 seconds and clears consent and test payments.
+- **Move the date:** the Reviewer console at `/staff/demo`. Each day runs the real pipeline.
 
 | Number | Who |
 |---|---|
@@ -63,13 +67,14 @@ Open http://localhost:3000. The server does not survive the session that started
 | `9000000003` | Parent of Mohit Gurjar, due in 13 days |
 | `9000000001` | Parent of Aarav Meena, up to date |
 | `9000001035` | Parent of two children |
-| `9000000100` | Accounts staff |
+| `9000000100` | Accounts Executive, who saves refunds |
+| `9000000101` | Accounts Manager, who approves them |
 
 The OTP appears on screen in demo mode.
 
 ## Next step: owner actions
 
-Version 1.0.0 is tagged and released, and prompt 11 is on top of it, unreleased. What is left is the owner's:
+Version 1.0.0 is tagged and released, and prompts 11 and 12 are on top of it, unreleased. What is left is the owner's:
 
 1. **Deploy** using the AWS guide in `deployment.md`, then put the live link at the top of `docs/TDD.md`.
 2. **Export the TDD** to PDF. Check that the Mermaid diagrams survive.
@@ -83,6 +88,9 @@ Version 1.0.0 is tagged and released, and prompt 11 is on top of it, unreleased.
 - **Refund rule:** pure pro-rata with no retained fee, confirmed by the owner.
 - **Long-overdue reminders:** they continue until paid, weekly to day 63, then every 4 weeks up to a year. Decided from the brief, see `docs/TDD.md`.
 - **`CLAUDE.md`, `prompt.md` and this file** stay tracked. The owner decided. The brief recommends AI tools and reads the commit history, so they are honest working records.
+
+- **Data pipeline:** sample data is replayed as events through the real entry points. Only enrolment is inserted directly. See `docs/decisions.md`.
+- **Level-up:** the five items in `level-up.md` are built. No new dependency or role, and parent home is unchanged apart from a refund status line.
 
 ## How each prompt is done
 
@@ -98,16 +106,22 @@ Version 1.0.0 is tagged and released, and prompt 11 is on top of it, unreleased.
 | Path | Job |
 |---|---|
 | `src/domain/` | Pure rules: money, dates, instalments, refund, payments, reminders, dues, tally, risk, gst, otp, access |
-| `src/lib/payments.ts` | `recordPayment`, the only code that marks an instalment paid |
+| `src/lib/payments.ts` | `recordPayment`, `applyQueuedPayment`, `reversePayment`, `returnQueuedPayment`. The only code that changes a payment |
+| `src/lib/pipeline.ts` | `runDay` and `replayDays`: events to real entry points, then the daily jobs |
+| `src/db/sample-events.ts`, `src/db/load-sample.ts` | Sample data as events, and the replay |
+| `src/lib/simulator.ts`, `src/lib/demo.ts` | Demo only: future events and the time machine |
+| `src/lib/books.ts` | Month-end checks, closing a month, queue suggestions |
+| `src/lib/audit.ts` | The append-only audit log |
+| `src/lib/scoreboard.ts`, `src/lib/risk-lab.ts` | Read-only queries for those pages |
 | `src/lib/reminders.ts` | The reminder job and list query |
 | `src/lib/auth.ts` | `requireUser`, `requireParent`. Call first in every protected page and action |
-| `src/lib/refunds.ts` | `saveRefund`, which also stops reminders and closes the fee account, and `refundOf` |
+| `src/lib/refunds.ts` | `saveRefund`, which stops reminders and closes the fee account, then `approveRefund` and `markRefundPaid` |
 | `src/lib/dues.ts` | Dues and Tally export queries, with centre and batch filters |
 | `src/lib/risk.ts` | The risk job, task list and review. It writes only to `risk_flags` |
 | `src/lib/ledger.ts` | Instalment, payment and receipt queries |
 | `src/lib/staff-students.ts` | Student search and lookup |
 | `src/lib/clock.ts` | `today()`. Never use `new Date()` for business dates |
-| `src/db/sample-data.ts` | Pure, seeded sample data with tests |
+| `src/db/sample-data.ts` | Pure, seeded sample data with tests. All the facts, none of the rows |
 | `src/i18n/` | All user text. `hi.ts` must match the shape of `en.ts` |
 | `src/components/` | `DataTable`, `ActionForm`, `SubmitButton`, `StatusChip`, `TextField`, `ReceiptView` |
 
@@ -115,11 +129,15 @@ Money is whole paise. Dates are `YYYY-MM-DD` strings.
 
 ## Sample data for later prompts
 
-- **Risk flag, triggers:** STU-1037 Neha Joshi, STU-1038 Chirag Joshi, STU-1039 Uday Meena. The seed runs the check, so they start as open call tasks.
+- **Risk flag, triggers:** STU-1037 Neha Joshi, STU-1038 Chirag Joshi, STU-1039 Uday Meena, high. STU-1033 Uday Vyas and STU-1056 Pranav Saini, watch. The replay runs the check daily, so these five start as open call tasks.
+- **Records that stop:** STU-1056 Pranav Saini.
+- **Paid over 60 days late:** STU-1047 to STU-1049. The STU-1048 entry is reversed on 20 Oct.
+- **Left:** STU-1050 to STU-1055: inside the deadline, overdue, approved, paid on time, paid late, and ₹0.
+- **Exact queue match:** Vidhi Soni, STU-1057, for the ₹12,500.
 - **Risk flag, too little data:** STU-1040 Manav Shekhawat. It creates no task.
 - **Risk flag, does not trigger:** STU-0587 Ishita Sharma, who has a late fee but steady attendance and scores.
 - **Reminder stages on the demo date:** STU-1041 to STU-1045. STU-1046 paid early, so its reminders show as stopped.
-- **Unmatched payment:** `GW-TEST-UNMATCHED-0001`, ₹12,500.
+- **Unmatched payments:** `GW-TEST-UNMATCHED-0001` ₹12,500 with no reference, `-0002` for a student who left, `-0003` an overpayment.
 
 ## Environment pitfalls
 
@@ -130,13 +148,15 @@ Money is whole paise. Dates are `YYYY-MM-DD` strings.
 - **Browser form limits** such as `max` can hide server rules. Remove them when testing the server, and do not trust a leftover alert.
 - **Signed-out pages** return HTTP 200 with a streamed redirect, because of `loading.tsx`. Check the body, not the status code. Route handlers return a real 307.
 - **The consent screen** has "Not now" instead of "Sign out", so scripts that sign out must handle it.
+- **Windows line endings:** working files are CRLF, so a patch script must normalise them. `next start -p` is rejected by the shell wrapper: use `node node_modules/next/dist/bin/next start --port 3000`.
+- **Chain commits with `&&`**, never `;`, so a failing test stops the commit.
 - **`AGENTS.md`** is generated by `next dev` and is gitignored.
 - **Docs edits:** check that Mermaid diagrams still render after changing `docs/TDD.md`.
 
 ## Before submission
 
 - Deploy, and put the live link at the top of the TDD.
-- Schedule the daily calls to `/api/cron/reminders` and `/api/cron/risk`.
+- Schedule the daily call to `/api/cron/daily`.
 - Add the demo logins for the live site to `deployment.md`.
 - Export the TDD to PDF. The zip holds the TDD and `deployment.md`, up to 25 MB.
 - Make the repo public.
@@ -145,8 +165,7 @@ Money is whole paise. Dates are `YYYY-MM-DD` strings.
 
 Not blocking, and listed in `docs/TDD.md` where they affect the client:
 
-- A saved manual payment cannot be reversed. If time allows, add a reversal entry, never a delete.
-- A saved refund cannot be reversed either, and there is no "refund paid" step or list of refunds across students.
-- The unmatched queue is read only.
-- The Tally columns are assumed. Receipt and export dates use UTC, which only matters for real payments just after midnight in India.
+- A saved refund cannot be reversed.
+- Only a queued payment that fits one instalment can be applied. Anything else is returned to the payer.
+- The Tally columns are assumed and need a trial import.
 - Hindi text needs review by a native speaker.

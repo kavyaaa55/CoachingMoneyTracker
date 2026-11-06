@@ -215,7 +215,16 @@ The mockups in `docs/mockups` are layout reference only. Their colours, font and
 | Parent attendance and scores | 3.3, 3.4 | One page, not two. Plain figures, with no trend or risk wording. Reached from the instalments page, so parent home keeps its one link |
 | Bulk upload | 8.1 | One column of choices, then a preview before saving. Errors listed by line, and nothing saved until the whole file passes |
 
-**Still optional:** applying a payment from the unmatched queue (8.2), audit log (8.3).
+**Level-up, built on the same system**
+
+| Screen | Base mockup | Change |
+|---|---|---|
+| Close the books | 8.2 | Month-end checks first, then the queue. A suggestion always states its reason |
+| Audit log | 8.3 | Read only, plain table |
+| Refund desk | None | Same figures row and table as Dues, soonest deadline first |
+| Director scoreboard | None | Tables and figures only, no charts |
+| Risk lab | None | A plain form that writes nothing, with the caveat stated first |
+| Reviewer console | None | Demo mode only, so no parent or real user ever sees it |
 
 **Dropped:** 1.1 design sheet (this file replaces it), and 1.5 and 1.6 as separate screens (they become the two shared layouts).
 
@@ -229,3 +238,5 @@ The mockups in `docs/mockups` are layout reference only. Their colours, font and
 | 2026-11-05 | Parent home is not a dashboard | The brief's five-second test |
 | 2026-11-05 | Risk shown as a band, not a score | The flag is uncertain and should look uncertain |
 | 2026-11-05 | Parent attendance and scores sit behind the instalments page | Parent home keeps one link and passes the five-second test |
+| 2026-11-06 | New staff screens reuse the Dues figures row and DataTable | Five new screens, no new visual language |
+| 2026-11-06 | Scoreboard uses tables, not charts | Progress bars were already removed, and the client asked for restraint |

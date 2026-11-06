@@ -23,6 +23,7 @@ Pick a language, enter a number, and the 6-digit code appears on screen, because
 | `9000000001` | Parent | Aarav Meena: up to date |
 | `9000001035` | Parent | Two children |
 | `9000000100` | Accounts staff | Dues, students, ledgers, reminders, call tasks, uploads and refunds |
+| `9000000101` | Accounts staff | Accounts Manager, who approves refunds the Executive saved |
 
 **A short tour:**
 
@@ -32,7 +33,9 @@ Pick a language, enter a number, and the 6-digit code appears on screen, because
 4. Open Reminders and press Run reminders now. Open Call tasks and mark a false flag.
 5. Open Upload, choose Centre 3 · JEE 2028 Morning and upload `docs/samples/attendance-centre-3.csv`. Save it, then press Run risk check now on Call tasks. Chirag Choudhary gets a new call task.
 
-The refund policy is public at `/refund-policy`. For a full walkthrough, see [docs/demo.md](docs/demo.md).
+**Try it in 3 minutes:** sign in as `9000000100` and open **Reviewer console**. Pay Ishita's balance from the link there, then move the date 7 days. Her reminders stop and everyone else's carry on, because each day ran through the real pipeline. **Reset demo** puts everything back.
+
+The refund policy is public at `/refund-policy`. The visual guide is at `/guide/index.html`. For a full walkthrough, see [docs/demo.md](docs/demo.md).
 
 ## Run locally
 
@@ -246,22 +249,20 @@ Caddy gets and renews the certificate on its own. Open `https://3-110-20-30.ssli
 
 ### 8. Schedule the daily jobs
 
-This runs reminders and the risk check at 9:00 in India, which is 3:30 on the server's UTC clock.
+This runs the daily pipeline, reminders then the risk check, at 9:00 in India, which is 3:30 on the server's UTC clock. Each run is recorded and shown on the Scoreboard.
 
 ```
 cat > ~/run-jobs.sh <<'EOF'
 #!/bin/sh
 SECRET=$(grep '^CRON_SECRET=' /home/ubuntu/coaching_institute/.env | cut -d= -f2)
-for job in reminders risk; do
-  curl -fsS -H "Authorization: Bearer $SECRET" "http://127.0.0.1:3000/api/cron/$job"
-  echo
-done
+curl -fsS -H "Authorization: Bearer $SECRET" "http://127.0.0.1:3000/api/cron/daily"
+echo
 EOF
 chmod 700 ~/run-jobs.sh
 (crontab -l 2>/dev/null; echo '30 3 * * * /home/ubuntu/run-jobs.sh >> /home/ubuntu/jobs.log 2>&1') | crontab -
 ```
 
-Both jobs are safe to run more than once.
+The pipeline is safe to run more than once. The separate `/api/cron/reminders` and `/api/cron/risk` routes still work.
 
 ### 9. Check it works
 
@@ -269,14 +270,14 @@ Both jobs are safe to run more than once.
 ~/run-jobs.sh
 ```
 
-You should see two lines of counts. Then, in a browser:
+You should see the day's counts and an empty `failed` list. Then, in a browser:
 
 1. Sign in as `9000000100` and check that Dues shows figures.
 2. Sign in as `9000000002`, agree to consent, and pay through the test gateway. The instalment should update, which proves the webhook reaches the app through `APP_URL`.
 3. Call a job with no secret, which should return 401:
 
    ```
-   curl -i https://3-110-20-30.sslip.io/api/cron/risk
+   curl -i https://3-110-20-30.sslip.io/api/cron/daily
    ```
 
 Add the live address to the top of `docs/TDD.md`.
@@ -304,7 +305,7 @@ The demo settings are not for production. For a real rollout:
 | Task | Commands |
 |---|---|
 | Deploy a new version | `cd ~/coaching_institute && git pull && npm ci && npm run db:migrate && npm run build && sudo systemctl restart fee-tracker` |
-| Reset the demo data | `cd ~/coaching_institute && npm run db:seed` |
+| Reset the demo data | **Reset demo** on the Reviewer console, or `cd ~/coaching_institute && npm run db:seed` |
 | Read the app log | `journalctl -u fee-tracker -f` |
 | Read the job log | `tail ~/jobs.log` |
 

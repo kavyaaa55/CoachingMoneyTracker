@@ -2,6 +2,43 @@
 
 ## Unreleased
 
+### Data pipeline
+
+- Sample data is replayed day by day as events through the real entry points, instead of being written as finished rows
+- One daily pipeline, `runDay`, used by the schedule, staff, the replay and the time machine
+- Every run is recorded, and a failed stage does not stop the next. New route `/api/cron/daily`
+
+### Reviewer console
+
+- A time machine that runs each day through the real pipeline, with simulated parents and centre files
+- A guided story, a preview of sent messages, recent runs and a reset
+
+### Director scoreboard
+
+- The brief's success measures, per rupee and by month and centre. Parent calls are shown as not tracked
+
+### Refund desk
+
+- Every refund against the 10-day deadline, second-person approval, a paid step and a GST credit note in the Tally export
+- Parents see the refund status
+
+### Risk lab
+
+- Replays the rule over the term using only what was known each day, with what-if numbers that change nothing live
+- Notices students whose records stop, and stores the rule version on each flag
+
+### Close the books
+
+- Month-end checks that add up the finished Tally file against the ledger, and closing a month
+- Queue suggestions, applying queued money, and returning it to the payer
+- Reversals that keep the record and restart future reminders
+- An append-only audit log, enforced by the database
+- Receipt and export dates now use India time
+
+### Docs
+
+- A visual guide, key decisions, and mistakes and recovery
+
 ### Parents
 
 - Attendance and test scores page in Hindi and English, reached from the instalments page. Parent home is unchanged
@@ -14,7 +51,7 @@
 
 ### Quality
 
-- 263 tests: 167 unit and 96 database
+- 365 tests: 213 unit and 152 database
 - A hands-on test guide in [docs/demo.md](docs/demo.md), with sample files in `docs/samples`
 
 ## 1.0.0 (5 Nov 2026)

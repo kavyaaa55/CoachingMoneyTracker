@@ -1,6 +1,6 @@
 # Brief Check
 
-Every requirement in [the brief](brief.txt), its status in version 1.0.0 plus the unreleased changes in the changelog, and where to find it. Checked line by line on 5 Nov 2026.
+Every requirement in [the brief](brief.txt), its status in version 1.0.0 plus the unreleased changes in the changelog, and where to find it. Checked line by line on 6 Nov 2026.
 
 | Status | Meaning |
 |---|---|
@@ -50,14 +50,14 @@ Every requirement in [the brief](brief.txt), its status in version 1.0.0 plus th
 | Never a fee action or parent message | Met | Parent pages hold no risk code |
 | Counsellors mark false flags | Met | With a required note and a visible rate |
 | Handling when unsure | Met | Too little data says so and creates no task |
-| Unmatched payments go to an accounts queue | Partial | Staff can see the queue on Dues, and nothing is marked paid. Applying a payment to a fee is not built |
+| Unmatched payments go to an accounts queue | Met | Nothing is marked paid. Staff apply it from plain-rule suggestions at `/staff/books`, or return it to the payer |
 
 ## Constraints
 
 | Requirement | Status | Notes |
 |---|---|---|
 | Published refund policy | Met | `/refund-policy`, public, in both languages. Wording is a sample for Company A to confirm |
-| Pro-rata refund within 10 days of leaving | Partial | The deadline is worked out and shown on the student's refund screen. There is no list across students, and no "refund paid" step |
+| Pro-rata refund within 10 days of leaving | Met | `/staff/refunds` lists every refund by deadline, with second-person approval, a paid step and a credit note |
 | Verifiable parental consent, DPDP Act 2023 | Met | Stored per child with a notice version. Proves control of the phone, not guardianship |
 | Receipts show GST | Met | The rate and GSTIN are labelled samples |
 | Works on low-end phones | Partial | Designed at 360px and kept flat and light. Not measured on a real low-end phone |
@@ -75,23 +75,23 @@ Every requirement in [the brief](brief.txt), its status in version 1.0.0 plus th
 
 ## Success measures
 
-The client's measures need live use, so none can be shown yet. This is what supports each one.
+The client's measures need live use for real results. The Scoreboard already works them out from the records.
 
 | Measure | What supports it | Gap |
 |---|---|---|
-| Value over 60 days late, 12% to 6% | Ageing shows it by batch, and reminders continue past 60 days | The dashboard shows what is late now, not the share that arrived late |
-| Parent calls about dues down 70% | Parent home and reminders | |
-| Month-end reconciliation, 4 days to 1 | Automatic matching and the Tally export | The Tally format needs a trial import |
+| Value over 60 days late, 12% to 6% | `/staff/scoreboard` measures it per rupee, by month and by centre | Sample figures only |
+| Parent calls about dues down 70% | Parent home and reminders | The app has no call data, so the Scoreboard says not tracked |
+| Month-end reconciliation, 4 days to 1 | `/staff/books` adds up the ledger and the Tally file, and records days to close | The Tally format needs a trial import |
 
 ## Submission rules
 
 | Requirement | Status | Notes |
 |---|---|---|
 | Frontend, backend, database, sign-in | Met | |
-| Tests for the important logic | Met | 263 tests |
+| Tests for the important logic | Met | 365 tests |
 | No secrets in the repository | Met | Full history checked |
 | Validated inputs and access control | Met | Checked on every read and write |
-| Sample data so it does not look empty | Met | 49 fictional students |
+| Sample data so it does not look empty | Met | 60 fictional students, replayed through the real pipeline |
 | Keep the commit history | Met | |
 | Label every assumption | Met | [TDD section 11](TDD.md#11-assumptions) |
 | GitHub URL at the top of the TDD | Met | |

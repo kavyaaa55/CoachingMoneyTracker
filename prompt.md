@@ -18,6 +18,7 @@ Run these in order, one at a time. Each one ends with a working app and a commit
 - [x] 9. Polish check
 - [x] 10. Submission files (live link, PDF export and public repo are left to the owner)
 - [x] 11. Optional depth: parent attendance and scores, bulk upload
+- [x] 12. Level-up: event pipeline and the five differentiators in `level-up.md`
 
 ## 1. Sample data
 
@@ -62,3 +63,7 @@ Run these in order, one at a time. Each one ends with a working app and a commit
 ## 11. Optional depth
 
 > Add a parent page for attendance and test scores, linked from the instalments page so parent home stays as it is. Add bulk upload of attendance and test scores per batch: a CSV with a preview, all-or-nothing saving, a template per batch, and clear errors by line. A repeat upload must be harmless. Uploading must never touch fees, reminders or call tasks. Test every check, and update every document that says these are not built.
+
+## 12. Level-up
+
+> Make the data flow as it would in production: sample data becomes events, replayed day by day through the real entry points, with one daily pipeline that records each run. On top of it, build the five items in `level-up.md`: reviewer console with a time machine, director scoreboard, refund desk, risk lab, and close the books. No new dependency, role or change to parent home. Walk every flow to its last step in a browser. Record choices in `docs/decisions.md` and mistakes in `docs/mistakes.md`, and add a visual guide.

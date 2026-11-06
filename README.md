@@ -30,6 +30,15 @@ A fee portal for Company A, a Jaipur coaching institute with 4 centres and 2,600
 - Dropout-risk call tasks with plain reasons, false-flag marking and a visible false-flag rate
 - Bulk upload of attendance and test scores per batch, with a preview before anything is saved
 
+**What sets it apart**
+
+- **A real data pipeline.** Sample data is replayed day by day through the same code a live day uses, and every run is recorded
+- **Reviewer console.** Move the date and watch a term play out: reminders fire, a payment stops them, flags appear
+- **Director scoreboard.** The client's own success measures, worked out from the records
+- **Refund desk.** Every refund against the 10-day deadline, with second-person approval and a GST credit note
+- **Risk lab.** Replays the rule using only what was known each day, and shows who it caught and who it missed
+- **Close the books.** Month-end checks against the Tally file, reversals that delete nothing, and an append-only audit log
+
 **Built to fail safely**
 
 - A payment that cannot be matched goes to a queue and marks nothing paid
@@ -37,6 +46,8 @@ A fee portal for Company A, a Jaipur coaching institute with 4 centres and 2,600
 - With too little data, the flag says so and creates no task
 - Reminders recheck the balance at the moment of sending
 - An upload with one bad row saves nothing, and a repeat upload changes nothing
+- A wrong payment is reversed with a new entry, never deleted
+- The audit log refuses every update and delete, at the database
 
 ## Screens
 
@@ -63,7 +74,10 @@ Open http://localhost:3000. The code appears on screen, because SMS is mocked.
 | `9000000002` | Parent of Ishita Sharma: part paid, 23 days overdue |
 | `9000000003` | Parent of Mohit Gurjar: due in 13 days |
 | `9000001035` | Parent of two children |
-| `9000000100` | Accounts staff |
+| `9000000100` | Accounts Executive |
+| `9000000101` | Accounts Manager, who approves refunds |
+
+**Try it in 3 minutes:** sign in as `9000000100`, open **Reviewer console**, and follow the guided story.
 
 All people and numbers are fictional. [deployment.md](deployment.md) has the full list, a short tour, and a guide to deploying on the AWS free tier.
 
@@ -76,13 +90,14 @@ src/
   app/         routes only: thin pages and server actions
   components/  small shared UI pieces
   domain/      pure business rules, with a test beside each one
-  db/          schema, client and seed
+  db/          schema, client, sample data, events and replay
   i18n/        English and Hindi text
   lib/         anything that needs cookies or the database
 ```
 
 - Money is whole paise, and dates are `YYYY-MM-DD` strings
-- `recordPayment` is the only code that marks an instalment paid
+- `lib/payments` is the only code that marks an instalment paid
+- Everything from outside enters as an event, and `runDay` is the only daily pipeline
 - Role and ownership are checked on every read and write
 
 ```
@@ -96,6 +111,9 @@ npm run lint
 
 | Document | What is in it |
 |---|---|
+| [Visual guide](public/guide/index.html) | The whole product in screenshots, with live calculators. Open `/guide/index.html` on the running app |
+| [Key decisions](docs/decisions.md) | What was chosen, why, and what was turned down |
+| [Mistakes and recovery](docs/mistakes.md) | What went wrong, how it was caught, and what changed |
 | [Test guide](docs/demo.md) | Step-by-step missions for trying every workflow, with no technical knowledge needed |
 | [Technical design](docs/TDD.md) | Architecture, data model, flows, how the risk flag works, assumptions, limits |
 | [Brief check](docs/BRIEF-CHECK.md) | Every brief requirement, its status and where to find it |

@@ -2,7 +2,7 @@
 
 **GitHub:** https://github.com/Siddhesh-source/coaching_institute
 **Live app:** not deployed yet (see [deployment.md](../deployment.md))
-**Version:** 1.0.0 plus the unreleased changes in the [changelog](../CHANGELOG.md), 5 Nov 2026. The core slice works end to end, with two optional features added. [docs/BRIEF-CHECK.md](BRIEF-CHECK.md) lists every brief requirement and its status.
+**Version:** 1.0.0 plus the unreleased changes in the [changelog](../CHANGELOG.md), 6 Nov 2026. The core slice works end to end, with optional depth and a level-up on top. Read with [key decisions](decisions.md), [mistakes and recovery](mistakes.md) and the [visual guide](../public/guide/index.html). [docs/BRIEF-CHECK.md](BRIEF-CHECK.md) lists every requirement.
 
 ---
 
@@ -14,9 +14,9 @@ Fee Tracker gives parents their dues on a phone in five seconds, in Hindi or Eng
 
 | Client success measure | What delivers it |
 |---|---|
-| Value over 60 days late: 12% to 6% | Automatic reminders, pay link in every message |
+| Value over 60 days late: 12% to 6% | Automatic reminders, pay link in every message. Measured on the Director Scoreboard |
 | Parent calls about dues: down 70% | Parent portal, dues readable in five seconds |
-| Month-end reconciliation: 4 days to 1 | Automatic payment matching, Tally export |
+| Month-end reconciliation: 4 days to 1 | Automatic matching, Tally export, month-end checks and a recorded close |
 
 ## 2. Brief Against Status
 
@@ -27,10 +27,10 @@ Fee Tracker gives parents their dues on a phone in five seconds, in Hindi or Eng
 | Hindi on parent screens | Built | Language chosen before sign-in |
 | Parent dues and pay link | Built | One pay link per instalment, test gateway |
 | Payment marks instalment paid | Built | Signed webhook only |
-| Unmatched payments never mark paid | Built | Accounts queue on the Dues page, read only. Applying a payment to a fee is not built |
+| Unmatched payments never mark paid | Built | Accounts queue. Staff apply from plain-rule suggestions, or return money to the payer |
 | Receipts show GST | Built | Printable, Hindi and English |
-| Realistic sample data | Built | 49 students, 4 centres, 9 batches |
-| Pro-rata refund calculator | Built | Every working line, 10 day deadline, saved once per student |
+| Realistic sample data | Built | 60 students, 4 centres, 9 batches, replayed through the real pipeline |
+| Pro-rata refund calculator | Built | Every working line, 10 day deadline, refund desk, second-person approval, credit note |
 | Published refund policy | Built | Public page in Hindi and English, printable |
 | Fee ledger for staff | Built | Search, plan, discount, instalments, payments, balance, days overdue |
 | Manual payments | Built | Same matching code as the webhook |
@@ -39,6 +39,10 @@ Fee Tracker gives parents their dues on a phone in five seconds, in Hindi or Eng
 | AI dropout-risk flag | Built | Rule-based band with reasons. Call tasks only, with false-flag marking and rate |
 | Parent attendance and test scores | Built | Optional depth. Own page behind the instalments page, in Hindi and English |
 | Bulk upload of attendance and scores | Built | Optional depth. CSV per batch, with a preview and all-or-nothing saving |
+| Reviewer console | Built | Level-up. Time machine over the real pipeline, demo mode only |
+| Director scoreboard | Built | Level-up. The brief's success measures from the records |
+| Risk lab | Built | Level-up. Replays the rule on what was known each day |
+| Close the books | Built | Level-up. Month-end checks, reversals, append-only audit log |
 
 ## 3. Architecture
 
@@ -82,19 +86,21 @@ The money rules are the hard part of this brief, so they sit in `src/domain` whe
 
 ## 4. Key Decisions
 
+The core choices are below. The level-up and data pipeline choices are in [decisions.md](decisions.md).
+
 | Decision | Why | Rejected |
 |---|---|---|
 | Store money as whole paise | Sums never drift. Rounding happens once, on purpose | Decimals or floats |
 | Dates as `YYYY-MM-DD` strings | A due date has no time zone, so it cannot shift by a day | Date objects |
 | Paid amount is calculated from payments | One source of truth. Balance can never disagree with history | A stored `paid` column |
-| One function marks instalments paid | `recordPayment` is the single place to audit | Updates spread across routes |
+| One file changes payments | `lib/payments` is the single place to audit | Updates spread across routes |
 | Manual entry uses the same `recordPayment` | One matching rule for all money. A mismatch is refused inside the same lock, so it cannot race | A separate staff write path |
 | Stop reminders in two places | The payment cancels queued reminders in the same step, and the job rechecks the balance at send time | Checking only when scheduling |
 | Job and payments share one lock | A payment cannot slip in during a send, and two runs cannot send twice | A separate job lock |
 | Only a signed webhook can record a gateway payment | The browser is never trusted to say it paid | Marking paid on the redirect |
 | `gateway_ref` is unique | A repeated webhook changes nothing | Checking in code alone |
 | Lock the instalment row while matching | Two payments cannot both use the same balance | Hoping they never collide |
-| Database refuses a matched payment with no instalment | The rule holds even if the code has a bug | Code checks alone |
+| Database refuses an applied payment with no instalment | The rule holds even if the code has a bug | Code checks alone |
 | Fixed demo date, `APP_TODAY=2026-11-02` | The brief's "23 days overdue" and "Due in 13 days" both point to this date | Real date, which would make the sample wrong |
 | Pay links signed and free of student data | Safe to send in a message to a minor's family | Links needing sign-in |
 | Role read from the database per request | A role change applies at once | Role stored in the cookie |
@@ -102,7 +108,7 @@ The money rules are the hard part of this brief, so they sit in `src/domain` whe
 
 ## 5. Data Model
 
-13 tables, 5 migrations. The core of it:
+16 tables, 13 migrations. The core of it:
 
 ```mermaid
 erDiagram
@@ -119,20 +125,53 @@ erDiagram
   STUDENTS ||--o| REFUNDS : "may get"
 ```
 
-`otp_codes` stands alone, keyed by phone number.
+`otp_codes` stands alone, keyed by phone number. `pipeline_runs`, `audit_events` and `month_closes` are records of what happened, and nothing reads them to decide a fee.
 
 Bulk upload needed no new table or migration. The existing unique keys, one attendance row per student and week and one score per student and test, are what make a repeat upload safe.
 
 Rules the database itself enforces:
 
 - `payments.gateway_ref` and `receipt_no` are unique.
-- A payment is `matched` only if it has an instalment, and the reverse.
+- A payment has an instalment only if it is `matched` or `reversed`.
 - Amounts must be positive, discounts cannot exceed the plan, and attendance and scores stay in range.
 - A student can have only one refund, and a reminder stage can exist only once per instalment.
 - A student has one attendance record per week and one score per test.
 - `risk_flags` has no link to fees or messages, so the flag has no route to a fee action.
+- The person who saved a refund cannot approve it.
+- `audit_events` refuses every update and delete, through a trigger.
+- A month can be closed only once.
 
 ## 6. Main Flows
+
+### Data pipeline
+
+The demo and production share one path. Only the source of events differs.
+
+```mermaid
+flowchart LR
+  A[Gateway webhook] --> E[Event]
+  B[Counter entry] --> E
+  C[Centre CSV] --> E
+  D[Student leaves] --> E
+  S[Replay and simulator, demo only] --> E
+  E --> P[recordPayment, saveUpload, saveRefund]
+  P --> J[runDay: reminders, then risk check]
+  J --> R[pipeline_runs]
+```
+
+- **Sources.** Live, these are the webhook, the counter form, the upload screen and staff actions. In the demo, `src/db/sample-events.ts` turns the sample into the events that would have produced it, and `src/lib/simulator.ts` makes future ones.
+- **One day.** `runDay` takes in what arrived, then runs reminders and the risk check. Cron, the staff buttons, the replay and the time machine all use it.
+- **Failure.** A failed stage is recorded and the next still runs. The daily route returns 500 so the scheduler can alert.
+- **Replay.** Enrolment is inserted directly, because admissions are out of scope. The term then replays from 25 Jun to 2 Nov in about 7 seconds. The demo date's jobs are left to run, so reminders are waiting when a reviewer arrives.
+- **Result.** 130 recorded days, 81 receipts from one series, 475 reminders sent and 189 stopped, none written by hand.
+
+### Close the books
+
+A person applies queued money from plain-rule suggestions, or returns it to the payer with a note. A wrong payment is reversed, never deleted: the receipt shows as cancelled, a Reversal voucher goes to Tally on that day, and future reminders restart. Month end adds up the finished Tally file against the ledger. A month closes once it is over, the totals agree, nothing is queued and receipts have no gaps. A closed month refuses backdated payments.
+
+### Refund desk
+
+Saving a refund is unchanged and final. It then waits for a second accounts user, a rule the database also enforces. Paying records the date and reference and issues a credit note with GST split, which reaches the Tally export. A ₹0 refund skips these steps. Parents see the status.
 
 ### Sign-in and consent
 
@@ -286,7 +325,7 @@ A separate page reached from the instalments page. It shows classes attended in 
 |---|---|---|
 | Payment matching | Built | Unmatched payments go to a queue and mark nothing paid |
 | Reminders | Built | Balance rechecked at send time. Failed sends are retried |
-| Dropout-risk flag | Built | Creates a call task only. Counsellors mark false flags. Too little data creates no task |
+| Dropout-risk flag | Built | Creates a call task only. Counsellors mark false flags. Too little data creates no task. The Risk Lab tests the rule |
 
 **Dropout-risk flag.** It runs daily from a protected route or a staff button, and reads missed instalments, attendance and test scores.
 
@@ -300,9 +339,13 @@ A separate page reached from the instalments page. It shows classes attended in 
 
 **When it is wrong.** The job writes to one table, `risk_flags`, which has no link to fees or messages. A test takes a full copy of instalments, payments, reminders, refunds, students, consents and users, runs the job and a review, and confirms nothing changed. Parents never see a flag. Counsellors mark each task "called" or "false flag", a false flag needs a note, and the screen shows the false-flag rate from real reviews. The rate is shown rather than fed back automatically, so a person decides when to change the thresholds.
 
+**Records that stop.** A student two weeks behind the latest attendance in the batch scores 2 points, as the strongest attendance sign. Comparing with the batch stops a late file from flagging a whole class. Each flag stores its rule version.
+
+**Risk Lab.** Replays the rule on every Monday of the term, using only what was known that day, and shows who was flagged, how early, and who was missed. On the sample it flags 4 of 6 leavers, with an average of 21 days' warning, and misses 2. What-if numbers change nothing live, and "late fees alone never flag" cannot be adjusted.
+
 **Repeat flags.** A student has at most one open task, enforced by a database index, and the job refreshes its reasons as data changes. After a review the job leaves that student alone for 30 days. Students who have left are skipped, and their open tasks drop off the list.
 
-The thresholds were set by judgement against sample data I wrote myself, so passing here shows the logic works, not that it predicts dropouts. In the sample it flags exactly the three students built to trigger it, says Manav has too little data, and leaves Ishita alone despite her late fee.
+The thresholds were set by judgement against sample data I wrote myself, so these figures show the tool works, not that the rule predicts dropouts. Run daily, the rule leaves five open tasks on the demo date: the three students built to trigger it, Uday Vyas, whose attendance dipped, and Pranav Saini, whose records stopped. It says Manav has too little data, and leaves Ishita alone despite her late fee.
 
 ## 8. Security and Compliance
 
@@ -345,18 +388,18 @@ The 31 mockups are kept in `docs/mockups` as layout reference only. They contain
 
 ## 10. Testing
 
-263 tests pass, and CI runs lint, types, tests and a build on every push.
+365 tests pass, and CI runs lint, types, tests and a build on every push.
 
 | Suite | Tests | Covers |
 |---|---|---|
-| Unit | 167 | Fee, refund, exit dates, OTP, GST, matching, ledger totals, reminder rules, dues and ageing, Tally format, risk bands and missing data, sessions, sample data, CSV reading, upload checks, attendance summary |
-| Database | 96 | Uploads with no side effects, repeat uploads, duplicates, races, part payments, unmatched cases, manual entry, reminder stages and stopping, saving refunds, payments after exit, dues filters, export dates, risk tasks and no side effects, webhook and cron security, student search |
+| Unit | 213 | Fee, refund, exit dates, OTP, GST, matching, ledger totals, reminder rules, dues and ageing, Tally format, risk bands and missing data, replay and look-ahead, late share, suggestions, sessions, sample data, language files |
+| Database | 152 | The whole replayed term, time machine, refund approval and credit notes, reversals, queue, month close, audit trigger, uploads, races, part payments, reminder stages and stopping, and that the flag changes nothing else |
 
 Tests use the brief's own rows, so Aarav, Ishita and Mohit must produce exactly the brief's statuses. Main flows were also walked through in a real browser at 360px, in both languages.
 
 A polish check then visited every screen at 360px in both languages, 67 views in all, measuring overflow, tap targets, field labels, headings and dead links. It also tried to reach another parent's child by changing the address, and looked for secrets in the full git history. Nothing leaked and no secrets were found.
 
-Testing found real problems: forms that cleared every field after a validation error, a day count of `-0` on the due date, sample data that put every overdue student in NEET batches, a Hindi button overflowing its box, and an export that would have broken the production build.
+Testing found real problems, listed with their fixes in [mistakes.md](mistakes.md). The worst, such as a queued payment being offered to strangers, passed every test and were found by using the screens.
 
 ## 11. Assumptions
 
@@ -394,7 +437,15 @@ The brief does not state these. Each one is my judgement.
 | Too little data | Under 6 weeks of attendance, under 4 tests, or no fee plan | The brief does not say how much is enough |
 | Repeat flags | One open task per student, then 30 days after a review | A counsellor should not be asked again the next morning |
 | False flag note | Required | The reason helps tune the rule |
-| Unmatched queue | Read only, on the Dues page | The brief requires the queue. Applying money needs a reversal trail |
+| Unmatched queue | Staff apply from plain-rule suggestions, or return to the payer | The brief requires the queue. A common amount is not evidence |
+| Records that stop | Two weeks behind the batch scores 2 points | A vanished student is the likeliest dropout |
+| Refund approval | A second accounts user, no new role | The brief names two roles |
+| Credit notes | Issued on paying a refund, sent to Tally | The brief covers receipts only. An accountant must confirm |
+| Reversals | Marked reversed, never deleted, with a Reversal voucher | Money is corrected with a new entry |
+| Month close | Once over, totals agree, nothing queued, no receipt gaps | The brief measures the time, not the method |
+| Late share | Per rupee, instalments due 60 or more days ago, unpaid counts as late | The brief does not define it |
+| Parent call measure | Shown as not tracked | The app has no call data |
+| Time machine | Demo only, forward only, in memory, shared by all viewers | Otherwise weeks of behaviour cannot be reviewed |
 | Sample data | All records beyond the 3 brief rows are invented | The brief asks for created sample data |
 | Upload format | CSV, one batch and one kind per file, up to 200 KB and 2,000 rows | The brief names no format, and Excel saves CSV with no new dependency |
 | Upload checks | All or nothing, with a preview. Up to 50 classes a week and 1,000 marks, week start a Monday | One bad row usually means a bad file, and a wrong week would skew the risk flag |
@@ -409,10 +460,10 @@ The brief does not state these. Each one is my judgement.
 
 - Consent proves control of the registered phone, not legal guardianship. A real rollout needs a stronger check.
 - Consent withdrawal goes through the centre's office. There is no in-app button.
-- A saved manual payment cannot be edited or reversed yet. That needs a reversal entry, not a delete.
+- A reversal does not move money. Money applied to the wrong student is reversed, then entered again.
 - Every accounts user can see all centres. There is no per-centre access yet.
 - Reminders stop a year after the due date. An account that old needs a person, not another message.
-- Staff can see the unmatched queue but cannot apply a payment to a fee from it yet.
+- Queued money can be applied only if it fits one instalment, and only to a suggested instalment. Anything else is returned to the payer.
 - Pay links are about 230 characters. Real SMS needs a short link service.
 - The job holds the instalment lock while sending. That is fine for a mock, but a real provider should be called with a timeout.
 - OTP limits are per phone number, with no limit per IP address.
@@ -421,25 +472,25 @@ The brief does not state these. Each one is my judgement.
 - Screen behaviour such as forms keeping their values is checked in a browser, not by automated tests. Adding component tests would need a new dependency.
 - The error page and loading placeholders were reviewed in code, not forced in a browser.
 - The mock gateway is available only when `DEMO_MODE=true`. A real gateway needs its own webhook format.
-- A saved refund cannot be edited or reversed, so a wrong exit date needs a database fix. It needs a reversal entry, as manual payments do.
-- The app works out a refund but does not pay it. There is no "refund paid" step, and no list of refunds across students, so staff track the deadline from each ledger.
+- A saved refund cannot be edited or reversed, so a wrong exit date needs a database fix.
+- The app records a refund as paid but does not move the money. Credit notes are an assumption for an accountant to confirm.
 - The refund policy wording is a sample built on assumed rules. Company A must confirm it before real use.
-- The Tally columns are assumed, and refunds are not exported. The file needs a trial import before real use.
-- Receipt and export dates use UTC. A real payment just after midnight in India would show the day before, which matters at month end. The demo is not affected.
+- The Tally columns are assumed, including the Reversal and Credit Note vouchers. The file needs a trial import before real use.
 - The risk thresholds are judgement, tested only on invented data. They need checking against real dropouts before anyone relies on them.
-- Upload replaces a saved value with no record of who changed it or what it was. That needs the audit log.
+- The audit log shows the latest 50 entries, with no search. A corrected upload keeps the first 20 replaced values.
 - A test name must match exactly to correct a score. "Unit Test 7" and "unit test 7" would be saved as two tests.
 - Upload takes CSV only, so staff must save from Excel first. Reading .xlsx directly would need a new dependency.
 - Parents see the latest 12 weeks and tests. Older records are kept but not shown.
-- A student who stops being recorded altogether looks steady, because the flag reads the records it has. It does not notice that attendance has gone missing.
+- A whole class that stops being recorded raises no flag, because the check compares students within a batch.
 - Call tasks can be seen by every accounts user, and a closed task cannot be reopened.
-- The dashboard shows what is late now. It does not yet track the brief's measure, the share of instalment value that arrives over 60 days late, which needs paid-late history too.
+- The time machine is one shared date for everyone on the demo, held in memory on one server process.
+- Parent calls, the brief's second measure, cannot be measured from the app.
 
-**Cut:** audit log, and a separate receipts list for parents. Parent attendance and scores and bulk upload were outside the core build, and were added afterwards as optional depth.
+**Cut:** a separate receipts list for parents, and promise-to-pay, which would invent a fee policy the client never stated.
 
 **Next, in order:**
 
 1. Deploy, using the AWS guide in [deployment.md](../deployment.md), and have Company A confirm the refund policy and Tally format.
-2. Reversal entries for payments and refunds, then applying unmatched payments from the queue.
-3. A list of refunds due across students, with a "refund paid" step.
-4. A dashboard measure for the share of value arriving over 60 days late.
+2. Run the Risk Lab on Company A's real history, then set the thresholds from it.
+3. Reversal entries for refunds, and splitting a queued payment across instalments.
+4. Per-centre access for accounts users.

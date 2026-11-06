@@ -108,7 +108,7 @@ You will copy a few commands into a **terminal**, the window where you type inst
   npm run db:seed
   ```
 
-  **You should see:** `Seeded 49 students, 3 call tasks.`
+  **You should see:** `Replayed the term for 60 students.`
 
 - [ ] **6. Start the app.** Leave this terminal open while you test.
 
@@ -238,7 +238,7 @@ Click **Pay ₹15,000** on the home page to reach the Test payment gateway. Unde
 
 - [ ] Click **View receipt**.
 
-  **You should see:** receipt **RCT-000002** with the tax split out. These lines add up to the total:
+  **You should see:** a new receipt with the next number in the series and the tax split out. These lines add up to the total:
 
   | Line | Amount |
   |---|---|
@@ -380,7 +380,7 @@ Tally is the accounting software the centres use. This export gives it a spreads
 
 - [ ] Set **From** to 1 Oct 2026 and **To** to 2 Nov 2026, click the button, and open the file in Excel or Google Sheets.
 
-  **You should see:** 18 receipts, including **RCT-000001** and **RCT-000002** for Ishita's ₹7,500 payments. Each row splits out the fee, CGST and SGST. Rows show the student ID but no names, and the unmatched payments are not there.
+  **You should see:** your receipts for Ishita's ₹7,500 payments among the others, plus any Reversal and Credit Note vouchers. Each row splits out the fee, CGST and SGST. Rows show the student ID but no names, and the unmatched payments are not there.
 
 <img src="screenshots/staff-dues.png" alt="Dues page with totals, overdue amounts and a table by centre and batch" width="640">
 
@@ -396,7 +396,7 @@ Tally is the accounting software the centres use. This export gives it a spreads
 
 - [ ] Click **Students** in the menu.
 
-  **You should see:** **49 students**.
+  **You should see:** **60 students**.
 
 - [ ] Search for each of these in turn: `Ishita`, then `STU-0587`, then `9000000002`.
 
@@ -536,7 +536,7 @@ Tally is the accounting software the centres use. This export gives it a spreads
 
 - [ ] Click **Call tasks** in the menu.
 
-  **You should see:** **Open (3)** for Chirag Joshi, Neha Joshi and Uday Meena. Each one shows the reasons and a number to call. The page says "No flags reviewed yet".
+  **You should see:** **Open (5)**, including Chirag Joshi, Neha Joshi and Uday Meena as high, and Uday Vyas and Pranav Saini as watch. Each one shows the reasons and a number to call. The page says "No flags reviewed yet".
 
   <img src="screenshots/staff-tasks.png" alt="Call tasks page listing three high risk students" width="520">
 
@@ -546,7 +546,7 @@ Tally is the accounting software the centres use. This export gives it a spreads
 
 - [ ] Type `Student was ill and is back in class.` in the note and click **False flag**.
 
-  **You should see:** **Marked as a false flag.**, **Open (2)**, and "False flags: 1 of 1 reviewed (100%)."
+  **You should see:** **Marked as a false flag.**, **Open (4)**, and "False flags: 1 of 1 reviewed (100%)."
 
 - [ ] On **Neha Joshi**, click **Called**. A note is optional here.
 
@@ -556,7 +556,7 @@ Tally is the accounting software the centres use. This export gives it a spreads
 
 - [ ] Click **Run risk check now**.
 
-  **You should see:** "Checked 49 students. 0 new tasks. 1 had too little data, so no task was created." Chirag and Neha do not come back, because a reviewed student is left alone for 30 days.
+  **You should see:** "Checked 54 students. 0 new tasks. 1 had too little data, so no task was created." Chirag and Neha do not come back, because a reviewed student is left alone for 30 days.
 
 **Prove nothing else changed:**
 
@@ -611,11 +611,11 @@ The sample files for this mission are in the `docs/samples` folder of the app.
 
 - [ ] Click **Call tasks**.
 
-  **You should see:** **Open (1)** and no task for Chirag Choudhary yet. Saving a file does not raise a flag by itself, so staff can finish entering a whole batch first.
+  **You should see:** **Open (3)** and no task for Chirag Choudhary yet. Saving a file does not raise a flag by itself, so staff can finish entering a whole batch first.
 
 - [ ] Click **Run risk check now**.
 
-  **You should see:** "Checked 49 students. 1 new task." **Chirag Choudhary** now appears as **Watch**, with "Attendance fell from 91% to 8%" and "1 instalment overdue". In Mission 8, the same student showed no signs of risk.
+  **You should see:** "Checked 54 students. 1 new task." **Chirag Choudhary** now appears as **Watch**, with "Attendance fell from 91% to 8%" and "1 instalment overdue". In Mission 8, the same student showed no signs of risk.
 
 **Upload the same file twice:**
 
@@ -792,7 +792,7 @@ This puts all the sample data back and removes your test payments, permissions, 
    npm run db:seed
    ```
 
-4. Wait for `Seeded 49 students, 3 call tasks.`, then begin again at Mission 1.
+4. Wait for `Replayed the term for 60 students.`, then begin again at Mission 1.
 
 The language you chose is remembered, so the first screen may be sign-in and not the language choice. Use the link at the top right to switch language.
 
