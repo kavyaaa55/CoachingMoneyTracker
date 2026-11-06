@@ -39,9 +39,9 @@ describe("sample data", () => {
   });
 
   it("has unique codes and names", () => {
-    expect(students).toHaveLength(49);
-    expect(new Set(students.map((student) => student.code)).size).toBe(49);
-    expect(new Set(students.map((student) => student.name)).size).toBe(49);
+    expect(students).toHaveLength(60);
+    expect(new Set(students.map((student) => student.code)).size).toBe(60);
+    expect(new Set(students.map((student) => student.name)).size).toBe(60);
   });
 
   it("covers all four centres", () => {
@@ -96,8 +96,8 @@ describe("sample data", () => {
   });
 
   it("has three students with falling attendance and scores", () => {
-    const falling = students.filter(({ attendance, scores }) => {
-      if (attendance.length < 12 || scores.length < 6) return false;
+    const falling = students.filter(({ attendance, scores, exit }) => {
+      if (exit || attendance.length < 12 || scores.length < 6) return false;
       return attendance[11].present <= 2 && scores[5].score < scores[0].score - 80;
     });
     expect(falling).toHaveLength(3);
@@ -120,7 +120,13 @@ describe("sample data", () => {
     expect([...new Set(offsets)]).toEqual(expect.arrayContaining([-7, -1, 0, 3, 7]));
   });
 
-  it("has one unmatched payment", () => {
-    expect(unmatchedPayments).toHaveLength(1);
+  it("has a queued payment for each reason the matching rules can give", () => {
+    expect(unmatchedPayments).toHaveLength(3);
+  });
+
+  it("only pays leavers before they left, so nothing is refused on replay", () => {
+    for (const { exit, instalments } of students) {
+      if (exit) expect(instalments.every((i) => !i.paidOn || i.paidOn <= exit.on)).toBe(true);
+    }
   });
 });

@@ -1,13 +1,23 @@
 import type { IsoDate } from "@/domain/dates";
 
-/** Today in India, or the fixed demo date when APP_TODAY is set. */
+const demo = globalThis as { demoToday?: IsoDate };
+
+/** Moves the demo date. Only the time machine calls this, and only in demo mode. */
+export function setDemoToday(date: IsoDate | null) {
+  demo.demoToday = date ?? undefined;
+}
+
+/** Today in India, or the demo date when one is set. */
 export function today(): IsoDate {
-  const fixed = process.env.APP_TODAY;
+  const fixed = demo.demoToday ?? process.env.APP_TODAY;
   if (fixed) return fixed;
   return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata" }).format(new Date());
 }
 
-/** The current time on the app's date, so demo payments land on the demo day. */
-export function nowOnAppDate(): Date {
-  return new Date(`${today()}T${new Date().toISOString().slice(11)}`);
+/** The current time of day on a given date, so replayed events land on their own day. */
+export function timeOn(date: IsoDate): Date {
+  return new Date(`${date}T${new Date().toISOString().slice(11)}`);
 }
+
+/** The current time on the app's date, so demo payments land on the demo day. */
+export const nowOnAppDate = (): Date => timeOn(today());

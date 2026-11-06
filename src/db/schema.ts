@@ -14,6 +14,7 @@ import {
   uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
+import type { PipelineCounts, PipelineSource } from "@/domain/pipeline";
 import type { RiskReason } from "@/domain/risk";
 
 export const roleEnum = pgEnum("role", ["parent", "accounts"]);
@@ -247,6 +248,21 @@ export const riskFlags = pgTable(
     // One open task per student, even if two runs overlap.
     uniqueIndex("risk_flags_one_open_task").on(t.studentId).where(sql`${t.taskStatus} = 'open'`),
   ],
+);
+
+/** What each day's pipeline run took in and did, so staff can see that it ran. */
+export const pipelineRuns = pgTable(
+  "pipeline_runs",
+  {
+    id: id(),
+    runOn: date("run_on").notNull(),
+    source: text("source").$type<PipelineSource>().notNull(),
+    counts: jsonb("counts").$type<PipelineCounts>().notNull(),
+    /** The stages that failed. A failed stage does not stop the others. */
+    failed: jsonb("failed").$type<string[]>().notNull().default([]),
+    createdAt: createdAt(),
+  },
+  (t) => [index().on(t.runOn)],
 );
 
 export const refunds = pgTable(

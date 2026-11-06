@@ -34,9 +34,19 @@ export type SampleStudent = {
   instalments: SampleInstalment[];
   attendance: SampleAttendance[];
   scores: SampleScore[];
+  exit?: SampleExit;
 };
 
-export type UnmatchedPayment = { gatewayRef: string; amount: number; paidOn: IsoDate };
+/** A student who left, and how far their refund has got. */
+export type SampleExit = { on: IsoDate; approvedOn?: IsoDate; paidOn?: IsoDate };
+
+/** Money the gateway reports that the matching rules will send to the queue. */
+export type UnmatchedPayment = {
+  gatewayRef: string;
+  amount: number;
+  paidOn: IsoDate;
+  claims?: { code: string; sequence: number };
+};
 
 type PaymentProfile = "paid-up" | "all-paid" | "part-latest" | "missed-latest" | "missed-two";
 type Trend = "steady" | "falling";
@@ -318,10 +328,73 @@ export function buildSampleData(): {
     instalments: individualPlan("2026-11-02", "2026-10-30"),
   });
 
+  // Everything below comes last, so the fixed random sequence above stays as it was.
+
+  // Paid over 60 days late, which is what the brief's success measure counts.
+  [65, 73, 88].forEach((daysLate, index) => {
+    addStudent(46 + index, "paid-up", "steady");
+    const first = students[students.length - 1].instalments[0];
+    first.paidOn = addDays(first.dueDate, daysLate);
+  });
+
+  const addLeaver = (index: number, exit: SampleExit, fading: boolean, firstOnly = false) => {
+    addStudent(index, "paid-up", "steady");
+    const student = students[students.length - 1];
+    student.exit = exit;
+    student.instalments = student.instalments.map((item, position) =>
+      !item.paidOn || item.paidOn > exit.on || (firstOnly && position > 0)
+        ? { dueDate: item.dueDate, amount: item.amount, paid: 0 }
+        : item,
+    );
+    student.attendance = student.attendance.filter((week) => week.weekStart <= exit.on);
+    student.scores = student.scores.filter((test) => test.takenOn <= exit.on);
+
+    if (!fading) return;
+    const weeks = student.attendance.length;
+    student.attendance = student.attendance.map((week, position) => ({
+      ...week,
+      present: clamp(6 - Math.floor((position * 6) / weeks), 0, 6),
+    }));
+    student.scores = student.scores.map((test, position) => ({
+      ...test,
+      score: clamp(230 - 40 * position, 0, 300),
+    }));
+  };
+
+  addLeaver(49, { on: "2026-10-27" }, true);
+  addLeaver(50, { on: "2026-10-20" }, true);
+  addLeaver(51, { on: "2026-10-29", approvedOn: "2026-10-31" }, false);
+  addLeaver(52, { on: "2026-09-24", approvedOn: "2026-09-28", paidOn: "2026-09-30" }, true);
+  addLeaver(53, { on: "2026-10-06", approvedOn: "2026-10-15", paidOn: "2026-10-19" }, true);
+  addLeaver(54, { on: "2026-10-30" }, false, true);
+
+  // Attendance simply stops being recorded, while the rest of the batch carries on.
+  addStudent(55, "paid-up", "steady");
+  const silent = students[students.length - 1];
+  silent.attendance = silent.attendance.filter((week) => week.weekStart <= "2026-10-05");
+
+  // Their balance equals the unmatched ₹12,500, so the queue has a real suggestion to offer.
+  addStudent(56, "part-latest", "steady");
+  const candidate = students[students.length - 1];
+  const partPaid = candidate.instalments.find((item) => item.paid > 0 && item.paid < item.amount)!;
+  partPaid.paid = partPaid.amount - 12500;
+
   return {
     students,
     unmatchedPayments: [
       { gatewayRef: "GW-TEST-UNMATCHED-0001", amount: 12500, paidOn: "2026-10-28" },
+      {
+        gatewayRef: "GW-TEST-UNMATCHED-0002",
+        amount: 30000,
+        paidOn: "2026-10-30",
+        claims: { code: "STU-1050", sequence: 3 },
+      },
+      {
+        gatewayRef: "GW-TEST-UNMATCHED-0003",
+        amount: 35000,
+        paidOn: "2026-10-31",
+        claims: { code: "STU-1005", sequence: 2 },
+      },
     ],
   };
 }

@@ -8,7 +8,7 @@ import {
   reminderSchedule,
 } from "@/domain/reminders";
 import { reminderMessage } from "@/i18n";
-import { today } from "./clock";
+import { timeOn, today } from "./clock";
 import { env } from "./env";
 import { payLinkFor } from "./pay-links";
 
@@ -129,7 +129,7 @@ async function processInstalment(
       .update(reminders)
       .set({
         status: "sent",
-        sentAt: new Date(),
+        sentAt: timeOn(date),
         message: text,
         language: recipient.language,
       })

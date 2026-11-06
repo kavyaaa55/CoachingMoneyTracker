@@ -151,7 +151,7 @@ describe("assessRisk with missing data", () => {
 
 describe("assessRisk on the sample data", () => {
   const { students } = buildSampleData();
-  const results = students.map((student) => ({
+  const results = students.filter((student) => !student.exit).map((student) => ({
     code: student.code,
     ...assessRisk({ ...student, today: SAMPLE_TODAY }),
   }));
