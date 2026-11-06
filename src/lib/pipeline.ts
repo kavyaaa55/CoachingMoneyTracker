@@ -1,6 +1,15 @@
-import { and, desc, eq } from "drizzle-orm";
+import { and, count, desc, eq } from "drizzle-orm";
 import { db } from "@/db/client";
-import { batches, centres, instalments, payments, pipelineRuns, students, users } from "@/db/schema";
+import {
+  batches,
+  centres,
+  instalments,
+  payments,
+  pipelineRuns,
+  reminders,
+  students,
+  users,
+} from "@/db/schema";
 import { addDays, type IsoDate } from "@/domain/dates";
 import {
   addCounts,
@@ -142,6 +151,16 @@ async function applyEvent(event: PipelineEvent): Promise<Partial<PipelineCounts>
   }
 }
 
+/** Counts every stop since the last run, including those a payment made as it arrived. */
+async function stoppedSinceLastRun() {
+  const [[{ stoppedSoFar }], [last]] = await Promise.all([
+    db.select({ stoppedSoFar: count() }).from(reminders).where(eq(reminders.status, "stopped")),
+    db.select().from(pipelineRuns).orderBy(desc(pipelineRuns.createdAt)).limit(1),
+  ]);
+  const before = last?.counts.stoppedSoFar ?? 0;
+  return { stoppedSoFar, remindersStopped: Math.max(0, stoppedSoFar - before) };
+}
+
 /** Events only. The last replayed day uses this, so the demo date's jobs are left to run. */
 export async function applyEvents(events: PipelineEvent[]) {
   let counts = emptyCounts();
@@ -162,12 +181,8 @@ export async function runDay(
   const failed: string[] = [];
 
   try {
-    const { sent, stopped, failed: notSent } = await runReminders(date);
-    counts = addCounts(counts, {
-      remindersSent: sent,
-      remindersStopped: stopped,
-      remindersFailed: notSent,
-    });
+    const { sent, failed: notSent } = await runReminders(date);
+    counts = addCounts(counts, { remindersSent: sent, remindersFailed: notSent });
   } catch {
     failed.push("reminders");
   }
@@ -179,6 +194,7 @@ export async function runDay(
     failed.push("risk");
   }
 
+  counts = { ...counts, ...(await stoppedSinceLastRun()) };
   await db.insert(pipelineRuns).values({ runOn: date, source, counts, failed });
   return { counts, failed };
 }

@@ -68,6 +68,11 @@ describe("the time machine", () => {
     expect(late).toBe(0);
   });
 
+  it("counts reminders a payment stopped, not only those the job stopped", async () => {
+    const runs = await db.select().from(pipelineRuns).where(eq(pipelineRuns.source, "time-machine"));
+    expect(runs.reduce((sum, run) => sum + run.counts.remindersStopped, 0)).toBeGreaterThan(0);
+  });
+
   it("takes in new attendance through the upload path, without rejecting a file", async () => {
     const [{ weeks }] = await db
       .select({ weeks: sql<number>`count(*)::int` })

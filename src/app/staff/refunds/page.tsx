@@ -62,7 +62,10 @@ export default async function RefundsPage() {
                 {
                   header: r.student,
                   cell: (row) => (
-                    <Link href={`/staff/students/${row.studentId}/refund`} className={rowLink}>
+                    <Link
+                      href={`/staff/students/${row.studentId}/refund`}
+                      className={`${rowLink} whitespace-nowrap`}
+                    >
                       {row.studentName}
                     </Link>
                   ),

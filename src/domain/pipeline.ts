@@ -33,6 +33,8 @@ export type PipelineCounts = {
   remindersStopped: number;
   remindersFailed: number;
   tasksCreated: number;
+  /** All stopped so far. A payment stops reminders at once, so the job alone would miss them. */
+  stoppedSoFar: number;
 };
 
 export const emptyCounts = (): PipelineCounts => ({
@@ -45,6 +47,7 @@ export const emptyCounts = (): PipelineCounts => ({
   remindersStopped: 0,
   remindersFailed: 0,
   tasksCreated: 0,
+  stoppedSoFar: 0,
 });
 
 export function addCounts(a: PipelineCounts, b: Partial<PipelineCounts>): PipelineCounts {

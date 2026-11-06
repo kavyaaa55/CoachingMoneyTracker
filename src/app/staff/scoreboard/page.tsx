@@ -41,6 +41,9 @@ export default async function ScoreboardPage() {
   const autoPercent =
     matching.matched === 0 ? 0 : Math.round((matching.automatic / matching.matched) * 100);
 
+  const monthName = (month: string) =>
+    formatDate(`${month}-01`, locale).split(" ").slice(1).join(" ");
+
   const measures = [
     {
       name: s.lateName,
@@ -55,7 +58,7 @@ export default async function ScoreboardPage() {
       from: s.days(BRIEF_CLOSE_DAYS.baseline),
       to: s.days(BRIEF_CLOSE_DAYS.target),
       now: close ? s.days(close.days) : s.notYet,
-      detail: `${close ? s.closeDetail(close.month) : s.closeEmpty} ${s.autoDetail(autoPercent)} ${
+      detail: `${close ? s.closeDetail(monthName(close.month)) : s.closeEmpty} ${s.autoDetail(autoPercent)} ${
         matching.oldestDays === null
           ? s.queueClear
           : s.queueDetail(matching.queued, matching.oldestDays)
@@ -119,9 +122,7 @@ export default async function ScoreboardPage() {
             <DataTable
               rows={months}
               rowKey={(row) => row.key}
-              columns={shareColumns(s.dueMonth, (key) =>
-                formatDate(`${key}-01`, locale).split(" ").slice(1).join(" "),
-              )}
+              columns={shareColumns(s.dueMonth, monthName)}
             />
           </section>
           <section className="flex min-w-0 flex-col gap-3">

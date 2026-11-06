@@ -225,7 +225,7 @@ export const en = {
       intro: "The brief's success measures, worked out from the records. Baselines and targets are the client's own.",
       sample: (date: string) => `Sample data as of ${date}. Treat these as a working example, not results.`,
       measure: "Measure",
-      baseline: "Today",
+      baseline: "Before",
       target: "Target",
       now: "This system",
       detail: "How it is measured",
