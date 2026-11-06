@@ -108,10 +108,12 @@ src/
   app/       routes only: thin pages and server actions
   components/  small shared UI pieces
   domain/    pure business rules, no framework or database imports
-  db/        schema, client, sample data, events and replay
+  db/        schema, client, seed
+    sample/  sample data, its events and the replay
   i18n/      English and Hindi text
   lib/       env, clock, sessions and anything that needs cookies or the database
-docs/        brief, mockups and technical design
+docs/        brief, design, decisions, operations. project/ holds working records
+scripts/     load test
 ```
 
 - Money is integer paise. Format it only with `formatInr`.
@@ -135,13 +137,16 @@ npm run lint         lint
 npm run build        production build
 npm run db:migrate   apply migrations
 npm run db:seed      load sample data
+npm run check        lint, types and both test suites
+npm run test:load    time the system at 2,600 students, on the test database
+docker compose up -d --build   run everything in containers
 ```
 
 Before each commit: `npm test`, `npm run test:db`, `npm run typecheck` and `npm run lint` must pass.
 
 ## How to work
 
-Follow `prompt.md` in order, one prompt at a time. Update `prompt.md` when a step is finished or changes. Update `docs/TDD.md` and `deployment.md` in the same step, so their status and limits stay true. Record choices in `docs/decisions.md` and anything that went wrong in `docs/mistakes.md`.
+Follow `docs/project/prompt.md` in order, one prompt at a time. Update it when a step is finished or changes. Update `docs/TDD.md` and `deployment.md` in the same step, so their status and limits stay true. Record choices in `docs/decisions.md` and anything that went wrong in `docs/mistakes.md`.
 
 ## Design System
 

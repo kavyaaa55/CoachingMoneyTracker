@@ -12,6 +12,30 @@ How to run Fee Tracker locally, deploy it on the AWS free tier, and sign in as a
 
 **Status:** not deployed yet. The AWS guide is written from the code and AWS documentation. A production build was started and tested locally, but the guide has not yet been run on a live AWS account.
 
+## Deploy with Docker
+
+The quickest way, on any machine with Docker. It runs Postgres, migrations and the app.
+
+```
+cp .env.example .env        # fill in the secrets and POSTGRES_PASSWORD
+docker compose up -d --build
+docker compose --profile demo run --rm seed     # sample data, for a demo only
+```
+
+Open http://localhost:3000 and check http://localhost:3000/api/health.
+
+- Generate each secret with `openssl rand -hex 32`.
+- Put a reverse proxy with HTTPS in front, such as Caddy. Session cookies need HTTPS in production.
+- Schedule the daily pipeline from the host:
+
+  ```
+  30 3 * * * curl -fsS -H "Authorization: Bearer $CRON_SECRET" https://YOUR-DOMAIN/api/cron/daily
+  ```
+
+The image runs as a non-root user and has a health check, so it also runs on any container host, such as ECS, Fly or Render, with a managed Postgres. Run the `tools` image once per release for migrations. [docs/operations.md](docs/operations.md) covers monitoring, backups and releases.
+
+CI builds and boots this image on every push. It has not been run on a live host yet.
+
 ## Demo logins
 
 Pick a language, enter a number, and the 6-digit code appears on screen, because SMS is mocked. All people and numbers are fictional.
@@ -94,6 +118,8 @@ Names only. Never commit the values.
 | `CRON_SECRET` | Yes | Protects the daily reminders and risk routes. At least 32 characters |
 | `GEMINI_API_KEY` | Optional | Turns on AI call guides and payer note reading. Without it, plain templates and rules are used |
 | `GEMINI_MODEL` | Optional | Defaults to `gemini-2.5-flash` |
+| `DATABASE_POOL_MAX` | Optional | Connections per app server. Defaults to 10 |
+| `POSTGRES_PASSWORD` | For docker compose | Password for the Postgres container |
 | `APP_URL` | In production | Public address of the app, with `https://`. Defaults to `http://localhost:3000` |
 | `DEMO_MODE` | For the demo | `true` shows the OTP on screen and enables the test gateway. Never use with real users |
 | `APP_TODAY` | For the demo | Fixes today's date. Use `2026-11-02` to match the brief's sample data |

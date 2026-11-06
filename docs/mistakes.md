@@ -131,29 +131,36 @@ Passing tests did not catch the worst ones. Three times a test agreed with the b
 - **Fix:** every path now respects the close, and late money posts on today's date.
 - **Lesson:** a rule is only as strong as the write path you forgot.
 
+### 18. Two bottlenecks hid behind fast sample data
+
+- **What happened:** with 60 students everything felt instant. At 2,600, the Risk Lab took 245 seconds and reminders would have taken minutes, because the mock sender takes no time.
+- **How it was caught:** a load test at the client's real size, and a fake 200 ms provider.
+- **Fix:** the lab went to 4 seconds and reminders to 16, and dashboards needed nothing.
+- **Lesson:** measure before you optimise, and make the mock as slow as the real thing.
+
 ## Process mistakes
 
-### 18. A commit went in with two failing tests
+### 19. A commit went in with two failing tests
 
 - **What happened:** one long command used `;` between steps, so the commit ran after tests had failed.
 - **How it was caught:** reading the output straight after.
 - **Fix:** it had not been pushed, so the commit was amended after the fix, and the history never carried a failing commit.
 - **Lesson:** gate commits with `&&`, so a failure stops the chain.
 
-### 19. Test data did not match its own story
+### 20. Test data did not match its own story
 
 - **What happened:** a test for "two weeks behind" failed. The code was right, but the test miscounted its own weeks.
 - **Fix:** corrected the test data after checking which side was wrong.
 - **Lesson:** a failing test is a question, not a verdict.
 
-### 20. Tests relied on local settings
+### 21. Tests relied on local settings
 
 - **What happened:** the time-machine tests passed locally only because `.env` turns demo mode on. CI has no such setting, so they would have failed after the push.
 - **How it was caught:** reading the CI file before pushing, then running the suite with CI's settings.
 - **Fix:** the tests now set up their own environment.
 - **Lesson:** check that tests pass with CI's settings, not only your own.
 
-### 21. Tooling friction
+### 22. Tooling friction
 
 | Problem | Recovery |
 |---|---|

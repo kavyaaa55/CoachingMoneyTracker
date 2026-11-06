@@ -52,6 +52,13 @@
 - Closed months can no longer be changed by any path
 - The OTP limit holds under parallel requests, sign-out ends every session, and security headers are set
 
+### Production basics
+
+- Measured at 2,600 students. Reminders send in parallel with a timeout, 7 times faster, and the Risk Lab is 57 times faster
+- A lock so two daily runs cannot overlap, housekeeping for old codes and limits, and a sign-in limit per address
+- A health route, JSON logs and a configurable connection pool
+- Docker, Compose, Dependabot, and a CI job that builds and boots the image
+
 ### Docs
 
 - A visual guide, key decisions, and mistakes and recovery
@@ -68,7 +75,7 @@
 
 ### Quality
 
-- 426 tests: 243 unit and 183 database
+- 436 tests: 243 unit and 193 database
 - A hands-on test guide in [docs/demo.md](docs/demo.md), with sample files in `docs/samples`
 
 ## 1.0.0 (5 Nov 2026)

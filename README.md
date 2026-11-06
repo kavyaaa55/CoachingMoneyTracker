@@ -58,7 +58,15 @@ A fee portal for Company A, a Jaipur coaching institute with 4 centres and 2,600
 
 ## Try it
 
-You need Node 22 or later and Postgres.
+With Docker:
+
+```
+cp .env.example .env        # then fill it in, see deployment.md
+docker compose up -d --build
+docker compose --profile demo run --rm seed
+```
+
+Or with Node 22 or later and Postgres:
 
 ```
 npm install
@@ -91,9 +99,13 @@ src/
   app/         routes only: thin pages and server actions
   components/  small shared UI pieces
   domain/      pure business rules, with a test beside each one
-  db/          schema, client, sample data, events and replay
+  db/          schema, client, seed, and sample/ for the data and its replay
   i18n/        English and Hindi text
   lib/         anything that needs cookies or the database
+docs/          design, decisions, security, operations
+scripts/       load test
+drizzle/       database migrations
+public/guide/  the visual guide
 ```
 
 - Money is whole paise, and dates are `YYYY-MM-DD` strings
@@ -102,27 +114,26 @@ src/
 - Role and ownership are checked on every read and write
 
 ```
-npm test            unit tests
-npm run test:db     database tests, on a separate test database
-npm run typecheck
-npm run lint
+npm run check       lint, types and both test suites
+npm run test:load   time the system at 2,600 students
 ```
+
+**Built for real use:** measured at the client's real size, with dashboards under 150 ms. Stateless app servers, row locks on money, a lock on the daily job, sign-in limits, a health route, JSON logs, and a Docker image that CI builds and boots on every push.
 
 ## Docs
 
 | Document | What is in it |
 |---|---|
-| [Visual guide](public/guide/index.html) | The whole product in screenshots, with live calculators. Open `/guide/index.html` on the running app |
+| [Documentation index](docs/README.md) | Everything below, in one place |
+| [Visual guide](public/guide/index.html) | The whole product in screenshots. Open `/guide/index.html` on the running app |
+| [Technical design](docs/TDD.md) | Architecture, data model, flows, assumptions, limits |
 | [Key decisions](docs/decisions.md) | What was chosen, why, and what was turned down |
 | [Mistakes and recovery](docs/mistakes.md) | What went wrong, how it was caught, and what changed |
-| [Security testing](docs/security.md) | What was attacked, what broke, what was fixed, what is accepted |
-| [Test guide](docs/demo.md) | Step-by-step missions for trying every workflow, with no technical knowledge needed |
-| [Technical design](docs/TDD.md) | Architecture, data model, flows, how the risk flag works, assumptions, limits |
-| [Brief check](docs/BRIEF-CHECK.md) | Every brief requirement, its status and where to find it |
-| [Deployment](deployment.md) | Local setup, AWS free tier guide, environment variables, demo logins |
+| [Security testing](docs/security.md) | What was attacked, what broke, what is accepted |
+| [Operations](docs/operations.md) | Measured capacity, monitoring, backups, scaling path |
+| [Deployment](deployment.md) | Docker, AWS, environment variables, demo logins |
 | [Design system](DESIGN.md) | Visual rules and the screen plan |
 | [Changelog](CHANGELOG.md) | What each release contains |
-| [Client brief](docs/brief.txt) | The source of truth |
 
 ## Limits
 

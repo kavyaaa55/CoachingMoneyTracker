@@ -84,6 +84,8 @@ The money rules are the hard part of this brief, so they sit in `src/domain` whe
 | Validation | Zod | Checks outside data at the server boundary |
 | Tests | Vitest | Unit tests, plus database tests on real Postgres |
 
+**Capacity.** Measured at Company A's real size, 2,600 students: dashboards take 10 to 150 ms, and the daily pipeline about 5 seconds. [operations.md](operations.md) has the figures, monitoring, backups and the scaling path.
+
 ## 4. Key Decisions
 
 The core choices are below. The level-up and data pipeline choices are in [decisions.md](decisions.md).
@@ -108,7 +110,7 @@ The core choices are below. The level-up and data pipeline choices are in [decis
 
 ## 5. Data Model
 
-16 tables, 16 migrations. The core of it:
+17 tables, 17 migrations. The core of it:
 
 ```mermaid
 erDiagram
@@ -404,12 +406,12 @@ The 31 mockups are kept in `docs/mockups` as layout reference only. They contain
 
 ## 10. Testing
 
-426 tests pass, and CI runs lint, types, tests and a build on every push.
+436 tests pass, and CI runs lint, types, tests and a build on every push.
 
 | Suite | Tests | Covers |
 |---|---|---|
 | Unit | 243 | Fee, refund, exit dates, OTP, GST, matching, ledger totals, reminder rules, dues and ageing, Tally format, risk bands and missing data, replay and look-ahead, batch baseline, learned thresholds, AI guardrails, late share, suggestions, sessions, sample data, language files |
-| Database | 183 | The whole replayed term, AI drafts and fallbacks with the network faked, time machine, refund approval and credit notes, reversals, queue, month close, audit trigger, uploads, races, part payments, reminder stages and stopping, and that the flag changes nothing else |
+| Database | 193 | The whole replayed term, AI drafts and fallbacks with the network faked, time machine, refund approval and credit notes, reversals, queue, month close, audit trigger, uploads, races, part payments, reminder stages and stopping, and that the flag changes nothing else |
 
 Tests use the brief's own rows, so Aarav, Ishita and Mohit must produce exactly the brief's statuses. Main flows were also walked through in a real browser at 360px, in both languages.
 
@@ -484,8 +486,8 @@ The brief does not state these. Each one is my judgement.
 - Reminders stop a year after the due date. An account that old needs a person, not another message.
 - Queued money can be applied only if it fits one instalment, and only to a suggested instalment. Anything else is returned to the payer.
 - Pay links are about 230 characters. Real SMS needs a short link service.
-- The job holds the instalment lock while sending. That is fine for a mock, but a real provider should be called with a timeout.
-- OTP limits are per phone number, with no limit per IP address, so someone can use up a number's codes for 10 minutes.
+- A send still holds a row lock, with a 10 second limit. At thousands of payments a day, sending should move to a queue. [operations.md](operations.md) has the scaling path.
+- Capacity was measured for data volume, not for many users at once.
 - Hindi text needs review by a native speaker before real use. Its layout has been checked, its wording has not.
 - Screen behaviour such as forms keeping their values is checked in a browser, not by automated tests. Adding component tests would need a new dependency.
 - The error page and loading placeholders were reviewed in code, not forced in a browser.

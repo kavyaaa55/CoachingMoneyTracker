@@ -126,6 +126,19 @@ The full results are in [security.md](security.md).
 | Late money posts on today's date | A closed month stays closed, and the money is still recorded | Reopening the month |
 | Fix what is cheap and real, and list what is accepted | A short honest list beats claiming nothing is left | Claiming the app is secure |
 
+## Production basics
+
+The figures are in [operations.md](operations.md).
+
+| Decision | Why | Rejected |
+|---|---|---|
+| Measure at the client's real size before changing anything | The numbers showed two real problems and ruled out the rest | Guessing, or adding indexes up front |
+| No new indexes | Every dashboard took under 150 ms at 2,600 students | Indexes with no evidence |
+| Keep sending inside the row lock, in parallel with a timeout | "Check at send time" is the brief's sharpest rule, and 8 at a time was 7 times faster | A send queue, which this size doesn't need yet |
+| Limits and locks live in Postgres | They hold across several servers with no new service | Redis |
+| Stateless app, signed sessions | Any server can answer, so scaling out needs no redesign | Server-side sessions |
+| CI builds and boots the Docker image | Docker isn't on the dev machine, so CI is the proof | Trusting an untested Dockerfile |
+
 ## Foundations, kept from the core build
 
 | Decision | Why |

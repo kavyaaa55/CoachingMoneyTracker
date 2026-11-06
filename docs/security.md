@@ -41,6 +41,7 @@ What was attacked, what broke, what was fixed, and what is still accepted. Teste
 | High | A long note or reference made the webhook return 400 | Real money would be dropped, not queued, against the brief's rule | A long note is trimmed, an oversized reference goes to the queue |
 | High | A closed month could still change, through a late webhook, a refund date, or any month before the first close | Figures already sent to Tally would stop agreeing | Late money posts today, refunds refuse closed dates, and everything up to the latest close counts as closed |
 | Medium | The OTP limit could be beaten in parallel: 20 codes sent, limit 5 | SMS bombing and cost | A lock per number around the limit check |
+| Medium | OTP limits were per number only | One address could work through many numbers | A limit per address too, held in Postgres. Added after this test, and covered by its own tests |
 | Medium | Sign-out left a copied session token valid for 7 days | A stolen token kept working | Sign-out raises a version, which ends every session |
 | Medium | No security headers | Staff pages could be framed, and pay-link tokens could leak through the referrer | CSP, frame denial, nosniff, no-referrer, HSTS |
 | Low | Spaced phone numbers and emails passed the note masking | Personal data could reach Gemini | Masked in any format |
@@ -63,7 +64,6 @@ The design matters more than the tests here: the model has no tool to call and n
 
 | Risk | Why it stands |
 |---|---|
-| OTP limits are per number, with no limit per IP, so someone can use up a number's codes for 10 minutes | Needs a shared rate limiter. First on the list for a real rollout |
 | `DEMO_MODE=true` shows codes on screen and lets a staff demo login reset data | That is the demo. It must never run with real users |
 | CSP allows inline scripts | Next needs them without a nonce setup |
 | One person can reverse a payment | It needs a reason and is audited. Refunds already need two people |
