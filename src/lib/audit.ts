@@ -6,6 +6,7 @@ export const AUDIT_ACTIONS = [
   "payment.manual",
   "payment.applied",
   "payment.reversed",
+  "payment.returned",
   "refund.saved",
   "refund.approved",
   "refund.paid",

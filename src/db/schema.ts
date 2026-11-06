@@ -27,7 +27,12 @@ export const paymentMethodEnum = pgEnum("payment_method", [
   "cheque",
   "bank_transfer",
 ]);
-export const paymentStatusEnum = pgEnum("payment_status", ["matched", "unmatched", "reversed"]);
+export const paymentStatusEnum = pgEnum("payment_status", [
+  "matched",
+  "unmatched",
+  "reversed",
+  "returned",
+]);
 export const reminderStatusEnum = pgEnum("reminder_status", ["queued", "sent", "stopped"]);
 export const riskBandEnum = pgEnum("risk_band", ["watch", "high"]);
 export const taskStatusEnum = pgEnum("task_status", ["open", "called", "false_flag"]);
@@ -163,6 +168,7 @@ export const payments = pgTable(
     /** The person who applied this from the queue. */
     appliedBy: uuid("applied_by").references(() => users.id),
     /** A wrong payment is never deleted. The row and its receipt stay, marked reversed. */
+    /** Queued money sent back to the payer uses these too, marked returned. */
     reversedBy: uuid("reversed_by").references(() => users.id),
     reversedOn: date("reversed_on"),
     reversalNote: text("reversal_note"),
@@ -171,8 +177,8 @@ export const payments = pgTable(
     index().on(t.instalmentId),
     check("payment_amount_positive", sql`${t.amountPaise} > 0`),
     check(
-      "unmatched_has_no_instalment",
-      sql`(${t.status} = 'unmatched') = (${t.instalmentId} is null)`,
+      "applied_has_instalment",
+      sql`(${t.status} in ('matched', 'reversed')) = (${t.instalmentId} is not null)`,
     ),
   ],
 );

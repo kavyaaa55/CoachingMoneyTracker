@@ -7,7 +7,7 @@ import { messages } from "@/i18n";
 import { requireUser } from "@/lib/auth";
 import { closeMonth } from "@/lib/books";
 import { getLocale } from "@/lib/locale";
-import { applyQueuedPayment, reversePayment } from "@/lib/payments";
+import { applyQueuedPayment, returnQueuedPayment, reversePayment } from "@/lib/payments";
 
 const applySchema = z.object({ paymentId: z.uuid(), instalmentId: z.uuid() });
 const closeSchema = z.object({ month: z.string().regex(/^\d{4}-\d{2}$/) });
@@ -29,6 +29,21 @@ export async function applyFromQueue(_: FormState, formData: FormData): Promise<
   if (outcome !== "applied") return { error: t.doesNotFit };
 
   redirect("/staff/books?applied=1");
+}
+
+const returnSchema = z.object({ paymentId: z.uuid(), note: z.string().trim().min(3).max(300) });
+
+export async function returnFromQueue(_: FormState, formData: FormData): Promise<FormState> {
+  const user = await requireUser("accounts");
+  const t = messages(await getLocale()).staff.books;
+
+  const form = returnSchema.safeParse(Object.fromEntries(formData));
+  if (!form.success) return { error: t.needNote };
+
+  const done = await returnQueuedPayment({ ...form.data, returnedBy: user.id });
+  if (!done) return { error: t.invalid };
+
+  redirect("/staff/books?returned=1");
 }
 
 export async function closeThisMonth(_: FormState, formData: FormData): Promise<FormState> {

@@ -17,7 +17,12 @@ import { tallyCsv } from "@/domain/tally";
 import { closeMonth, latestClose, monthReport, queueWithSuggestions } from "./books";
 import { tallyReceipts, tallyReversals } from "./dues";
 import { instalmentsOf, staffReceipt } from "./ledger";
-import { applyQueuedPayment, recordPayment, reversePayment } from "./payments";
+import {
+  applyQueuedPayment,
+  recordPayment,
+  returnQueuedPayment,
+  reversePayment,
+} from "./payments";
 import { saveRefund } from "./refunds";
 import { runReminders } from "./reminders";
 
@@ -271,6 +276,41 @@ describe("month end", () => {
     expect(await close()).toBe("closed");
     expect(await close()).toBe("already-closed");
     expect(await latestClose()).toEqual({ month: "2026-10", days: 1 });
+  });
+});
+
+describe("returning queued money", () => {
+  const returnIt = (paymentId: string) =>
+    returnQueuedPayment({ paymentId, note: "Sent back by NEFT", returnedBy: staffId }, TODAY);
+
+  it("clears the queue so the month can close, and keeps the row", async () => {
+    const queued = await pay(100, null);
+    expect(await closeMonth({ month: "2026-10", closedBy: staffId }, TODAY)).toBe("checks-failed");
+
+    expect(await returnIt(queued.paymentId!)).toBe(true);
+    expect(await paymentRow(queued.paymentId!)).toMatchObject({
+      status: "returned",
+      instalmentId: null,
+      reversalNote: "Sent back by NEFT",
+    });
+    expect(await closeMonth({ month: "2026-10", closedBy: staffId }, TODAY)).toBe("closed");
+  });
+
+  it("never counts as money received, in the ledger or the Tally file", async () => {
+    const queued = await pay(100, null);
+    await returnIt(queued.paymentId!);
+    const report = await monthReport("2026-10");
+    expect(report.checks[0]).toMatchObject({ left: 0, right: 0 });
+    expect(report.checks[1]).toMatchObject({ left: 0, right: 0 });
+  });
+
+  it("only works on queued money, and only once", async () => {
+    const matched = await pay(100);
+    expect(await returnIt(matched.paymentId!)).toBe(false);
+
+    const queued = await pay(100, null);
+    expect(await returnIt(queued.paymentId!)).toBe(true);
+    expect(await returnIt(queued.paymentId!)).toBe(false);
   });
 });
 

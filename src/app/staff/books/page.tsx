@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ActionForm } from "@/components/action-form";
 import { buttonStyles, rowLink } from "@/components/button-styles";
+import { TextField } from "@/components/text-field";
 import { monthsBetween, lastDayOf } from "@/domain/books";
 import { formatInr } from "@/domain/money";
 import { formatDate, messages } from "@/i18n";
@@ -8,9 +9,9 @@ import { requireUser } from "@/lib/auth";
 import { monthReport, queueWithSuggestions } from "@/lib/books";
 import { today } from "@/lib/clock";
 import { getLocale } from "@/lib/locale";
-import { applyFromQueue, closeThisMonth } from "./actions";
+import { applyFromQueue, closeThisMonth, returnFromQueue } from "./actions";
 
-type Query = { month?: string; applied?: string };
+type Query = { month?: string; applied?: string; returned?: string };
 
 const TERM_START = "2026-07-01";
 
@@ -41,6 +42,12 @@ export default async function BooksPage({ searchParams }: { searchParams: Promis
       {query.applied && (
         <p role="status" className="rounded-md bg-paid-tint px-4 py-3 text-paid">
           {b.applied}
+        </p>
+      )}
+
+      {query.returned && (
+        <p role="status" className="rounded-md bg-paid-tint px-4 py-3 text-paid">
+          {b.returned}
         </p>
       )}
 
@@ -153,6 +160,22 @@ export default async function BooksPage({ searchParams }: { searchParams: Promis
                     </div>
                   ))
                 )}
+                <details className="border-t border-divider pt-1">
+                  <summary className="min-h-12 cursor-pointer py-3 font-medium underline underline-offset-4">
+                    {b.returnOpen}
+                  </summary>
+                  <div className="mt-2 max-w-[480px]">
+                    <ActionForm
+                      action={returnFromQueue}
+                      label={b.returnConfirm}
+                      pendingLabel={b.returning}
+                      variant="secondary"
+                    >
+                      <input type="hidden" name="paymentId" value={row.id} />
+                      <TextField name="note" label={b.returnNote} />
+                    </ActionForm>
+                  </div>
+                </details>
               </li>
             ))}
           </ul>

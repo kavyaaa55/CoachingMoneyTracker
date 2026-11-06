@@ -183,7 +183,13 @@ export const en = {
       queueIntro:
         "Money that arrived but marks nothing paid. Suggestions follow plain rules, and a person always decides.",
       queueEmpty: "The queue is empty.",
-      noSuggestion: "No safe suggestion. This stays here until someone contacts the payer.",
+      noSuggestion: "No safe suggestion. Contact the payer, then return it if it belongs on no fee.",
+      returnOpen: "Return to payer",
+      returnNote: "How was it returned, and why?",
+      returnConfirm: "Yes, mark as returned",
+      returning: "Saving...",
+      returned: "Marked as returned. It stays on record and has left the queue.",
+      needNote: "Give a reason of a few words.",
       balance: (amount: string) => `${amount} left`,
       reasons: {
         "exact-balance": "This balance is exactly the amount received.",
@@ -211,6 +217,7 @@ export const en = {
         "payment.manual": "Recorded a payment",
         "payment.applied": "Applied a queued payment",
         "payment.reversed": "Reversed a payment",
+        "payment.returned": "Returned queued money",
         "refund.saved": "Saved a refund",
         "refund.approved": "Approved a refund",
         "refund.paid": "Paid a refund",

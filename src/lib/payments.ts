@@ -27,7 +27,7 @@ type ManualDetails = {
 
 export type RecordedPayment = {
   paymentId: string | null;
-  status: "matched" | "unmatched" | "reversed" | "rejected";
+  status: "matched" | "unmatched" | "reversed" | "returned" | "rejected";
   duplicate: boolean;
   studentId: string | null;
 };
@@ -221,6 +221,38 @@ export async function applyQueuedPayment({
       },
     });
     return "applied";
+  });
+}
+
+type ReturnQueued = { paymentId: string; note: string; returnedBy: string };
+
+/**
+ * Money that belongs on no fee, such as an overpayment or a payment for a student who has left.
+ * It leaves the queue with a reason, so a month can close, and the row stays as the record.
+ */
+export async function returnQueuedPayment(
+  { paymentId, note, returnedBy }: ReturnQueued,
+  date: IsoDate = today(),
+): Promise<boolean> {
+  return db.transaction(async (tx) => {
+    const updated = await tx
+      .update(payments)
+      .set({ status: "returned", reversedBy: returnedBy, reversedOn: date, reversalNote: note })
+      .where(and(eq(payments.id, paymentId), eq(payments.status, "unmatched")))
+      .returning();
+    if (updated.length === 0) return false;
+
+    await audit(tx, {
+      actorId: returnedBy,
+      action: "payment.returned",
+      entityId: paymentId,
+      detail: {
+        reference: updated[0].gatewayRef,
+        amountPaise: updated[0].amountPaise,
+        note,
+      },
+    });
+    return true;
   });
 }
 

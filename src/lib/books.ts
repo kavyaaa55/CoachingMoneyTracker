@@ -39,7 +39,13 @@ export async function monthReport(month: string) {
       db
         .select({ total })
         .from(payments)
-        .where(and(gte(payments.reversedOn, from), lte(payments.reversedOn, to))),
+        .where(
+          and(
+            eq(payments.status, "reversed"),
+            gte(payments.reversedOn, from),
+            lte(payments.reversedOn, to),
+          ),
+        ),
       db
         .select({ total: sql<number>`coalesce(sum(${refunds.refundPaise}), 0)::int` })
         .from(refunds)
