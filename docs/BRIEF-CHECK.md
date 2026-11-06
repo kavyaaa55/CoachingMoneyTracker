@@ -19,7 +19,7 @@ Every requirement in [the brief](brief.txt), its status in version 1.0.0 plus th
 | Dues dashboard | Met | `/staff/dues`, `src/domain/dues.ts` |
 | About 6 to 8 screens | Met | Sign-in, consent, parent home, pay and receipt, dues, ledger, refund, reminders and tasks |
 | Roles: parent and accounts executive | Met | `src/lib/auth.ts`, `src/domain/access.ts` |
-| AI: dropout-risk flag | Met | `/staff/tasks`, `src/domain/risk.ts`, `src/lib/ai.ts`. Learned batch baseline, thresholds learned from outcomes, and Gemini call guides, as TDD section 7 explains |
+| AI: dropout-risk flag | Met | `/staff/tasks`, `src/domain/risk.ts`, `src/lib/ai.ts`. Gemini gives the flag, with rules as the fallback and the hard lines in code, as TDD section 7 explains |
 | Hard part: instalment and pro-rata refund rules | Met | `src/domain/refund.ts`, with unit and database tests |
 | Payments, messages and outside systems mocked | Met | Test gateway, mock sender, CSV export |
 | Seeded from the sample data | Met | The three brief rows produce the brief's exact statuses, in `src/db/sample-data.test.ts` |
@@ -58,7 +58,7 @@ Every requirement in [the brief](brief.txt), its status in version 1.0.0 plus th
 |---|---|---|
 | Published refund policy | Met | `/refund-policy`, public, in both languages. Wording is a sample for Company A to confirm |
 | Pro-rata refund within 10 days of leaving | Met | `/staff/refunds` lists every refund by deadline, with second-person approval, a paid step and a credit note |
-| Verifiable parental consent, DPDP Act 2023 | Met | Stored per child with a notice version. Proves control of the phone, not guardianship |
+| Verifiable parental consent, DPDP Act 2023 | Met | Stored per child with a notice version, and the notice names the risk check and the AI service. Proves control of the phone, not guardianship |
 | Receipts show GST | Met | The rate and GSTIN are labelled samples |
 | Works on low-end phones | Partial | Designed at 360px and kept flat and light. Not measured on a real low-end phone |
 | Hindi required | Partial | On every parent screen and reminder. Wording still needs a native speaker |
@@ -88,7 +88,7 @@ The client's measures need live use for real results. The Scoreboard already wor
 | Requirement | Status | Notes |
 |---|---|---|
 | Frontend, backend, database, sign-in | Met | |
-| Tests for the important logic | Met | 395 tests |
+| Tests for the important logic | Met | 412 tests |
 | No secrets in the repository | Met | Full history checked |
 | Validated inputs and access control | Met | Checked on every read and write |
 | Sample data so it does not look empty | Met | 60 fictional students, replayed through the real pipeline |

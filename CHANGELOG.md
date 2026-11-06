@@ -37,6 +37,8 @@
 
 ### AI layer
 
+- Gemini gives the dropout-risk flag from anonymous records. Rules are the fallback, and each task says who decided
+- The consent notice now names the risk check and the AI service, so parents agree again
 - The risk flag learns each batch's normal pattern, so a dip the whole batch shares is not blamed on anyone
 - The Risk Lab proposes better numbers from who left and which flags were false, and a person decides
 - Gemini drafts call guides in the parent's language, and reads payer notes in Hindi and English
@@ -58,7 +60,7 @@
 
 ### Quality
 
-- 395 tests: 234 unit and 161 database
+- 412 tests: 242 unit and 170 database
 - A hands-on test guide in [docs/demo.md](docs/demo.md), with sample files in `docs/samples`
 
 ## 1.0.0 (5 Nov 2026)

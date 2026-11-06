@@ -36,7 +36,7 @@ Fee Tracker gives parents their dues on a phone in five seconds, in Hindi or Eng
 | Manual payments | Built | Same matching code as the webhook |
 | Reminders that stop on payment | Built | Hindi and English, before, on and after, continuing until paid, with a mock sender |
 | Dues dashboard, ageing, Tally export | Built | Filters by centre and batch. CSV of receipts with GST split |
-| AI dropout-risk flag | Built | Band with reasons, learned batch baseline, and an AI call guide. Call tasks only, with false-flag marking and rate |
+| AI dropout-risk flag | Built | Gemini gives the flag, with rules as fallback. Call tasks only, with false-flag marking and rate |
 | Parent attendance and test scores | Built | Optional depth. Own page behind the instalments page, in Hindi and English |
 | Bulk upload of attendance and scores | Built | Optional depth. CSV per batch, with a preview and all-or-nothing saving |
 | Reviewer console | Built | Level-up. Time machine over the real pipeline, demo mode only |
@@ -108,7 +108,7 @@ The core choices are below. The level-up and data pipeline choices are in [decis
 
 ## 5. Data Model
 
-16 tables, 14 migrations. The core of it:
+16 tables, 15 migrations. The core of it:
 
 ```mermaid
 erDiagram
@@ -327,9 +327,9 @@ A separate page reached from the instalments page. It shows classes attended in 
 | Reminders | Built | Balance rechecked at send time. Failed sends are retried |
 | Dropout-risk flag | Built | Creates a call task only. Counsellors mark false flags. Too little data creates no task. The Risk Lab tests the rule |
 
-**Dropout-risk flag.** It runs daily from a protected route or a staff button, and reads missed instalments, attendance and test scores.
+**Dropout-risk flag.** Gemini gives the flag, and the rule below is its fallback. It runs daily from a protected route or a staff button, and reads missed instalments, attendance and test scores.
 
-- **Method:** transparent points in `src/domain/risk.ts`, measured against a learned batch baseline, not a trained model. There is no real dropout history to train on, and a counsellor must be able to see why a student was flagged. The AI layer below learns what it honestly can from the data available. The review data it collects is what a trained model would need later.
+- **Method:** one call per run sends Gemini each student with a sign, under a made-up id, as percentages and an overdue count. It returns a band, a confidence and a reason. The transparent points in `src/domain/risk.ts`, measured against a learned batch baseline, decide when it cannot. This is a general model judging records, not one trained on dropouts, because no such history exists.
 - **Attendance:** the last 4 weeks against earlier weeks. A fall of 15 points scores 1, and 30 points scores 2.
 - **Tests:** the last 2 tests against earlier tests. A fall of 10 points scores 1, and 20 points scores 2.
 - **Missed instalments:** 1 overdue scores 1, and 2 or more scores 2.
@@ -343,12 +343,15 @@ A separate page reached from the instalments page. It shows classes attended in 
 
 | Part | What it does | When it is wrong or unsure |
 |---|---|---|
+| The flag | Gemini gives the band for each student with a sign, and can add or clear a flag | Low confidence, a failure or no key means the rule decides, and the task says so. Too little data is never sent, late fees alone cannot flag, and figures come from our records |
 | Batch baseline | Learns each batch's typical fall, by median, and counts only a student's fall beyond it | Under 3 students, it learns nothing and the plain rule applies |
 | Learning from outcomes | Risk Lab tries about 150 sets of numbers against the term, scored on leavers caught and false flags | Under 3 cases it says so. It only proposes, and a person decides |
 | Call guide | Gemini drafts a guide in the parent's language | A draft mentioning money, or with links, numbers or placeholders, is replaced by the template |
 | Payer note | Gemini reads free text such as "doosri kist", and code matches it to real students | Hints only narrow a suggestion. Money stays unmatched until a person applies it |
 
-Gemini never sees a name, ID or phone number. Notes are masked first, and the fee reason is not sent. It has a 12 second limit, and with no key or a failure every step falls back to plain rules. Output is labelled as AI and recorded in the audit log. Its writes are limited to the call task, the note hints and the log, so it has no route to fees or parents.
+Gemini never sees a name, ID, phone number or amount. The flag gets a made-up id, percentages and an overdue count, notes are masked first, and call guides get no fee reason at all. Calls have a time limit, and with no key or a failure every step falls back to plain rules. Output is labelled as AI, and each task shows who decided and what the rule alone said. Its writes are limited to the call task, the note hints and the log, so it has no route to fees or parents.
+
+On the sample, Gemini agreed with the rule on three students, raised Pranav Saini from watch to high because his records stopped, and flagged Manav Bairwa, whom the rule passed. Replays stay offline, so the final demo day is judged live, and the Risk Lab tests the fallback rule, not Gemini.
 
 **Records that stop.** A student two weeks behind the latest attendance in the batch scores 2 points, as the strongest attendance sign. Comparing with the batch stops a late file from flagging a whole class. Each flag stores its rule version.
 
@@ -399,12 +402,12 @@ The 31 mockups are kept in `docs/mockups` as layout reference only. They contain
 
 ## 10. Testing
 
-395 tests pass, and CI runs lint, types, tests and a build on every push.
+412 tests pass, and CI runs lint, types, tests and a build on every push.
 
 | Suite | Tests | Covers |
 |---|---|---|
-| Unit | 234 | Fee, refund, exit dates, OTP, GST, matching, ledger totals, reminder rules, dues and ageing, Tally format, risk bands and missing data, replay and look-ahead, batch baseline, learned thresholds, AI guardrails, late share, suggestions, sessions, sample data, language files |
-| Database | 161 | The whole replayed term, AI drafts and fallbacks with the network faked, time machine, refund approval and credit notes, reversals, queue, month close, audit trigger, uploads, races, part payments, reminder stages and stopping, and that the flag changes nothing else |
+| Unit | 242 | Fee, refund, exit dates, OTP, GST, matching, ledger totals, reminder rules, dues and ageing, Tally format, risk bands and missing data, replay and look-ahead, batch baseline, learned thresholds, AI guardrails, late share, suggestions, sessions, sample data, language files |
+| Database | 170 | The whole replayed term, AI drafts and fallbacks with the network faked, time machine, refund approval and credit notes, reversals, queue, month close, audit trigger, uploads, races, part payments, reminder stages and stopping, and that the flag changes nothing else |
 
 Tests use the brief's own rows, so Aarav, Ishita and Mohit must produce exactly the brief's statuses. Main flows were also walked through in a real browser at 360px, in both languages.
 
@@ -458,7 +461,8 @@ The brief does not state these. Each one is my judgement.
 | Parent call measure | Shown as not tracked | The app has no call data |
 | Time machine | Demo only, forward only, in memory, shared by all viewers | Otherwise weeks of behaviour cannot be reviewed |
 | Batch baseline | Median fall in a batch of at least 3 is taken off each student's fall | A shared dip is not a sign of leaving |
-| Gemini use | Drafts and suggests only, with names masked and plain fallbacks | The brief asks for AI that handles being wrong |
+| Who gives the flag | Gemini, with the rule as fallback, and code holds the hard lines | The brief says an AI flag |
+| Gemini use | Anonymous facts only, with plain fallbacks | The brief asks for AI that handles being wrong |
 | Sample data | All records beyond the 3 brief rows are invented | The brief asks for created sample data |
 | Upload format | CSV, one batch and one kind per file, up to 200 KB and 2,000 rows | The brief names no format, and Excel saves CSV with no new dependency |
 | Upload checks | All or nothing, with a preview. Up to 50 classes a week and 1,000 marks, week start a Monday | One bad row usually means a bad file, and a wrong week would skew the risk flag |
@@ -501,6 +505,8 @@ The brief does not state these. Each one is my judgement.
 - Masking covers names held in English script, so a name typed in Devanagari in a payer's note would reach Gemini. A production rollout needs a data agreement with the provider, and a paid tier so inputs are not used for training.
 - Call guides are generic by design, because the model is given so little. Hindi drafts were checked by a developer, not a native speaker.
 - Learned numbers come from invented sample data, so they show the mechanism, not good thresholds.
+- Gemini's flag has not been tested against real dropouts, and the Risk Lab does not replay it. Its verdicts can vary between runs, which is why a person always decides what to do.
+- Whether flagging minors from their records is allowed under the DPDP Act's rules on monitoring children is a question for Company A's lawyer. The consent notice names the risk check and the AI service, but it is sample wording.
 
 **Cut:** a separate receipts list for parents, and promise-to-pay, which would invent a fee policy the client never stated.
 

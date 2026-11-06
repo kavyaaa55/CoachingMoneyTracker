@@ -78,23 +78,32 @@ Passing tests did not catch the worst ones. Three times a test agreed with the b
 - **What happened:** the "AI flag" was fixed rules, and the first plan argued that was enough.
 - **How it was caught:** owner review, who asked whether an actual layer existed. It did not.
 - **Fix:** batch baselines and thresholds now learn from data, and Gemini drafts call guides and reads payer notes, all with fallbacks.
-- **Lesson:** an honest label does not replace the feature the brief asked for.
+- **Still wrong:** that layer sat around the flag, and rules still made the decision. Comparing it line by line with the brief showed this, and the owner was right to say the AI should give the flag.
+- **Final fix:** Gemini now gives the flag, code holds the hard lines, and rules are the fallback. On the sample it flagged a student the rule had passed.
+- **Lesson:** an honest label does not replace the feature the brief asked for. Compare against the brief's exact words before calling something done.
 
-### 11. The safety check blocked every good AI draft
+### 11. The consent notice did not cover the risk check or AI
+
+- **What happened:** the notice said data was used for dues and reminders only. It never mentioned the risk check, and then data started going to an AI provider.
+- **How it was caught:** comparing the build with the brief's DPDP line.
+- **Fix:** the notice now names both in Hindi and English, and its version went up, so parents agree again.
+- **Lesson:** a new use of data changes what parents agreed to, so check the notice whenever data use changes.
+
+### 12. The safety check blocked every good AI draft
 
 - **What happened:** the check rejected anything containing "fee", which also matched "**fee**ling". Every draft quietly became the template.
 - **How it was caught:** three live Gemini calls in a row showed "Standard guide". All the tests used fake replies that avoided the word.
 - **Fix:** whole-word matching, and a test for "feeling".
 - **Lesson:** test against real model output, not only replies you wrote yourself.
 
-### 12. Gemini left a placeholder in a draft
+### 13. Gemini left a placeholder in a draft
 
 - **What happened:** the first live draft said "calling from [Institute Name]".
 - **How it was caught:** reading the first real output.
 - **Fix:** the prompt forbids placeholders, and the check rejects brackets.
 - **Lesson:** a model's first real answer will show you a case you did not imagine.
 
-### 13. An empty API key would have crashed the app
+### 14. An empty API key would have crashed the app
 
 - **What happened:** `.env.example` ships `GEMINI_API_KEY=` empty, and validation refused an empty value, so the optional feature could stop the whole app starting.
 - **How it was caught:** running the tests with the key set to empty.
@@ -103,27 +112,27 @@ Passing tests did not catch the worst ones. Three times a test agreed with the b
 
 ## Process mistakes
 
-### 14. A commit went in with two failing tests
+### 15. A commit went in with two failing tests
 
 - **What happened:** one long command used `;` between steps, so the commit ran after tests had failed.
 - **How it was caught:** reading the output straight after.
 - **Fix:** it had not been pushed, so the commit was amended after the fix, and the history never carried a failing commit.
 - **Lesson:** gate commits with `&&`, so a failure stops the chain.
 
-### 15. Test data did not match its own story
+### 16. Test data did not match its own story
 
 - **What happened:** a test for "two weeks behind" failed. The code was right, but the test miscounted its own weeks.
 - **Fix:** corrected the test data after checking which side was wrong.
 - **Lesson:** a failing test is a question, not a verdict.
 
-### 16. Tests relied on local settings
+### 17. Tests relied on local settings
 
 - **What happened:** the time-machine tests passed locally only because `.env` turns demo mode on. CI has no such setting, so they would have failed after the push.
 - **How it was caught:** reading the CI file before pushing, then running the suite with CI's settings.
 - **Fix:** the tests now set up their own environment.
 - **Lesson:** check that tests pass with CI's settings, not only your own.
 
-### 17. Tooling friction
+### 18. Tooling friction
 
 | Problem | Recovery |
 |---|---|

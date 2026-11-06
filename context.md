@@ -45,7 +45,7 @@ Fee Tracker: a 7-day solo assessment build for Company A, a Jaipur coaching inst
 | 11. Optional depth: parent attendance and scores, bulk upload | Done |
 | 12. Level-up: event pipeline and five differentiators | Done |
 
-Last verified: 395 tests pass (234 unit, 161 database), lint, types and the production build are clean, and the AI layer was exercised with live Gemini calls.
+Last verified: 412 tests pass (242 unit, 170 database), lint, types and the production build are clean, and the AI layer was exercised with live Gemini calls.
 
 ## Run it
 
@@ -90,7 +90,7 @@ Version 1.0.0 is tagged and released, and prompts 11 and 12 are on top of it, un
 - **`CLAUDE.md`, `prompt.md` and this file** stay tracked. The owner decided. The brief recommends AI tools and reads the commit history, so they are honest working records.
 
 - **Data pipeline:** sample data is replayed as events through the real entry points. Only enrolment is inserted directly. See `docs/decisions.md`.
-- **AI layer:** learned batch baselines and thresholds, and Gemini for call guides and payer notes, inside the existing screens. It only drafts or suggests, and falls back to plain rules. `GEMINI_API_KEY` is optional and lives in `.env`.
+- **AI layer:** Gemini gives the risk flag, with rules as fallback and the hard lines in code. It also drafts call guides and reads payer notes, and batch baselines and thresholds learn from data. All of it sits inside the existing screens. `GEMINI_API_KEY` is optional and lives in `.env`.
 - **Level-up:** the five items in `level-up.md` are built. No new dependency or role, and parent home is unchanged apart from a refund status line.
 
 ## How each prompt is done
@@ -131,7 +131,7 @@ Money is whole paise. Dates are `YYYY-MM-DD` strings.
 
 ## Sample data for later prompts
 
-- **Risk flag, triggers:** STU-1037 Neha Joshi, STU-1038 Chirag Joshi, STU-1039 Uday Meena, high. STU-1033 Uday Vyas and STU-1056 Pranav Saini, watch. The replay runs the check daily, so these five start as open call tasks.
+- **Risk flag, triggers:** STU-1037 Neha Joshi, STU-1038 Chirag Joshi, STU-1039 Uday Meena, high. STU-1033 Uday Vyas and STU-1056 Pranav Saini, watch. The replay runs the rule daily, then Gemini judges the demo date, so with a key it may add or change tasks. Manav Bairwa, STU-1021, was an AI-only flag.
 - **Records that stop:** STU-1056 Pranav Saini.
 - **Paid over 60 days late:** STU-1047 to STU-1049. The STU-1048 entry is reversed on 20 Oct.
 - **Left:** STU-1050 to STU-1055: inside the deadline, overdue, approved, paid on time, paid late, and ₹0.

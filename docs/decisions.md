@@ -65,7 +65,7 @@ The data pipeline sits under all five, because a demo is only as honest as the w
 
 | Decision | Why | Rejected |
 |---|---|---|
-| Rules that learn, plus a tool to test them | A counsellor must see why, and a rule that can be checked beats a black box | A trained model on invented data |
+| A tool that tests the fallback rule | A counsellor must see why, and a rule that can be checked beats a black box | A trained model on invented data |
 | Replay sees only what was known that day | Otherwise the rule looks better than it was. This is the classic backtest mistake | Replaying on today's records |
 | What-if numbers change nothing live | Live rules change only through a reviewed code change | Editable thresholds |
 | "Late fees alone never flag" cannot be adjusted | It is a product rule, not a tuning number | Exposing it as a setting |
@@ -91,15 +91,22 @@ The data pipeline sits under all five, because a demo is only as honest as the w
 
 ## AI layer
 
-The brief asks for AI that works, including when it is wrong or unsure. So the model only ever drafts or suggests, and plain code decides what goes in and what comes out. There are no new screens: it sits inside Call tasks, Risk Lab and Close the Books.
+The brief says "an AI flag", and asks that it works, including when it is wrong or unsure. So Gemini gives the flag, and code holds the brief's hard lines around it. There are no new screens: it sits inside Call tasks, Risk Lab and Close the Books.
 
 | Decision | Why | Rejected |
 |---|---|---|
+| Gemini gives the flag | The brief asks for an AI flag, and it can read a pattern a threshold misses. On the sample it raised a student whose records stopped, and flagged one the rule passed | Rules deciding, with AI only assisting |
+| Hard lines stay in code, not in a prompt | A prompt can be ignored. Too little data is never sent, and late fees alone cannot flag, whatever the model says | Trusting the model to obey |
+| Figures come from our records | The model picks which signs matter, and code fills in the numbers, so it cannot invent a fact | Showing the model's numbers |
+| Rules are the fallback, and each task says who decided | Low confidence, a failure or no key means the rule decides, and staff can see that | A flag that hides its source |
+| AI can add or clear a flag, but never removes an open task | Someone may already be acting on it, so it stays and says the AI did not confirm it | Tasks vanishing overnight |
+| One anonymous call per run, for students with a sign | A made-up id, percentages and an overdue count. Cheap, private and fast | A call per student, or sending names |
+| Replays stay offline | A term is 130 days, and a reset must be fast and repeatable. The final demo day is judged live | Calling the model for every past day |
 | Learn each batch's normal pattern, using the median | A dip the whole batch shares, such as exam week, is not blamed on anyone. A median stops a few students in trouble hiding each other | Comparing a student only with themselves |
 | Learn thresholds from who left and from false flags | The false flags counsellors mark finally feed back into the rule | A rate nobody acts on |
 | Proposed numbers need a person to adopt them | A rule that silently rewrites itself cannot be trusted or explained | Self-updating thresholds |
 | Gemini drafts a call guide for staff | Turns flag facts into a warm opening, in the parent's language | Showing raw figures only |
-| The fee reason is never sent to the model | A counsellor's call must not turn into a fee action | Sending every reason |
+| Call guides never mention fees | A counsellor's call must not turn into a fee action, so the guide gets no fee reason | Sending every reason |
 | The model reads a payer's note, and our code does the matching | It handles Hinglish like "doosri kist", while hints are checked against real students, so it cannot invent one | Letting the model choose the student |
 | Names are masked before a note leaves | Most students are minors, so the model sees `NAME_1` | Sending the note as typed |
 | Every draft is checked before anyone sees it | No money talk, links, long numbers or placeholders. A failed check uses the template | Trusting model output |

@@ -536,7 +536,7 @@ Tally is the accounting software the centres use. This export gives it a spreads
 
 - [ ] Click **Call tasks** in the menu.
 
-  **You should see:** **Open (5)**, including Chirag Joshi, Neha Joshi and Uday Meena as high, and Uday Vyas and Pranav Saini as watch. Each one shows the reasons and a number to call. The page says "No flags reviewed yet".
+  **You should see:** five or six open tasks, including Chirag Joshi, Neha Joshi and Uday Meena as high. Each one says whether AI or the rule gave it, and without a Gemini key they all say the rule. Each one shows the reasons and a number to call. The page says "No flags reviewed yet".
 
   <img src="screenshots/staff-tasks.png" alt="Call tasks page listing three high risk students" width="520">
 
@@ -546,7 +546,7 @@ Tally is the accounting software the centres use. This export gives it a spreads
 
 - [ ] Type `Student was ill and is back in class.` in the note and click **False flag**.
 
-  **You should see:** **Marked as a false flag.**, **Open (4)**, and "False flags: 1 of 1 reviewed (100%)."
+  **You should see:** **Marked as a false flag.**, one fewer open task, and "False flags: 1 of 1 reviewed (100%)."
 
 - [ ] On **Neha Joshi**, click **Called**. A note is optional here.
 
@@ -611,7 +611,7 @@ The sample files for this mission are in the `docs/samples` folder of the app.
 
 - [ ] Click **Call tasks**.
 
-  **You should see:** **Open (3)** and no task for Chirag Choudhary yet. Saving a file does not raise a flag by itself, so staff can finish entering a whole batch first.
+  **You should see:** no task for Chirag Choudhary yet. Saving a file does not raise a flag by itself, so staff can finish entering a whole batch first.
 
 - [ ] Click **Run risk check now**.
 

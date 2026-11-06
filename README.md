@@ -37,7 +37,7 @@ A fee portal for Company A, a Jaipur coaching institute with 4 centres and 2,600
 - **Director scoreboard.** The client's own success measures, worked out from the records
 - **Refund desk.** Every refund against the 10-day deadline, with second-person approval and a GST credit note
 - **Risk lab.** Replays the rule using only what was known each day, and shows who it caught and who it missed
-- **An AI layer that can be wrong safely.** The flag learns each batch's pattern, the lab learns from outcomes, and Gemini drafts call guides and reads payer notes. It only suggests, never sees a name, and falls back to plain rules
+- **An AI flag that can be wrong safely.** Gemini gives the flag from anonymous records, drafts call guides and reads payer notes. It never sees a name, the brief's hard rules stay in code, and plain rules take over when it is unsure
 - **Close the books.** Month-end checks against the Tally file, reversals that delete nothing, and an append-only audit log
 
 **Built to fail safely**

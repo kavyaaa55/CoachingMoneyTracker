@@ -157,7 +157,7 @@ dialog button { display: block; margin: 8px auto 0; }
     <button class="chip" data-show="reviewer" aria-pressed="false">Reviewer</button>
   </div>
   <div class="card figures">
-    <div><b>395</b><span>tests passing</span></div>
+    <div><b>412</b><span>tests passing</span></div>
     <div><b>60</b><span>fictional students</span></div>
     <div><b>130</b><span>days replayed</span></div>
     <div><b>81</b><span>receipts from real code</span></div>
@@ -236,7 +236,7 @@ dialog button { display: block; margin: 8px auto 0; }
   <p>A parent picks a language, enters their number and types the code. SMS is mocked, so the code shows on screen in the demo. Most students are minors, so nothing is shown until a parent agrees, as the DPDP Act 2023 needs.</p>
   <div class="phones">
     <figure><button data-zoom aria-label="Enlarge sign-in"><img src="img/sign-in.png" alt="Sign-in screen with language choice and mobile number" loading="lazy"></button><figcaption>One field and a language choice.</figcaption></figure>
-    <figure><button data-zoom aria-label="Enlarge consent"><img src="img/consent.png" alt="Consent screen naming the child and the data used" loading="lazy"></button><figcaption>Consent is stored per child, with a notice version.</figcaption></figure>
+    <figure><button data-zoom aria-label="Enlarge consent"><img src="img/consent.png" alt="Consent screen naming the child and the data used" loading="lazy"></button><figcaption>Consent is stored per child, with a notice version, and it names the use of AI.</figcaption></figure>
   </div>
 </section>
 
@@ -322,8 +322,8 @@ dialog button { display: block; margin: 8px auto 0; }
 
 <section id="tasks" data-for="accounts reviewer">
   <h2>Call tasks: the dropout-risk flag</h2>
-  <p>The flag reads missed instalments, falling attendance and test trends. It only ever creates a call task. It never touches fees and never messages a parent. Counsellors mark false flags, and with too little data it says so and creates no task.</p>
-  <p><b>Try it:</b> see how points become a band. Late fees alone never flag anyone.</p>
+  <p>Gemini gives the flag from missed instalments, falling attendance and test trends. It only ever creates a call task. It never touches fees and never messages a parent. Counsellors mark false flags, and with too little data it says so and creates no task.</p>
+  <p><b>Try it:</b> this is the plain rule that takes over when the AI is unsure. Late fees alone never flag anyone.</p>
   <div class="card">
     <div class="fields">
       <div class="field"><label for="rAtt">Attendance fall, points</label><input id="rAtt" type="number" min="0" max="100" value="41"></div>
@@ -337,21 +337,22 @@ dialog button { display: block; margin: 8px auto 0; }
 
 <section id="ai" data-for="reviewer accounts director">
   <h2>The AI layer</h2>
-  <p>The brief asks for AI that works, including when it is wrong or unsure. So the AI only ever drafts or suggests, and it lives inside the screens staff already use.</p>
+  <p>The brief says "an AI flag" and asks what happens when it is wrong or unsure. So Gemini gives the flag, code holds the brief's hard lines around it, and it all lives inside the screens staff already use.</p>
   <div class="scroll"><table>
     <tr><th>Part</th><th>What it does</th><th>When it is wrong or unsure</th></tr>
+    <tr><td>The flag</td><td>Gemini reads anonymous records and gives each student a band. On the sample it flagged a student the rule had passed</td><td>If it is unsure or fails, the rule decides, and the task says who decided. Too little data is never judged, and late fees alone cannot flag</td></tr>
     <tr><td>Batch baseline</td><td>Learns each batch's normal pattern, so a dip the whole batch shares, like exam week, is not blamed on anyone</td><td>Under 3 students it learns nothing, and the plain rule applies</td></tr>
     <tr><td>Learning from outcomes</td><td>The Risk Lab proposes better numbers from who left and which flags counsellors called false</td><td>A person decides. Under 3 cases it says so</td></tr>
     <tr><td>Call guide</td><td>Gemini drafts a guide in the parent's language</td><td>A draft with money talk, links or placeholders is thrown away for a plain template</td></tr>
     <tr><td>Payer notes</td><td>Gemini reads notes like "doosri kist ka advance", and our code matches them to real students</td><td>It only narrows a suggestion. Money stays unmatched until a person applies it</td></tr>
   </table></div>
   <div class="pair">
-    <figure><button data-zoom aria-label="Enlarge AI call guide"><img src="img/staff-tasks-ai.png" alt="Call tasks with AI drafted call guides, labelled as AI" loading="lazy"></button><figcaption>Real Gemini output, labelled as AI. The last task shows the plain fallback.</figcaption></figure>
+    <figure><button data-zoom aria-label="Enlarge AI call guide"><img src="img/staff-tasks-ai.png" alt="Call tasks with AI drafted call guides, labelled as AI" loading="lazy"></button><figcaption>Real Gemini output. Each task says whether AI or the rule gave it, and what the rule alone said.</figcaption></figure>
     <figure><button data-zoom aria-label="Enlarge AI note reading"><img src="img/staff-books-ai.png" alt="Accounts queue with a suggestion from a payer's note" loading="lazy"></button><figcaption>The note pointed to Mohit's second instalment. A person still decides.</figcaption></figure>
     <figure><button data-zoom aria-label="Enlarge learned numbers"><img src="img/staff-lab-learn.png" alt="Risk lab proposing better numbers" loading="lazy"></button><figcaption>Numbers learned from outcomes, proposed and never applied by itself.</figcaption></figure>
     <figure><button data-zoom aria-label="Enlarge audit of AI use"><img src="img/staff-audit.png" alt="Audit log showing what was sent to the model" loading="lazy"></button><figcaption>The audit log shows exactly what was sent: <code>NAME_1</code>, never the name.</figcaption></figure>
   </div>
-  <p class="note">Gemini never sees a name, ID or phone number, and the fee reason is never sent. With no key, or if the service fails, every step falls back to plain rules, so nothing breaks.</p>
+  <p class="note">Gemini never sees a name, ID, phone number or amount. It gets a made-up id, percentages and an overdue count, and parents are told this in the consent notice. With no key, or if the service fails, every step falls back to plain rules, so nothing breaks.</p>
 </section>
 
 <section id="console" data-for="reviewer">
@@ -403,7 +404,7 @@ dialog button { display: block; margin: 8px auto 0; }
 <section id="lab" data-for="reviewer director">
   <span class="tag">What sets it apart · 4</span>
   <h2>Risk lab</h2>
-  <p>There is no real dropout history to train on, and a model on invented data would give a fake accuracy number. So this page tests the rule instead: it replays the term using only what was known each day, and shows who it caught and who it missed. It can also propose better numbers from what really happened.</p>
+  <p>There is no real dropout history to train on, and a model trained on invented data would give a fake accuracy number. So this page tests the fallback rule: it replays the term using only what was known each day, and shows who it caught and who it missed. It can also propose better numbers from what really happened.</p>
   <div class="pair">
     <figure><button data-zoom aria-label="Enlarge lab"><img src="img/staff-lab-live.png" alt="Risk lab showing 4 of 6 leavers flagged" loading="lazy"></button><figcaption>4 of 6 leavers flagged, with 21 days' average warning. It shows the 2 it missed.</figcaption></figure>
     <figure><button data-zoom aria-label="Enlarge what-if"><img src="img/staff-lab.png" alt="Risk lab with changed numbers showing who would be added" loading="lazy"></button><figcaption>Change a number to see who would be added or dropped. Nothing changes live.</figcaption></figure>
