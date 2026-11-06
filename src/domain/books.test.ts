@@ -89,12 +89,22 @@ describe("suggestMatches", () => {
     expect(first).toMatchObject({ studentCode: "B", reason: "exact-balance" });
   });
 
-  it("puts the claimed student first, on any instalment the money fits", () => {
+  it("offers money that names a student only to that student", () => {
     const list = suggestMatches(rupees(10000), "CLAIMED", [
       candidate("OTHER", 10000),
       candidate("MINE", 30000, "CLAIMED"),
     ]);
-    expect(list.map((item) => item.reason)).toEqual(["same-student", "exact-balance"]);
+    expect(list.map((item) => [item.studentCode, item.reason])).toEqual([["MINE", "same-student"]]);
+  });
+
+  it("never hands a leaver's money to a stranger with the same balance", () => {
+    expect(suggestMatches(rupees(30000), "LEFT", [candidate("STRANGER", 30000)])).toEqual([]);
+  });
+
+  it("treats several equal balances as a coincidence, not a match", () => {
+    expect(
+      suggestMatches(rupees(30000), null, [candidate("A", 30000), candidate("B", 30000)]),
+    ).toEqual([]);
   });
 
   it("offers nothing that would not fit, and no guesses", () => {
@@ -102,8 +112,8 @@ describe("suggestMatches", () => {
     expect(suggestMatches(rupees(100), null, [candidate("A", 30000)])).toEqual([]);
   });
 
-  it("shows at most three", () => {
-    const many = ["A", "B", "C", "D"].map((code) => candidate(code, 100));
-    expect(suggestMatches(rupees(100), null, many)).toHaveLength(3);
+  it("shows at most three instalments of the named student", () => {
+    const many = ["A", "B", "C", "D"].map((code) => candidate(code, 100, "S"));
+    expect(suggestMatches(rupees(100), "S", many)).toHaveLength(3);
   });
 });

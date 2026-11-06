@@ -81,22 +81,24 @@ const MAX_SUGGESTIONS = 3;
 
 /**
  * Plain rules a person can check, and only ever suggestions: a person always confirms, so the
- * brief's rule that an unmatched payment marks nothing paid still holds. The claimed student comes
- * first, then anyone whose balance is exactly this amount. Nothing is offered if it would not fit.
+ * brief's rule that an unmatched payment marks nothing paid still holds. Money that names a student
+ * is only ever offered to that student. Money that names nobody is offered to a student whose
+ * balance is exactly this amount, but only if there is just one: ₹30,000 is a common balance, so
+ * several matches are a coincidence, not evidence.
  */
 export function suggestMatches(
   amount: Paise,
   claimedStudentId: string | null,
   candidates: QueueCandidate[],
 ): Suggestion[] {
-  const fits = candidates.filter((item) => amount <= item.balance);
-  const sameStudent = fits
-    .filter((item) => item.studentId === claimedStudentId)
-    .map((item): Suggestion => ({ ...item, reason: "same-student" }));
-  const exact = fits
-    .filter((item) => item.balance === amount && item.studentId !== claimedStudentId)
-    .map((item): Suggestion => ({ ...item, reason: "exact-balance" }));
+  if (claimedStudentId) {
+    return candidates
+      .filter((item) => item.studentId === claimedStudentId && amount <= item.balance)
+      .sort((a, b) => a.dueDate.localeCompare(b.dueDate))
+      .slice(0, MAX_SUGGESTIONS)
+      .map((item) => ({ ...item, reason: "same-student" }));
+  }
 
-  const byDueDate = (a: Suggestion, b: Suggestion) => a.dueDate.localeCompare(b.dueDate);
-  return [...sameStudent.sort(byDueDate), ...exact.sort(byDueDate)].slice(0, MAX_SUGGESTIONS);
+  const exact = candidates.filter((item) => item.balance === amount);
+  return exact.length === 1 ? [{ ...exact[0], reason: "exact-balance" }] : [];
 }
