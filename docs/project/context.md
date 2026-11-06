@@ -11,7 +11,7 @@ Fee Tracker: a 7-day solo assessment build for Company A, a Jaipur coaching inst
 ## Read in this order
 
 1. `CLAUDE.md`: ground rules, hard rules from the brief, assumptions, stack
-2. `prompt.md`: build order and status
+2. `docs/project/prompt.md`: build order and status
 3. `DESIGN.md`: read before any UI work
 4. `docs/brief.txt`: the client brief, which wins over everything else
 5. `docs/TDD.md`: architecture, decisions, limits
@@ -45,7 +45,7 @@ Fee Tracker: a 7-day solo assessment build for Company A, a Jaipur coaching inst
 | 11. Optional depth: parent attendance and scores, bulk upload | Done |
 | 12. Level-up: event pipeline and five differentiators | Done |
 
-Last verified: 426 tests pass (243 unit, 183 database), 65 live attack checks pass, lint, types and the production build are clean, and the AI layer was exercised with live Gemini calls.
+Last verified: 436 tests pass (243 unit, 193 database), 65 live attack checks pass, lint, types and the production build are clean, and the AI layer was exercised with live Gemini calls.
 
 ## Run it
 
@@ -76,7 +76,7 @@ The OTP appears on screen in demo mode.
 
 Version 1.0.0 is tagged and released, and prompts 11 and 12 are on top of it, unreleased. What is left is the owner's:
 
-1. **Deploy** using the AWS guide in `deployment.md`, then put the live link at the top of `docs/TDD.md`.
+1. **Deploy** with Docker or the AWS guide in `deployment.md`, then put the live link at the top of `docs/TDD.md`.
 2. **Export the TDD** to PDF. Check that the Mermaid diagrams survive.
 3. **Make the repo public.** The brief requires it until review ends. Then check the CI badge in the README.
 4. **Zip** the TDD and `deployment.md`, up to 25 MB.
@@ -87,9 +87,10 @@ Version 1.0.0 is tagged and released, and prompts 11 and 12 are on top of it, un
 
 - **Refund rule:** pure pro-rata with no retained fee, confirmed by the owner.
 - **Long-overdue reminders:** they continue until paid, weekly to day 63, then every 4 weeks up to a year. Decided from the brief, see `docs/TDD.md`.
-- **`CLAUDE.md`, `prompt.md` and this file** stay tracked. The owner decided. The brief recommends AI tools and reads the commit history, so they are honest working records.
+- **`CLAUDE.md`, `docs/project/prompt.md` and this file** stay tracked. The owner decided. The brief recommends AI tools and reads the commit history, so they are honest working records.
 
 - **Data pipeline:** sample data is replayed as events through the real entry points. Only enrolment is inserted directly. See `docs/decisions.md`.
+- **Production basics:** measured at 2,600 students, then fixed what the numbers showed. See `docs/operations.md`.
 - **AI layer:** Gemini gives the risk flag, with rules as fallback and the hard lines in code. It also drafts call guides and reads payer notes, and batch baselines and thresholds learn from data. All of it sits inside the existing screens. `GEMINI_API_KEY` is optional and lives in `.env`.
 - **Level-up:** the five items in `level-up.md` are built. No new dependency or role, and parent home is unchanged apart from a refund status line.
 
@@ -98,7 +99,7 @@ Version 1.0.0 is tagged and released, and prompts 11 and 12 are on top of it, un
 1. Build with logic in `src/domain`, tests beside it, and thin pages in `src/app`.
 2. Run `npm test`, `npm run test:db`, `npm run typecheck`, `npm run lint`, `npm run build`.
 3. Check in a real browser: desktop and 360px, Hindi and English, wrong-role access, the console.
-4. Update `prompt.md`, `docs/TDD.md`, `deployment.md` and the assumptions in `CLAUDE.md`.
+4. Update `docs/project/prompt.md`, `docs/TDD.md`, `deployment.md` and the assumptions in `CLAUDE.md`.
 5. Commit in logical steps, push, and confirm CI passes.
 6. Run `npm run db:seed` so the owner sees fresh data, and leave the server running.
 
@@ -109,7 +110,8 @@ Version 1.0.0 is tagged and released, and prompts 11 and 12 are on top of it, un
 | `src/domain/` | Pure rules: money, dates, instalments, refund, payments, reminders, dues, tally, risk, gst, otp, access |
 | `src/lib/payments.ts` | `recordPayment`, `applyQueuedPayment`, `reversePayment`, `returnQueuedPayment`. The only code that changes a payment |
 | `src/lib/pipeline.ts` | `runDay` and `replayDays`: events to real entry points, then the daily jobs |
-| `src/db/sample-events.ts`, `src/db/load-sample.ts` | Sample data as events, and the replay |
+| `src/db/sample/events.ts`, `src/db/sample/load.ts` | Sample data as events, and the replay |
+| `src/lib/rate-limit.ts`, `src/lib/log.ts` | Sign-in limits per address, and JSON logs |
 | `src/lib/simulator.ts`, `src/lib/demo.ts` | Demo only: future events and the time machine |
 | `src/lib/books.ts` | Month-end checks, closing a month, queue suggestions |
 | `src/lib/audit.ts` | The append-only audit log |
@@ -123,7 +125,7 @@ Version 1.0.0 is tagged and released, and prompts 11 and 12 are on top of it, un
 | `src/lib/ledger.ts` | Instalment, payment and receipt queries |
 | `src/lib/staff-students.ts` | Student search and lookup |
 | `src/lib/clock.ts` | `today()`. Never use `new Date()` for business dates |
-| `src/db/sample-data.ts` | Pure, seeded sample data with tests. All the facts, none of the rows |
+| `src/db/sample/data.ts` | Pure, seeded sample data with tests. All the facts, none of the rows |
 | `src/i18n/` | All user text. `hi.ts` must match the shape of `en.ts` |
 | `src/components/` | `DataTable`, `ActionForm`, `SubmitButton`, `StatusChip`, `TextField`, `ReceiptView` |
 
@@ -145,6 +147,7 @@ Money is whole paise. Dates are `YYYY-MM-DD` strings.
 ## Environment pitfalls
 
 - **Multi-line shell commands** containing apostrophes or backticks can fail with `unexpected EOF`, and nothing runs. Write the content to a script file first, then run the file.
+- **Docker is not installed on this machine.** CI builds and boots the image instead.
 - **Temporary Postgres** started with `pg_ctl` hangs with shared memory error 487. Use `npm run test:db`, which uses the real service and a separate `fee_tracker_test` database.
 - **Headless browser** cannot read `D:` paths. Serve through localhost, or copy files to `C:` first.
 - **Screenshots** can catch fallback fonts before web fonts load. Wait for `document.fonts.ready`.

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { balanceOf, instalmentStatus } from "@/domain/instalments";
 import { reminderSchedule } from "@/domain/reminders";
-import { buildSampleData, CENTRES, PLAN_TOTAL, SAMPLE_TODAY } from "./sample-data";
+import { buildSampleData, CENTRES, PLAN_TOTAL, SAMPLE_TODAY } from "./data";
 
 const { students, unmatchedPayments } = buildSampleData();
 const byCode = (code: string) => students.find((student) => student.code === code)!;

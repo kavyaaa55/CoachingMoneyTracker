@@ -1,6 +1,6 @@
 import { desc, eq, inArray, isNull } from "drizzle-orm";
 import { db } from "@/db/client";
-import { toCsv } from "@/db/sample-events";
+import { toCsv } from "@/db/sample/events";
 import { attendance, batches, centres, students, testScores } from "@/db/schema";
 import { addDays, daysBetween, type IsoDate } from "@/domain/dates";
 import { balanceOf } from "@/domain/instalments";

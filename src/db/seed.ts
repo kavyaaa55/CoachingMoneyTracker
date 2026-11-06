@@ -1,5 +1,5 @@
 import { sqlClient } from "./client";
-import { loadSampleData } from "./load-sample";
+import { loadSampleData } from "./sample/load";
 
 loadSampleData()
   .then(({ students }) => console.log(`Replayed the term for ${students} students.`))

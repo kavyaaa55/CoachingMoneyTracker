@@ -1,6 +1,6 @@
 import { and, asc, desc, eq, gt, sql } from "drizzle-orm";
 import { db } from "@/db/client";
-import { loadSampleData } from "@/db/load-sample";
+import { loadSampleData } from "@/db/sample/load";
 import { instalments, payments, pipelineRuns, students } from "@/db/schema";
 import { addDays, type IsoDate } from "@/domain/dates";
 import { addCounts, emptyCounts } from "@/domain/pipeline";

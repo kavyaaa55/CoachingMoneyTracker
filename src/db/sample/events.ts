@@ -2,7 +2,7 @@ import { addDays } from "@/domain/dates";
 import { rupees } from "@/domain/money";
 import { inDayOrder, type PipelineEvent } from "@/domain/pipeline";
 import { csvCell } from "@/domain/tally";
-import type { SampleStudent, UnmatchedPayment } from "./sample-data";
+import type { SampleStudent, UnmatchedPayment } from "./data";
 
 export const toCsv = (rows: (string | number)[][]) =>
   rows.map((row) => row.map((cell) => csvCell(String(cell))).join(",")).join("\r\n");

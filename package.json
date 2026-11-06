@@ -1,7 +1,12 @@
 {
   "name": "fee-tracker",
   "version": "1.0.0",
+  "description": "Fee portal for a coaching institute: dues, reminders, refunds and an AI dropout flag, in Hindi and English.",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Siddhesh-source/coaching_institute.git"
+  },
   "engines": {
     "node": ">=22"
   },
@@ -15,7 +20,9 @@
     "test:db": "vitest run --config vitest.db.config.mts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:seed": "tsx --env-file=.env src/db/seed.ts"
+    "db:seed": "tsx --env-file-if-exists=.env src/db/seed.ts",
+    "test:load": "tsx --env-file-if-exists=.env --tsconfig tsconfig.json scripts/load-test.ts",
+    "check": "npm run lint && npm run typecheck && npm test && npm run test:db"
   },
   "dependencies": {
     "drizzle-orm": "^0.45.4",

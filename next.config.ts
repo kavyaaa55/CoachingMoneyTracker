@@ -27,6 +27,8 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // Set by the Dockerfile, for a small self-contained server.
+  output: process.env.BUILD_STANDALONE ? "standalone" : undefined,
   devIndicators: false,
   poweredByHeader: false,
   headers: async () => [{ source: "/:path*", headers: securityHeaders }],

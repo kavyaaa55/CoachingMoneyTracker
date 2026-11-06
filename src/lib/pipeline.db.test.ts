@@ -2,8 +2,8 @@ import { eq, sql } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { GET } from "@/app/api/cron/daily/route";
 import { db, sqlClient } from "@/db/client";
-import { loadSampleData } from "@/db/load-sample";
-import { buildSampleData, SAMPLE_TODAY } from "@/db/sample-data";
+import { loadSampleData } from "@/db/sample/load";
+import { buildSampleData, SAMPLE_TODAY } from "@/db/sample/data";
 import {
   instalments,
   payments,

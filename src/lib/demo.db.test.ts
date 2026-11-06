@@ -1,8 +1,8 @@
 import { eq, sql } from "drizzle-orm";
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 import { db, sqlClient } from "@/db/client";
-import { loadSampleData } from "@/db/load-sample";
-import { SAMPLE_TODAY } from "@/db/sample-data";
+import { loadSampleData } from "@/db/sample/load";
+import { SAMPLE_TODAY } from "@/db/sample/data";
 import { attendance, payments, pipelineRuns, reminders, students } from "@/db/schema";
 import { setDemoToday, today } from "./clock";
 import { daysToNextDue, moveDemoDate, resetDemo, storyLinks, syncDemoClock } from "./demo";

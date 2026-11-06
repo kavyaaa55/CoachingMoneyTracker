@@ -2,7 +2,7 @@
 
 Five additions that would make this submission stand out, without changing what the product is.
 
-**Status: all five are built, on top of a new event pipeline.** This file is the original plan. What was decided along the way is in [docs/decisions.md](docs/decisions.md), and what went wrong is in [docs/mistakes.md](docs/mistakes.md).
+**Status: all five are built, on top of a new event pipeline.** This file is the original plan. What was decided along the way is in [docs/decisions.md](../decisions.md), and what went wrong is in [docs/mistakes.md](../mistakes.md).
 
 ## The short version
 

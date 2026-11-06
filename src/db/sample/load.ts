@@ -2,10 +2,10 @@ import { sql } from "drizzle-orm";
 import { rupees } from "@/domain/money";
 import { replayDays } from "@/lib/pipeline";
 import { runRiskCheck } from "@/lib/risk";
-import { db } from "./client";
-import { buildSampleData, CENTRES, PLAN_TOTAL, SAMPLE_TODAY } from "./sample-data";
-import { buildEvents } from "./sample-events";
-import { batches, centres, instalments, students, users } from "./schema";
+import { db } from "../client";
+import { buildSampleData, CENTRES, PLAN_TOTAL, SAMPLE_TODAY } from "./data";
+import { buildEvents } from "./events";
+import { batches, centres, instalments, students, users } from "../schema";
 
 const TERM = { termStart: "2026-07-01", termEnd: "2027-06-30" };
 

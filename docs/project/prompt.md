@@ -19,6 +19,7 @@ Run these in order, one at a time. Each one ends with a working app and a commit
 - [x] 10. Submission files (live link, PDF export and public repo are left to the owner)
 - [x] 11. Optional depth: parent attendance and scores, bulk upload
 - [x] 12. Level-up: event pipeline and the five differentiators in `level-up.md`
+- [x] 13. Production basics: measured capacity, hardening, Docker and a conventional repo
 
 ## 1. Sample data
 
@@ -67,3 +68,7 @@ Run these in order, one at a time. Each one ends with a working app and a commit
 ## 12. Level-up
 
 > Make the data flow as it would in production: sample data becomes events, replayed day by day through the real entry points, with one daily pipeline that records each run. On top of it, build the five items in `level-up.md`: reviewer console with a time machine, director scoreboard, refund desk, risk lab, and close the books. No new dependency, role or change to parent home. Walk every flow to its last step in a browser. Record choices in `docs/decisions.md` and mistakes in `docs/mistakes.md`, and add a visual guide.
+
+## 13. Production basics
+
+> Measure the system at 2,600 students before changing anything, then fix what the numbers show. Add a health route, JSON logs, a lock on the daily run, a limit per address on sign-in and a configurable pool. Add Docker, Compose and a CI job that boots the image. Move working records into `docs/project`, and record measured capacity in `docs/operations.md`.

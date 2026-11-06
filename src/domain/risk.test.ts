@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildSampleData, SAMPLE_TODAY } from "@/db/sample-data";
+import { buildSampleData, SAMPLE_TODAY } from "@/db/sample/data";
 import { addDays } from "./dates";
 import {
   assessRisk,
