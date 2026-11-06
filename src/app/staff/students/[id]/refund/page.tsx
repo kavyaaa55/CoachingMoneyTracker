@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { z } from "zod";
 import { ActionForm } from "@/components/action-form";
 import { buttonStyles } from "@/components/button-styles";
+import { RefundSteps } from "@/components/refund-steps";
 import { RefundWorking, type Working } from "@/components/refund-working";
 import { TextField } from "@/components/text-field";
 import { summariseLedger } from "@/domain/instalments";
@@ -22,7 +23,7 @@ type Props = {
 };
 
 export default async function RefundPage({ params, searchParams }: Props) {
-  await requireUser("accounts");
+  const user = await requireUser("accounts");
   const { id } = await params;
   const { exit } = await searchParams;
 
@@ -112,6 +113,8 @@ export default async function RefundPage({ params, searchParams }: Props) {
       )}
 
       {working && <RefundWorking working={working} today={date} locale={locale} t={t} />}
+
+      {saved && <RefundSteps refund={saved} userId={user.id} today={date} locale={locale} t={t} />}
 
       {working && !saved &&
         (canSaveExit(working.exitDate, date) ? (

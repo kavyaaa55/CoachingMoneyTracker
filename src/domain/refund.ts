@@ -35,6 +35,33 @@ export function isPlausibleExitDate(exitDate: IsoDate, termStart: IsoDate, termE
 /** Assumption, see CLAUDE.md: a future date can be previewed, but only a real exit is saved. */
 export const canSaveExit = (exitDate: IsoDate, today: IsoDate) => exitDate <= today;
 
+export type RefundStep = "calculated" | "approved" | "paid";
+export type RefundStage = "nothing-due" | "to-approve" | "to-pay" | "paid";
+
+/** A ₹0 refund has nothing to approve or pay, so it never waits on anyone. */
+export function refundStage(refund: Paise, status: RefundStep): RefundStage {
+  if (refund === 0) return "nothing-due";
+  if (status === "paid") return "paid";
+  return status === "approved" ? "to-pay" : "to-approve";
+}
+
+type DeskRow = { refund: Paise; status: RefundStep; dueBy: IsoDate; paidOn: IsoDate | null };
+
+/** The figures at the top of the refund desk. */
+export function summariseRefunds(rows: DeskRow[], today: IsoDate) {
+  const stages = rows.map((row) => refundStage(row.refund, row.status));
+  const open = rows.filter((row) => row.refund > 0 && row.status !== "paid");
+  const paid = rows.filter((row) => row.refund > 0 && row.paidOn);
+
+  return {
+    toApprove: stages.filter((stage) => stage === "to-approve").length,
+    toPay: stages.filter((stage) => stage === "to-pay").length,
+    overdue: open.filter((row) => row.dueBy < today).length,
+    paid: paid.length,
+    paidInTime: paid.filter((row) => row.paidOn! <= row.dueBy).length,
+  };
+}
+
 const toWholeRupee = (paise: number): Paise => Math.round(paise / 100) * 100;
 
 /**

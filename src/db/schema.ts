@@ -32,8 +32,9 @@ export const riskBandEnum = pgEnum("risk_band", ["watch", "high"]);
 export const taskStatusEnum = pgEnum("task_status", ["open", "called", "false_flag"]);
 export const refundStatusEnum = pgEnum("refund_status", ["calculated", "approved", "paid"]);
 
-/** One unbroken series of receipt numbers. */
+/** One series of receipt numbers. A rolled-back payment can leave a gap, which month end reports. */
 export const receiptNoSeq = pgSequence("receipt_no_seq");
+export const creditNoteNoSeq = pgSequence("credit_note_no_seq");
 
 const id = () => uuid("id").primaryKey().defaultRandom();
 const createdAt = () => timestamp("created_at", { withTimezone: true }).notNull().defaultNow();
@@ -286,6 +287,17 @@ export const refunds = pgTable(
       .notNull()
       .references(() => users.id),
     createdAt: createdAt(),
+    approvedBy: uuid("approved_by").references(() => users.id),
+    approvedOn: date("approved_on"),
+    paidBy: uuid("paid_by").references(() => users.id),
+    paidOn: date("paid_on"),
+    paidMethod: paymentMethodEnum("paid_method"),
+    paidRef: text("paid_ref"),
+    creditNoteNo: text("credit_note_no").unique(),
   },
-  (t) => [unique().on(t.studentId)],
+  (t) => [
+    unique().on(t.studentId),
+    // The database itself refuses a person approving their own refund.
+    check("refund_second_person", sql`${t.approvedBy} is null or ${t.approvedBy} <> ${t.createdBy}`),
+  ],
 );

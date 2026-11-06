@@ -1,9 +1,47 @@
 import { describe, expect, it } from "vitest";
 import { rupees } from "./money";
-import { calculateRefund, canSaveExit, isPlausibleExitDate } from "./refund";
+import {
+  calculateRefund,
+  canSaveExit,
+  isPlausibleExitDate,
+  refundStage,
+  summariseRefunds,
+  type RefundStep,
+} from "./refund";
 
 const term = { termStart: "2026-07-01", termEnd: "2027-06-30" };
 const ishita = { ...term, netFee: rupees(120000), paid: rupees(45000) };
+
+describe("refund desk", () => {
+  const row = (refund: number, status: RefundStep, dueBy: string, paidOn: string | null = null) => ({
+    refund,
+    status,
+    dueBy,
+    paidOn,
+  });
+
+  it("moves through its steps, and a ₹0 refund never waits on anyone", () => {
+    expect(refundStage(100, "calculated")).toBe("to-approve");
+    expect(refundStage(100, "approved")).toBe("to-pay");
+    expect(refundStage(100, "paid")).toBe("paid");
+    expect(refundStage(0, "calculated")).toBe("nothing-due");
+  });
+
+  it("counts what is waiting, what is late and what was paid in time", () => {
+    const summary = summariseRefunds(
+      [
+        row(100, "calculated", "2026-11-06"),
+        row(100, "calculated", "2026-10-30"),
+        row(100, "approved", "2026-11-08"),
+        row(100, "paid", "2026-10-04", "2026-09-30"),
+        row(100, "paid", "2026-10-16", "2026-10-19"),
+        row(0, "calculated", "2026-10-30"),
+      ],
+      "2026-11-02",
+    );
+    expect(summary).toEqual({ toApprove: 2, toPay: 1, overdue: 1, paid: 2, paidInTime: 1 });
+  });
+});
 
 describe("calculateRefund", () => {
   it("works out Ishita leaving on 12 Oct 2026", () => {

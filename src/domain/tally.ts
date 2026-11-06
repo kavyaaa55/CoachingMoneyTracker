@@ -12,6 +12,8 @@ export type TallyReceipt = {
   method: string;
   reference: string;
   amount: Paise;
+  /** Amounts stay positive: the voucher type says which way the money went. */
+  voucher?: "Receipt" | "Credit Note";
 };
 
 /**
@@ -48,15 +50,18 @@ export function csvCell(value: string): string {
 
 function voucherRow(receipt: TallyReceipt): string[] {
   const { taxable, cgst, sgst } = splitGst(receipt.amount);
+  const voucher = receipt.voucher ?? "Receipt";
 
   return [
     toVoucherDate(receipt.paidOn),
-    "Receipt",
+    voucher,
     receipt.receiptNo ?? "",
     receipt.centre,
     receipt.batch,
     receipt.studentCode,
-    `Instalment ${receipt.sequence}, ${receipt.studentCode}`,
+    voucher === "Receipt"
+      ? `Instalment ${receipt.sequence}, ${receipt.studentCode}`
+      : `Refund, ${receipt.studentCode}`,
     receipt.method === "cash" ? "Cash" : "Bank",
     receipt.reference,
     toRupees(taxable),

@@ -17,6 +17,28 @@ const receipt: TallyReceipt = {
 
 const lines = (csv: string) => csv.replace("﻿", "").trimEnd().split("\r\n");
 
+describe("tallyCsv credit notes", () => {
+  it("writes a refund as a credit note with a positive amount", () => {
+    const csv = tallyCsv([
+      {
+        receiptNo: "CN-000001",
+        paidOn: "2026-09-30",
+        centre: "Centre 1",
+        batch: "JEE 2027 Morning",
+        studentCode: "STU-1053",
+        sequence: 0,
+        method: "bank_transfer",
+        reference: "NEFT-1",
+        amount: 118000,
+        voucher: "Credit Note",
+      },
+    ]);
+    expect(csv).toContain("30-09-2026,Credit Note,CN-000001");
+    expect(csv).toContain('"Refund, STU-1053"');
+    expect(csv).toContain("1000.00,90.00,90.00,1180.00");
+  });
+});
+
 describe("tallyCsv", () => {
   it("writes a header and one voucher per receipt, with GST split out", () => {
     const { taxable, cgst, sgst } = splitGst(rupees(15000));

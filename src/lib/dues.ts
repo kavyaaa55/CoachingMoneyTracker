@@ -1,6 +1,6 @@
-import { and, asc, count, desc, eq, gte, isNotNull, isNull, lt, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, gte, isNotNull, isNull, lt, lte, sql } from "drizzle-orm";
 import { db } from "@/db/client";
-import { batches, centres, instalments, payments, students } from "@/db/schema";
+import { batches, centres, instalments, payments, refunds, students } from "@/db/schema";
 import { addDays, type IsoDate } from "@/domain/dates";
 import type { TallyReceipt } from "@/domain/tally";
 import { instalmentFields } from "./ledger";
@@ -80,6 +80,36 @@ export async function unmatchedQueue() {
 }
 
 type ExportRange = DuesFilters & { from: IsoDate; to: IsoDate };
+
+/** Refunds paid out in the range, as credit notes. */
+export async function tallyCreditNotes({ from, to, ...filters }: ExportRange): Promise<TallyReceipt[]> {
+  const rows = await db
+    .select({
+      receiptNo: refunds.creditNoteNo,
+      paidOn: refunds.paidOn,
+      centre: centres.name,
+      batch: batches.name,
+      studentCode: students.code,
+      method: refunds.paidMethod,
+      reference: refunds.paidRef,
+      amount: refunds.refundPaise,
+    })
+    .from(refunds)
+    .innerJoin(students, eq(students.id, refunds.studentId))
+    .innerJoin(batches, eq(batches.id, students.batchId))
+    .innerJoin(centres, eq(centres.id, batches.centreId))
+    .where(and(gte(refunds.paidOn, from), lte(refunds.paidOn, to), inScope(filters)))
+    .orderBy(asc(refunds.paidOn));
+
+  return rows.map((row) => ({
+    ...row,
+    paidOn: row.paidOn!,
+    sequence: 0,
+    method: row.method ?? "bank_transfer",
+    reference: row.reference ?? "",
+    voucher: "Credit Note" as const,
+  }));
+}
 
 /**
  * Money that was really received, so this includes students who have since left.

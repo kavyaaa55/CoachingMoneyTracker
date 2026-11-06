@@ -86,6 +86,15 @@ export default async function ParentHome({ searchParams }: { searchParams: Promi
                 : t.home.noRefund}
             </p>
             <p className="mt-1 text-muted">{t.home.leftOn(formatDate(refund.exitDate, locale))}</p>
+            {refund.refundPaise > 0 && (
+              <p className="mt-1 text-muted">
+                {refund.paidOn
+                  ? t.home.refundPaid(formatDate(refund.paidOn, locale))
+                  : refund.status === "approved"
+                    ? t.home.refundApproved
+                    : t.home.refundChecking}
+              </p>
+            )}
           </section>
           <div className="mt-auto pt-10">
             <Link href={listHref} className="block py-4 text-center font-medium underline underline-offset-4">

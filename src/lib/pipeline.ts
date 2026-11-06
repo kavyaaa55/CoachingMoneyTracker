@@ -12,7 +12,7 @@ import {
 } from "@/domain/pipeline";
 import { today } from "./clock";
 import { recordPayment } from "./payments";
-import { saveRefund } from "./refunds";
+import { approveRefund, markRefundPaid, refundOf, saveRefund } from "./refunds";
 import { runReminders } from "./reminders";
 import { runRiskCheck } from "./risk";
 import { saveUpload } from "./upload";
@@ -53,6 +53,12 @@ async function batchId(centre: string, batch: string) {
     .where(and(eq(centres.name, centre), eq(batches.name, batch)));
   if (!row) throw new Error(`No batch ${batch} at ${centre}`);
   return row.id;
+}
+
+async function refundIdOf(code: string) {
+  const refund = await refundOf(await studentId(code));
+  if (!refund) throw new Error(`No refund for ${code}`);
+  return refund.id;
 }
 
 /** Hands one event to the same code a live event uses. */
@@ -99,8 +105,24 @@ async function applyEvent(event: PipelineEvent): Promise<Partial<PipelineCounts>
       );
       return outcome === "saved" ? { studentsLeft: 1 } : {};
     }
-    default:
+    case "refund-approved": {
+      const refundId = await refundIdOf(event.code);
+      await approveRefund({ refundId, approvedBy: await staffId(CHECKER_PHONE) }, event.on);
       return {};
+    }
+    case "refund-paid": {
+      await markRefundPaid(
+        {
+          refundId: await refundIdOf(event.code),
+          paidBy: await staffId(CHECKER_PHONE),
+          paidOn: event.on,
+          method: "bank_transfer",
+          reference: event.reference,
+        },
+        event.on,
+      );
+      return {};
+    }
   }
 }
 
