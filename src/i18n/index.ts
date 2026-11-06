@@ -51,6 +51,7 @@ export function reminderMessage(locale: Locale, details: ReminderDetails): strin
 export function riskReasonLabel(reason: RiskReason, t: Messages): string {
   const { reasons } = t.staff.tasks;
   if (reason.kind === "missed") return reasons.missed(reason.count);
+  if (reason.kind === "missing") return reasons.missing(reason.weeks);
   return reasons[reason.kind](reason.from, reason.to);
 }
 

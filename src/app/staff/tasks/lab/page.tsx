@@ -51,7 +51,7 @@ export default async function RiskLabPage({ searchParams }: { searchParams: Prom
     { label: k.open, value: summary.open },
     {
       label: k.falseFlags,
-      value: byReason.length === 0 ? "0" : Math.max(...byReason.map((row) => row.falseFlags)),
+      value: reviews.filter((flag) => flag.status === "false_flag").length,
     },
   ];
 

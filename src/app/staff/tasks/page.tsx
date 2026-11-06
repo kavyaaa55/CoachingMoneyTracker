@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { rowLink } from "@/components/button-styles";
+import { buttonStyles, rowLink } from "@/components/button-styles";
 import { RiskChip } from "@/components/risk-chip";
 import { SubmitButton } from "@/components/submit-button";
 import { TaskReviewForm } from "@/components/task-review-form";
@@ -56,9 +56,14 @@ export default async function TasksPage({ searchParams }: { searchParams: Promis
               : k.rate(counts.false_flag, counts.called + counts.false_flag, rate)}
           </p>
         </div>
-        <form action={runRiskCheckNow} className="md:w-64 md:shrink-0">
-          <SubmitButton label={k.run} pendingLabel={k.running} />
-        </form>
+        <div className="flex flex-col gap-2 md:w-64 md:shrink-0">
+          <form action={runRiskCheckNow}>
+            <SubmitButton label={k.run} pendingLabel={k.running} />
+          </form>
+          <Link href="/staff/tasks/lab" className={buttonStyles.secondary}>
+            {k.openLab}
+          </Link>
+        </div>
       </div>
 
       {ran && (

@@ -1,4 +1,4 @@
-import { and, asc, count, desc, eq, inArray, isNull, ne, or } from "drizzle-orm";
+import { and, asc, count, desc, eq, inArray, isNull, max, ne, or } from "drizzle-orm";
 import { db } from "@/db/client";
 import {
   attendance,
@@ -10,7 +10,7 @@ import {
   users,
 } from "@/db/schema";
 import type { IsoDate } from "@/domain/dates";
-import { assessRisk, decideTask } from "@/domain/risk";
+import { assessRisk, decideTask, latestWeekByBatch, RULE_VERSION } from "@/domain/risk";
 import { today } from "./clock";
 import { instalmentsOf, instalmentsOfMany } from "./ledger";
 
@@ -30,7 +30,7 @@ const groupBy = <T extends { studentId: string }>(rows: T[]) => {
  */
 export async function runRiskCheck(date: IsoDate = today()): Promise<RiskRunResult> {
   const active = await db
-    .select({ id: students.id })
+    .select({ id: students.id, batchId: students.batchId })
     .from(students)
     .where(isNull(students.exitDate));
   const ids = active.map((student) => student.id);
@@ -47,6 +47,14 @@ export async function runRiskCheck(date: IsoDate = today()): Promise<RiskRunResu
   const scoresBy = groupBy(scoreRows);
   const flagsBy = groupBy(flagRows);
 
+  const batchOf = new Map(active.map((student) => [student.id, student.batchId]));
+  const latestWeeks = latestWeekByBatch(
+    attendanceRows.map((row) => ({
+      batchId: batchOf.get(row.studentId)!,
+      weekStart: row.weekStart,
+    })),
+  );
+
   const result: RiskRunResult = { checked: ids.length, flagged: 0, notEnoughData: 0 };
 
   for (const studentId of ids) {
@@ -55,6 +63,7 @@ export async function runRiskCheck(date: IsoDate = today()): Promise<RiskRunResu
       attendance: attendanceBy.get(studentId) ?? [],
       scores: scoresBy.get(studentId) ?? [],
       today: date,
+      batchLatestWeek: latestWeeks.get(batchOf.get(studentId)!),
     });
     if (risk.band === "not-enough-data") result.notEnoughData += 1;
 
@@ -72,12 +81,18 @@ export async function runRiskCheck(date: IsoDate = today()): Promise<RiskRunResu
     if (action === "update" && open) {
       await db
         .update(riskFlags)
-        .set({ band: risk.band, reasons: risk.reasons })
+        .set({ band: risk.band, reasons: risk.reasons, ruleVersion: RULE_VERSION })
         .where(eq(riskFlags.id, open.id));
     } else {
       const created = await db
         .insert(riskFlags)
-        .values({ studentId, band: risk.band, reasons: risk.reasons, flaggedOn: date })
+        .values({
+          studentId,
+          band: risk.band,
+          reasons: risk.reasons,
+          flaggedOn: date,
+          ruleVersion: RULE_VERSION,
+        })
         .onConflictDoNothing()
         .returning({ id: riskFlags.id });
       result.flagged += created.length;
@@ -89,12 +104,28 @@ export async function runRiskCheck(date: IsoDate = today()): Promise<RiskRunResu
 
 /** Live assessment for one student, shown to staff on the ledger. */
 export async function riskOf(studentId: string, date: IsoDate = today()) {
-  const [instalments, attendanceRows, scores] = await Promise.all([
+  const [instalments, attendanceRows, scores, [batch]] = await Promise.all([
     instalmentsOf(studentId),
     db.select().from(attendance).where(eq(attendance.studentId, studentId)),
     db.select().from(testScores).where(eq(testScores.studentId, studentId)),
+    db
+      .select({ latest: max(attendance.weekStart) })
+      .from(attendance)
+      .innerJoin(students, eq(students.id, attendance.studentId))
+      .where(
+        eq(
+          students.batchId,
+          db.select({ id: students.batchId }).from(students).where(eq(students.id, studentId)),
+        ),
+      ),
   ]);
-  return assessRisk({ instalments, attendance: attendanceRows, scores, today: date });
+  return assessRisk({
+    instalments,
+    attendance: attendanceRows,
+    scores,
+    today: date,
+    batchLatestWeek: batch?.latest,
+  });
 }
 
 export const TASK_FILTERS = ["open", "called", "false_flag"] as const;

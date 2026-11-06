@@ -1,0 +1,1 @@
+ALTER TABLE "risk_flags" ADD COLUMN "rule_version" text DEFAULT 'v1' NOT NULL;

@@ -238,6 +238,7 @@ export const riskFlags = pgTable(
     reasons: jsonb("reasons").$type<RiskReason[]>().notNull(),
     taskStatus: taskStatusEnum("task_status").notNull().default("open"),
     reviewNote: text("review_note"),
+    ruleVersion: text("rule_version").notNull().default("v1"),
     flaggedOn: date("flagged_on").notNull(),
     reviewedOn: date("reviewed_on"),
     reviewedBy: uuid("reviewed_by").references(() => users.id),

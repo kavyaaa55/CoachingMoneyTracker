@@ -64,6 +64,13 @@
       "when": 1793976815250,
       "tag": "0008_refund_desk",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1793978076622,
+      "tag": "0009_risk_rule_version",
+      "breakpoints": true
     }
   ]
 }

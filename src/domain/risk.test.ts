@@ -3,6 +3,7 @@ import { buildSampleData, SAMPLE_TODAY } from "@/db/sample-data";
 import { addDays } from "./dates";
 import {
   assessRisk,
+  latestWeekByBatch,
   decideTask,
   falseFlagRate,
   REFLAG_AFTER_DAYS,
@@ -146,6 +147,50 @@ describe("assessRisk with missing data", () => {
 
     expect(assessRisk(input({ attendance: empty })).band).toBe("not-enough-data");
     expect(assessRisk(input({ scores: noMarks })).band).toBe("not-enough-data");
+  });
+});
+
+describe("records that stop", () => {
+  const steadyWeeks = Array.from({ length: 8 }, (_, index) => ({
+    weekStart: addDays("2026-08-10", index * 7),
+    present: 6,
+    total: 6,
+  }));
+  const steadyTests = Array.from({ length: 4 }, (_, index) => ({
+    takenOn: addDays("2026-07-25", index * 18),
+    score: 200,
+    maxScore: 300,
+  }));
+  const base = {
+    instalments: [{ dueDate: "2026-07-10", amount: 100, paid: 100 }],
+    attendance: steadyWeeks,
+    scores: steadyTests,
+    today: "2026-11-02",
+  };
+
+  it("flags a student two weeks behind the rest of the batch", () => {
+    expect(assessRisk({ ...base, batchLatestWeek: "2026-10-12" })).toEqual({
+      band: "watch",
+      reasons: [{ kind: "missing", weeks: 2 }],
+    });
+  });
+
+  it("leaves one late week alone", () => {
+    expect(assessRisk({ ...base, batchLatestWeek: "2026-10-05" }).band).toBe("none");
+  });
+
+  it("does not flag anyone when the whole batch's file is late", () => {
+    expect(assessRisk({ ...base, batchLatestWeek: "2026-09-28" }).band).toBe("none");
+  });
+
+  it("finds the latest week in each batch", () => {
+    const latest = latestWeekByBatch([
+      { batchId: "a", weekStart: "2026-10-05" },
+      { batchId: "a", weekStart: "2026-10-26" },
+      { batchId: "b", weekStart: "2026-09-28" },
+    ]);
+    expect(latest.get("a")).toBe("2026-10-26");
+    expect(latest.get("b")).toBe("2026-09-28");
   });
 });
 

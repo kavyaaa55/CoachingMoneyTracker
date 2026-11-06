@@ -14,9 +14,14 @@ import {
   students,
 } from "@/db/schema";
 import { instalmentStatus } from "@/domain/instalments";
+import { RULE_VERSION } from "@/domain/risk";
+import { replayRule, summariseReplay } from "@/domain/risk-lab";
+import { lateShare } from "@/domain/scoreboard";
 import { env } from "./env";
 import { instalmentsOf } from "./ledger";
 import { runDay } from "./pipeline";
+import { labStudents } from "./risk-lab";
+import { matchingHealth, reminderResponse, scoredInstalments } from "./scoreboard";
 
 const studentCalled = async (code: string) =>
   (await db.select().from(students).where(eq(students.code, code)))[0];
@@ -105,6 +110,40 @@ describe("the replayed term", () => {
     expect(runs.every((run) => run.source === "replay" && run.failed.length === 0)).toBe(true);
     expect(runs.reduce((sum, run) => sum + run.counts.uploadsRejected, 0)).toBe(0);
     expect(runs.reduce((sum, run) => sum + run.counts.recordsUploaded, 0)).toBeGreaterThan(500);
+  });
+
+  it("notices the student whose attendance simply stopped", async () => {
+    const silent = await studentCalled("STU-1056");
+    const [flag] = await db.select().from(riskFlags).where(eq(riskFlags.studentId, silent.id));
+    expect(flag.reasons.map((reason) => reason.kind)).toContain("missing");
+    expect(flag.ruleVersion).toBe(RULE_VERSION);
+  });
+
+  it("gives the risk lab real outcomes, with a leaver it missed", async () => {
+    const before = await db.select({ total: sql<number>`count(*)::int` }).from(riskFlags);
+    const { students: list, termStart } = await labStudents();
+    const rows = replayRule(list, termStart, SAMPLE_TODAY);
+    const summary = summariseReplay(rows);
+
+    expect(summary.left).toBe(6);
+    expect(summary.caught).toBeGreaterThanOrEqual(4);
+    expect(summary.caught).toBeLessThan(6);
+    expect(summary.averageWarning).toBeGreaterThan(0);
+    expect(await db.select({ total: sql<number>`count(*)::int` }).from(riskFlags)).toEqual(before);
+  });
+
+  it("gives the scoreboard a real late figure, from payments that arrived late", async () => {
+    const late = lateShare(await scoredInstalments(), SAMPLE_TODAY);
+    expect(late.percent).toBeGreaterThan(0);
+    expect(late.percent).toBeLessThan(50);
+
+    const response = await reminderResponse();
+    expect(response.sent).toBeGreaterThan(0);
+    expect(response.followed).toBeLessThanOrEqual(response.sent);
+
+    const health = await matchingHealth(SAMPLE_TODAY);
+    expect(health.queued).toBe(3);
+    expect(health.oldestDays).toBe(5);
   });
 
   it("gives the same outcome when run twice", async () => {
