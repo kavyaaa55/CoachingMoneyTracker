@@ -26,6 +26,7 @@ export async function loadSampleData() {
           reminders, payments, instalments, consents, students, users, batches, centres cascade`,
     );
     await tx.execute(sql`alter sequence receipt_no_seq restart`);
+    await tx.execute(sql`alter sequence credit_note_no_seq restart`);
 
     const centreRows = await tx
       .insert(centres)

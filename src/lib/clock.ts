@@ -14,6 +14,11 @@ export function today(): IsoDate {
   return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata" }).format(new Date());
 }
 
+const indiaDate = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata" });
+
+/** The date in India at a moment in time. Receipts and exports must use this, never UTC. */
+export const istDate = (moment: Date): IsoDate => indiaDate.format(moment);
+
 /** The current time of day on a given date, so replayed events land on their own day. */
 export function timeOn(date: IsoDate): Date {
   return new Date(`${date}T${new Date().toISOString().slice(11)}`);
