@@ -129,6 +129,7 @@ dialog button { display: block; margin: 8px auto 0; }
     <a href="#reminders">Reminders</a>
     <a href="#upload">Bulk upload</a>
     <a href="#tasks">Call tasks</a>
+    <a href="#ai">The AI layer</a>
     <div class="group">What sets it apart</div>
     <a href="#console">Reviewer console</a>
     <a href="#scoreboard">Director scoreboard</a>
@@ -156,7 +157,7 @@ dialog button { display: block; margin: 8px auto 0; }
     <button class="chip" data-show="reviewer" aria-pressed="false">Reviewer</button>
   </div>
   <div class="card figures">
-    <div><b>365</b><span>tests passing</span></div>
+    <div><b>395</b><span>tests passing</span></div>
     <div><b>60</b><span>fictional students</span></div>
     <div><b>130</b><span>days replayed</span></div>
     <div><b>81</b><span>receipts from real code</span></div>
@@ -227,7 +228,7 @@ dialog button { display: block; margin: 8px auto 0; }
     <tr><td>Student leaves</td><td>Staff save the exit</td><td>Replay</td></tr>
     <tr><td>The daily run</td><td>A schedule calls <code>/api/cron/daily</code></td><td>Replay, or the time machine</td></tr>
   </table></div>
-  <p>The whole term replays in about 7 seconds. The result is 130 recorded days, 475 reminders sent and 189 stopped, none written by hand.</p>
+  <p>The whole term replays in about 15 seconds. The result is 130 recorded days, 475 reminders sent and 189 stopped, none written by hand.</p>
 </section>
 
 <section id="signin" data-for="parent">
@@ -334,6 +335,25 @@ dialog button { display: block; margin: 8px auto 0; }
   <figure><button data-zoom aria-label="Enlarge tasks"><img src="img/staff-tasks.png" alt="Call tasks with bands and plain reasons" loading="lazy"></button><figcaption>A band with plain reasons, never a score like 72/100, because a precise number would overstate what the data can show.</figcaption></figure>
 </section>
 
+<section id="ai" data-for="reviewer accounts director">
+  <h2>The AI layer</h2>
+  <p>The brief asks for AI that works, including when it is wrong or unsure. So the AI only ever drafts or suggests, and it lives inside the screens staff already use.</p>
+  <div class="scroll"><table>
+    <tr><th>Part</th><th>What it does</th><th>When it is wrong or unsure</th></tr>
+    <tr><td>Batch baseline</td><td>Learns each batch's normal pattern, so a dip the whole batch shares, like exam week, is not blamed on anyone</td><td>Under 3 students it learns nothing, and the plain rule applies</td></tr>
+    <tr><td>Learning from outcomes</td><td>The Risk Lab proposes better numbers from who left and which flags counsellors called false</td><td>A person decides. Under 3 cases it says so</td></tr>
+    <tr><td>Call guide</td><td>Gemini drafts a guide in the parent's language</td><td>A draft with money talk, links or placeholders is thrown away for a plain template</td></tr>
+    <tr><td>Payer notes</td><td>Gemini reads notes like "doosri kist ka advance", and our code matches them to real students</td><td>It only narrows a suggestion. Money stays unmatched until a person applies it</td></tr>
+  </table></div>
+  <div class="pair">
+    <figure><button data-zoom aria-label="Enlarge AI call guide"><img src="img/staff-tasks-ai.png" alt="Call tasks with AI drafted call guides, labelled as AI" loading="lazy"></button><figcaption>Real Gemini output, labelled as AI. The last task shows the plain fallback.</figcaption></figure>
+    <figure><button data-zoom aria-label="Enlarge AI note reading"><img src="img/staff-books-ai.png" alt="Accounts queue with a suggestion from a payer's note" loading="lazy"></button><figcaption>The note pointed to Mohit's second instalment. A person still decides.</figcaption></figure>
+    <figure><button data-zoom aria-label="Enlarge learned numbers"><img src="img/staff-lab-learn.png" alt="Risk lab proposing better numbers" loading="lazy"></button><figcaption>Numbers learned from outcomes, proposed and never applied by itself.</figcaption></figure>
+    <figure><button data-zoom aria-label="Enlarge audit of AI use"><img src="img/staff-audit.png" alt="Audit log showing what was sent to the model" loading="lazy"></button><figcaption>The audit log shows exactly what was sent: <code>NAME_1</code>, never the name.</figcaption></figure>
+  </div>
+  <p class="note">Gemini never sees a name, ID or phone number, and the fee reason is never sent. With no key, or if the service fails, every step falls back to plain rules, so nothing breaks.</p>
+</section>
+
 <section id="console" data-for="reviewer">
   <span class="tag">What sets it apart · 1</span>
   <h2>Reviewer console</h2>
@@ -383,7 +403,7 @@ dialog button { display: block; margin: 8px auto 0; }
 <section id="lab" data-for="reviewer director">
   <span class="tag">What sets it apart · 4</span>
   <h2>Risk lab</h2>
-  <p>The flag is a set of rules, because there is no real dropout history to train on. A model on invented data would give a fake accuracy number. So this page tests the rule instead: it replays the term using only what was known each day, and shows who it caught and who it missed.</p>
+  <p>There is no real dropout history to train on, and a model on invented data would give a fake accuracy number. So this page tests the rule instead: it replays the term using only what was known each day, and shows who it caught and who it missed. It can also propose better numbers from what really happened.</p>
   <div class="pair">
     <figure><button data-zoom aria-label="Enlarge lab"><img src="img/staff-lab-live.png" alt="Risk lab showing 4 of 6 leavers flagged" loading="lazy"></button><figcaption>4 of 6 leavers flagged, with 21 days' average warning. It shows the 2 it missed.</figcaption></figure>
     <figure><button data-zoom aria-label="Enlarge what-if"><img src="img/staff-lab.png" alt="Risk lab with changed numbers showing who would be added" loading="lazy"></button><figcaption>Change a number to see who would be added or dropped. Nothing changes live.</figcaption></figure>
@@ -418,6 +438,7 @@ dialog button { display: block; margin: 8px auto 0; }
     <tr><td>A staff member typed the wrong amount</td><td>Refused, and nothing is saved</td></tr>
     <tr><td>A payment was wrong</td><td>Reversed with a reason, never deleted</td></tr>
     <tr><td>Someone approves their own refund</td><td>Refused by the code and by the database</td></tr>
+    <tr><td>The AI service fails or writes something unsafe</td><td>A plain template or rule is used, and nothing breaks</td></tr>
     <tr><td>A daily job fails</td><td>Recorded, and the next stage still runs</td></tr>
     <tr><td>A CSV has one bad row</td><td>Nothing is saved, and the error is shown by line</td></tr>
   </table></div>

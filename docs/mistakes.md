@@ -64,7 +64,7 @@ Passing tests did not catch the worst ones. Three times a test agreed with the b
 
 - **What happened:** the seed wrote finished rows, and even rebuilt reminder history by hand. The demo looked alive but none of its history came from the product's own code.
 - **How it was caught:** owner review.
-- **Fix:** sample data is now replayed as events through the real entry points. The whole term replays in about 7 seconds, fast enough for a live reset button.
+- **Fix:** sample data is now replayed as events through the real entry points. The whole term replays in about 15 seconds, fast enough for a live reset button.
 - **Lesson:** this also found mistake 6, and gave real receipt numbers for free.
 
 ### 9. A comment claimed something false
@@ -73,35 +73,64 @@ Passing tests did not catch the worst ones. Three times a test agreed with the b
 - **Fix:** the comment now tells the truth, and month end reports any gap.
 - **Lesson:** a confident comment is a claim, so check it.
 
+### 10. There was no real AI layer
+
+- **What happened:** the "AI flag" was fixed rules, and the first plan argued that was enough.
+- **How it was caught:** owner review, who asked whether an actual layer existed. It did not.
+- **Fix:** batch baselines and thresholds now learn from data, and Gemini drafts call guides and reads payer notes, all with fallbacks.
+- **Lesson:** an honest label does not replace the feature the brief asked for.
+
+### 11. The safety check blocked every good AI draft
+
+- **What happened:** the check rejected anything containing "fee", which also matched "**fee**ling". Every draft quietly became the template.
+- **How it was caught:** three live Gemini calls in a row showed "Standard guide". All the tests used fake replies that avoided the word.
+- **Fix:** whole-word matching, and a test for "feeling".
+- **Lesson:** test against real model output, not only replies you wrote yourself.
+
+### 12. Gemini left a placeholder in a draft
+
+- **What happened:** the first live draft said "calling from [Institute Name]".
+- **How it was caught:** reading the first real output.
+- **Fix:** the prompt forbids placeholders, and the check rejects brackets.
+- **Lesson:** a model's first real answer will show you a case you did not imagine.
+
+### 13. An empty API key would have crashed the app
+
+- **What happened:** `.env.example` ships `GEMINI_API_KEY=` empty, and validation refused an empty value, so the optional feature could stop the whole app starting.
+- **How it was caught:** running the tests with the key set to empty.
+- **Fix:** an empty value now means "no key".
+- **Lesson:** optional must mean optional in every form it can arrive.
+
 ## Process mistakes
 
-### 10. A commit went in with two failing tests
+### 14. A commit went in with two failing tests
 
 - **What happened:** one long command used `;` between steps, so the commit ran after tests had failed.
 - **How it was caught:** reading the output straight after.
 - **Fix:** it had not been pushed, so the commit was amended after the fix, and the history never carried a failing commit.
 - **Lesson:** gate commits with `&&`, so a failure stops the chain.
 
-### 11. Test data did not match its own story
+### 15. Test data did not match its own story
 
 - **What happened:** a test for "two weeks behind" failed. The code was right, but the test miscounted its own weeks.
 - **Fix:** corrected the test data after checking which side was wrong.
 - **Lesson:** a failing test is a question, not a verdict.
 
-### 12. Tests relied on local settings
+### 16. Tests relied on local settings
 
 - **What happened:** the time-machine tests passed locally only because `.env` turns demo mode on. CI has no such setting, so they would have failed after the push.
 - **How it was caught:** reading the CI file before pushing, then running the suite with CI's settings.
 - **Fix:** the tests now set up their own environment.
 - **Lesson:** check that tests pass with CI's settings, not only your own.
 
-### 13. Tooling friction
+### 17. Tooling friction
 
 | Problem | Recovery |
 |---|---|
 | Long shell scripts with apostrophes failed with `unexpected EOF` | Write script files with the editor, then run them |
 | A patch script failed on Windows line endings | The helper now normalises line endings |
 | The token-saving shell wrapper rejected `next start -p` | Run `node node_modules/next/dist/bin/next start --port 3000` |
+| A shell heredoc turned the regex `\\b` into a backspace character | Write anything with backslashes using the editor, never a heredoc |
 
 ## Mistakes from the core build
 

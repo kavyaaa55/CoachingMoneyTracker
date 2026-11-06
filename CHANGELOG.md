@@ -35,6 +35,13 @@
 - An append-only audit log, enforced by the database
 - Receipt and export dates now use India time
 
+### AI layer
+
+- The risk flag learns each batch's normal pattern, so a dip the whole batch shares is not blamed on anyone
+- The Risk Lab proposes better numbers from who left and which flags were false, and a person decides
+- Gemini drafts call guides in the parent's language, and reads payer notes in Hindi and English
+- Names are masked, output is checked and labelled, and everything falls back to plain rules
+
 ### Docs
 
 - A visual guide, key decisions, and mistakes and recovery
@@ -51,7 +58,7 @@
 
 ### Quality
 
-- 365 tests: 213 unit and 152 database
+- 395 tests: 234 unit and 161 database
 - A hands-on test guide in [docs/demo.md](docs/demo.md), with sample files in `docs/samples`
 
 ## 1.0.0 (5 Nov 2026)

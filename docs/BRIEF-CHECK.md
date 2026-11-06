@@ -19,7 +19,7 @@ Every requirement in [the brief](brief.txt), its status in version 1.0.0 plus th
 | Dues dashboard | Met | `/staff/dues`, `src/domain/dues.ts` |
 | About 6 to 8 screens | Met | Sign-in, consent, parent home, pay and receipt, dues, ledger, refund, reminders and tasks |
 | Roles: parent and accounts executive | Met | `src/lib/auth.ts`, `src/domain/access.ts` |
-| AI: dropout-risk flag | Met | `/staff/tasks`, `src/domain/risk.ts`. Rule-based, as TDD section 7 explains |
+| AI: dropout-risk flag | Met | `/staff/tasks`, `src/domain/risk.ts`, `src/lib/ai.ts`. Learned batch baseline, thresholds learned from outcomes, and Gemini call guides, as TDD section 7 explains |
 | Hard part: instalment and pro-rata refund rules | Met | `src/domain/refund.ts`, with unit and database tests |
 | Payments, messages and outside systems mocked | Met | Test gateway, mock sender, CSV export |
 | Seeded from the sample data | Met | The three brief rows produce the brief's exact statuses, in `src/db/sample-data.test.ts` |
@@ -88,7 +88,7 @@ The client's measures need live use for real results. The Scoreboard already wor
 | Requirement | Status | Notes |
 |---|---|---|
 | Frontend, backend, database, sign-in | Met | |
-| Tests for the important logic | Met | 365 tests |
+| Tests for the important logic | Met | 395 tests |
 | No secrets in the repository | Met | Full history checked |
 | Validated inputs and access control | Met | Checked on every read and write |
 | Sample data so it does not look empty | Met | 60 fictional students, replayed through the real pipeline |

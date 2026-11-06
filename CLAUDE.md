@@ -58,10 +58,13 @@ Label each of these in the Technical Design Document. Add new ones here as they 
 | Ageing buckets | 0–30, 31–60, 60+ days | The brief's success measure uses 60 days |
 | Centre names | Centre 1 to Centre 4 | The brief does not name them |
 | Counsellor | The accounts role handles call tasks | The brief lists only two roles |
-| Risk method | Transparent points, not a trained model. Attendance compares the last 4 weeks with earlier weeks, tests the last 2 with earlier tests. A fall of 15 or 30 points in attendance, or 10 or 20 in tests, scores 1 or 2. Missed instalments score 1 or 2. 2 points is watch, 4 is high | There is no real dropout history to train on, and a counsellor must see why |
+| Risk method | Transparent points, not a trained model. Attendance compares the last 4 weeks with earlier weeks, tests the last 2 with earlier tests. A fall of 15 or 30 points in attendance, or 10 or 20 in tests, scores 1 or 2, counted beyond what the batch itself lost. Missed instalments score 1 or 2. 2 points is watch, 4 is high | There is no real dropout history to train on, and a counsellor must see why |
 | Late fees alone | Never flag a student, however many are missed | Reminders handle money, and being short of money is not a sign of leaving. Ishita's sample row shows this |
 | Too little data | Under 6 weeks of attendance, under 4 tests, or no fee plan | The brief says to say so, not how much is enough |
 | Records that stop | Two weeks behind the latest attendance in the batch scores 2 points, as the strongest attendance sign | A student who vanishes is the likeliest dropout, and a late file for a whole class must not flag everyone |
+| Batch baseline | The median fall in a batch, from at least 3 students, is learned from its records and taken off each student's fall | A dip the whole batch shares, such as exam week, is not a sign of leaving |
+| Learning from outcomes | The Risk Lab proposes numbers from who left and which flags were called false, with at least 3 such cases. A person decides | The brief says counsellors mark false flags, and live rules must not change on their own |
+| Gemini use | `gemini-2.5-flash` drafts call guides and reads payer notes. It only drafts or suggests. Student names are masked and the fee reason is never sent. Anything unsafe, late or failed falls back to plain templates and rules | The brief asks for AI that handles being wrong. Minors' data must not leave the system |
 | Refund approval | A second accounts user approves, enforced by a database check. No new role | The brief names two roles, and money going out needs two people |
 | Credit notes | Paying a refund issues a numbered credit note with GST split, and it goes to the Tally export. An accountant must confirm the treatment | The brief says receipts show GST, not how refunds treat it |
 | Reversals | A wrong payment is marked reversed, never deleted. The receipt shows as cancelled, a Reversal voucher goes to Tally on the reversal day, and future reminders restart. Refused once a student has left | Money must be corrected with a new entry, and a saved refund used that money |
@@ -116,6 +119,7 @@ docs/        brief, mockups and technical design
 - User-facing text comes from `src/i18n`, never hardcoded.
 - Every rule in `src/domain` has a test next to it, using the brief's sample data.
 - Anything from outside enters as a `PipelineEvent` and goes to its real entry point. `runDay` in `lib/pipeline` is the only daily pipeline.
+- All model calls go through `askGemini` in `lib/ai`, and what is sent or accepted is decided in `domain/ai`. AI output is always labelled, and never touches fees, parents or a payment's status.
 - Changes to money and records call `audit` in the same transaction. Receipts and exports use `istDate`, never UTC.
 
 ## Commands

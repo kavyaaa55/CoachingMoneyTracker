@@ -65,7 +65,7 @@ The data pipeline sits under all five, because a demo is only as honest as the w
 
 | Decision | Why | Rejected |
 |---|---|---|
-| Rules, plus a tool to test them | A counsellor must see why, and a rule that can be checked beats a black box | A trained model on invented data |
+| Rules that learn, plus a tool to test them | A counsellor must see why, and a rule that can be checked beats a black box | A trained model on invented data |
 | Replay sees only what was known that day | Otherwise the rule looks better than it was. This is the classic backtest mistake | Replaying on today's records |
 | What-if numbers change nothing live | Live rules change only through a reviewed code change | Editable thresholds |
 | "Late fees alone never flag" cannot be adjusted | It is a product rule, not a tuning number | Exposing it as a setting |
@@ -89,6 +89,25 @@ The data pipeline sits under all five, because a demo is only as honest as the w
 | Audit log is append only, by database trigger | A log that can be edited proves nothing | A convention in code |
 | All dates use India time | A payment just after midnight must land in the right month | UTC |
 
+## AI layer
+
+The brief asks for AI that works, including when it is wrong or unsure. So the model only ever drafts or suggests, and plain code decides what goes in and what comes out. There are no new screens: it sits inside Call tasks, Risk Lab and Close the Books.
+
+| Decision | Why | Rejected |
+|---|---|---|
+| Learn each batch's normal pattern, using the median | A dip the whole batch shares, such as exam week, is not blamed on anyone. A median stops a few students in trouble hiding each other | Comparing a student only with themselves |
+| Learn thresholds from who left and from false flags | The false flags counsellors mark finally feed back into the rule | A rate nobody acts on |
+| Proposed numbers need a person to adopt them | A rule that silently rewrites itself cannot be trusted or explained | Self-updating thresholds |
+| Gemini drafts a call guide for staff | Turns flag facts into a warm opening, in the parent's language | Showing raw figures only |
+| The fee reason is never sent to the model | A counsellor's call must not turn into a fee action | Sending every reason |
+| The model reads a payer's note, and our code does the matching | It handles Hinglish like "doosri kist", while hints are checked against real students, so it cannot invent one | Letting the model choose the student |
+| Names are masked before a note leaves | Most students are minors, so the model sees `NAME_1` | Sending the note as typed |
+| Every draft is checked before anyone sees it | No money talk, links, long numbers or placeholders. A failed check uses the template | Trusting model output |
+| Any failure falls back to plain rules | No key, a timeout or an outage never breaks a screen | Failing visibly |
+| Every use is labelled and audited | Staff can see it is AI, and the audit log shows exactly what was sent | Hidden AI |
+| `gemini-2.5-flash`, called with `fetch` | About 2 seconds, and no new dependency. A newer model hung in testing | An SDK, or the newest model by default |
+| On demand, not on page load | Staff choose when to spend a call, and pages stay fast | Drafting on every render |
+
 ## Foundations, kept from the core build
 
 | Decision | Why |
@@ -106,8 +125,8 @@ The data pipeline sits under all five, because a demo is only as honest as the w
 
 | Idea | Why not |
 |---|---|
-| A trained model | No real dropout data, so any accuracy figure would be invented |
-| LLM chatbot or AI call notes | Sends minors' data to a third party for little gain |
+| A trained dropout model | No real dropout data, so any accuracy figure would be invented. The batch baseline and the Risk Lab learn from data without claiming one |
+| A parent chatbot | It breaks the five-second design rule |
 | Real Razorpay or WhatsApp | The brief says to mock outside systems |
 | Promise-to-pay | The best runner-up, but it invents a fee policy the client never stated |
 | Charts, dark mode, animation | `DESIGN.md` rules these out |

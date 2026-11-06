@@ -92,6 +92,8 @@ Names only. Never commit the values.
 | `SESSION_SECRET` | Yes | Signs sessions and pay links. At least 32 characters |
 | `GATEWAY_WEBHOOK_SECRET` | Yes | Signs mock gateway webhooks. At least 32 characters |
 | `CRON_SECRET` | Yes | Protects the daily reminders and risk routes. At least 32 characters |
+| `GEMINI_API_KEY` | Optional | Turns on AI call guides and payer note reading. Without it, plain templates and rules are used |
+| `GEMINI_MODEL` | Optional | Defaults to `gemini-2.5-flash` |
 | `APP_URL` | In production | Public address of the app, with `https://`. Defaults to `http://localhost:3000` |
 | `DEMO_MODE` | For the demo | `true` shows the OTP on screen and enables the test gateway. Never use with real users |
 | `APP_TODAY` | For the demo | Fixes today's date. Use `2026-11-02` to match the brief's sample data |

@@ -240,3 +240,4 @@ The mockups in `docs/mockups` are layout reference only. Their colours, font and
 | 2026-11-05 | Parent attendance and scores sit behind the instalments page | Parent home keeps one link and passes the five-second test |
 | 2026-11-06 | New staff screens reuse the Dues figures row and DataTable | Five new screens, no new visual language |
 | 2026-11-06 | Scoreboard uses tables, not charts | Progress bars were already removed, and the client asked for restraint |
+| 2026-11-06 | AI output sits inside existing cards, on `highlight`, always labelled | No new screens or components, and staff must know what the model wrote |
