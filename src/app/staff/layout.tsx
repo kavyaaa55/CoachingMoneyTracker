@@ -2,6 +2,7 @@ import { StaffNav } from "@/components/staff-nav";
 import { TopBar } from "@/components/top-bar";
 import { messages } from "@/i18n";
 import { requireUser } from "@/lib/auth";
+import { env } from "@/lib/env";
 import { getLocale } from "@/lib/locale";
 
 export default async function StaffLayout({ children }: { children: React.ReactNode }) {
@@ -21,6 +22,7 @@ export default async function StaffLayout({ children }: { children: React.ReactN
             { href: "/staff/reminders", label: t.staff.navReminders },
             { href: "/staff/tasks", label: t.staff.navTasks },
             { href: "/staff/upload", label: t.staff.navUpload },
+            ...(env.DEMO_MODE ? [{ href: "/staff/demo", label: t.staff.navDemo }] : []),
           ]}
         />
       </aside>
