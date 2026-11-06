@@ -14,7 +14,10 @@ import { liveFeed } from "./simulator";
 const studentCalled = async (code: string) =>
   (await db.select().from(students).where(eq(students.code, code)))[0];
 
+// Set here, because CI has no demo settings in its environment.
 beforeAll(async () => {
+  env.DEMO_MODE = true;
+  process.env.APP_TODAY = SAMPLE_TODAY;
   await loadSampleData();
 }, 60_000);
 
