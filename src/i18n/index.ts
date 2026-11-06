@@ -55,6 +55,14 @@ export function riskReasonLabel(reason: RiskReason, t: Messages): string {
   return reasons[reason.kind](reason.from, reason.to);
 }
 
+/** The guide staff get when the model is unavailable, or its draft fails the checks. */
+export function callBriefTemplate(reasons: RiskReason[], t: Messages): string {
+  const { brief } = t.staff.tasks;
+  const signs = reasons.filter((reason) => reason.kind !== "missed");
+  const about = signs.some((reason) => reason.kind === "tests") ? brief.aboutTests : brief.aboutClasses;
+  return [brief.open, about, brief.close].map((line) => `- ${line}`).join("\n");
+}
+
 export function stageLabel(dayOffset: number, t: Messages): string {
   const stage = stageOf(dayOffset);
   if (stage === "on") return t.reminders.stages.on;

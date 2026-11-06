@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import type { FormState } from "@/components/action-form";
 import { messages } from "@/i18n";
+import { readPayerNote } from "@/lib/ai";
 import { requireUser } from "@/lib/auth";
 import { closeMonth } from "@/lib/books";
 import { getLocale } from "@/lib/locale";
@@ -44,6 +45,21 @@ export async function returnFromQueue(_: FormState, formData: FormData): Promise
   if (!done) return { error: t.invalid };
 
   redirect("/staff/books?returned=1");
+}
+
+const noteSchema = z.object({ paymentId: z.uuid() });
+
+export async function readNote(_: FormState, formData: FormData): Promise<FormState> {
+  const user = await requireUser("accounts");
+  const t = messages(await getLocale()).staff.books;
+
+  const form = noteSchema.safeParse(Object.fromEntries(formData));
+  if (!form.success) return { error: t.invalid };
+
+  const read = await readPayerNote(form.data.paymentId, user.id);
+  if (!read) return { error: t.noteFailed };
+
+  redirect("/staff/books");
 }
 
 export async function closeThisMonth(_: FormState, formData: FormData): Promise<FormState> {

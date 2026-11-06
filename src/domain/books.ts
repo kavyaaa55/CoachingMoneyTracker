@@ -1,3 +1,4 @@
+import type { NoteHints } from "./ai";
 import { daysBetween, type IsoDate } from "./dates";
 import type { Paise } from "./money";
 import { parseCsv } from "./upload";
@@ -66,6 +67,7 @@ export function tallyFileTotals(csv: string): VoucherTotals {
 }
 
 export type QueueCandidate = {
+  batch: string;
   instalmentId: string;
   studentId: string;
   studentCode: string;
@@ -75,7 +77,9 @@ export type QueueCandidate = {
   dueDate: IsoDate;
 };
 
-export type Suggestion = QueueCandidate & { reason: "exact-balance" | "same-student" };
+export type Suggestion = QueueCandidate & {
+  reason: "exact-balance" | "same-student" | "payer-note";
+};
 
 const MAX_SUGGESTIONS = 3;
 
@@ -84,12 +88,14 @@ const MAX_SUGGESTIONS = 3;
  * brief's rule that an unmatched payment marks nothing paid still holds. Money that names a student
  * is only ever offered to that student. Money that names nobody is offered to a student whose
  * balance is exactly this amount, but only if there is just one: ₹30,000 is a common balance, so
- * several matches are a coincidence, not evidence.
+ * several matches are a coincidence, not evidence. What the model read from a note is checked
+ * against real students here, so it can only narrow the choice, never invent one.
  */
 export function suggestMatches(
   amount: Paise,
   claimedStudentId: string | null,
   candidates: QueueCandidate[],
+  hints?: NoteHints | null,
 ): Suggestion[] {
   if (claimedStudentId) {
     return candidates
@@ -97,6 +103,20 @@ export function suggestMatches(
       .sort((a, b) => a.dueDate.localeCompare(b.dueDate))
       .slice(0, MAX_SUGGESTIONS)
       .map((item) => ({ ...item, reason: "same-student" }));
+  }
+
+  // What the payer wrote comes next. It needs a name, and the money must still fit.
+  if (hints && hints.names.length > 0) {
+    const named = candidates.filter(
+      (item) =>
+        amount <= item.balance &&
+        hints.names.some((name) => item.studentName.toLowerCase().includes(name.toLowerCase())) &&
+        (hints.instalment === null || item.sequence === hints.instalment) &&
+        (hints.programme === null || item.batch.startsWith(hints.programme)),
+    );
+    if (named.length > 0 && named.length <= MAX_SUGGESTIONS) {
+      return named.map((item) => ({ ...item, reason: "payer-note" }));
+    }
   }
 
   const exact = candidates.filter((item) => item.balance === amount);

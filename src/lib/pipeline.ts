@@ -84,6 +84,7 @@ async function applyEvent(event: PipelineEvent): Promise<Partial<PipelineCounts>
           instalmentRef: event.instalment && (await instalmentId(event.instalment)),
           amountPaise: event.amount,
           paidAt,
+          ...(event.kind === "gateway" && event.note ? { note: event.note } : {}),
         },
         event.kind === "counter"
           ? { method: "cash", externalRef: null, recordedBy: await staffId(MAKER_PHONE) }

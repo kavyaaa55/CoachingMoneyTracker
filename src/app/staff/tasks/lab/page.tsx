@@ -2,12 +2,13 @@ import Link from "next/link";
 import { buttonStyles, rowLink } from "@/components/button-styles";
 import { DataTable } from "@/components/data-table";
 import { TextField } from "@/components/text-field";
-import { DEFAULT_RULES, RULE_VERSION } from "@/domain/risk";
+import { DEFAULT_RULES, RULE_VERSION, type RiskRules } from "@/domain/risk";
 import {
   compareReplays,
   falseFlagsByReason,
   readRules,
   replayRule,
+  suggestRules,
   summariseReplay,
 } from "@/domain/risk-lab";
 import { formatDate, messages } from "@/i18n";
@@ -16,7 +17,10 @@ import { today } from "@/lib/clock";
 import { getLocale } from "@/lib/locale";
 import { allReviews, labStudents } from "@/lib/risk-lab";
 
-type Query = Partial<Record<"am" | "as" | "tm" | "ts" | "w" | "h", string>>;
+type Query = Partial<Record<"am" | "as" | "tm" | "ts" | "w" | "h" | "learn", string>>;
+
+const rulesHref = (rules: RiskRules) =>
+  `/staff/tasks/lab?am=${rules.attendanceDrop.mild}&as=${rules.attendanceDrop.strong}&tm=${rules.testDrop.mild}&ts=${rules.testDrop.strong}&w=${rules.watchPoints}&h=${rules.highPoints}`;
 
 export default async function RiskLabPage({ searchParams }: { searchParams: Promise<Query> }) {
   await requireUser("accounts");
@@ -35,6 +39,9 @@ export default async function RiskLabPage({ searchParams }: { searchParams: Prom
   const change = compareReplays(live, trial);
   const byReason = falseFlagsByReason(reviews);
   const changed = JSON.stringify(rules) !== JSON.stringify(DEFAULT_RULES);
+
+  const falseFlagCodes = reviews.filter((r) => r.status === "false_flag").map((r) => r.code);
+  const learned = query.learn ? suggestRules(students, termStart, date, falseFlagCodes) : null;
 
   const fields = [
     { name: "am", label: k.attendanceMild, value: rules.attendanceDrop.mild },
@@ -102,6 +109,33 @@ export default async function RiskLabPage({ searchParams }: { searchParams: Prom
           )}
         </div>
       </form>
+
+      {!learned && (
+        <Link href="/staff/tasks/lab?learn=1" className="self-start py-3 font-medium underline underline-offset-4">
+          {k.learn}
+        </Link>
+      )}
+      {learned && (
+        <div className="flex flex-col gap-1 rounded-md bg-highlight px-4 py-3">
+          {learned.kind === "too-little-evidence" && <p>{k.learnThin(learned.evidence)}</p>}
+          {learned.kind === "keep-live-rule" && <p>{k.learnKeep}</p>}
+          {learned.kind === "better" && (
+            <>
+              <p>
+                {k.learnBetter(
+                  summariseReplay(learned.live).caught,
+                  summariseReplay(learned.trial).caught,
+                  summariseReplay(learned.live).open,
+                  summariseReplay(learned.trial).open,
+                )}
+              </p>
+              <Link href={rulesHref(learned.rules)} className="font-medium underline underline-offset-4">
+                {k.learnTry}
+              </Link>
+            </>
+          )}
+        </div>
+      )}
 
       <dl className="grid grid-cols-2 gap-x-6 gap-y-4 rounded-md border border-divider bg-surface p-6 lg:grid-cols-4">
         {figures.map((item) => (

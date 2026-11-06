@@ -13,6 +13,8 @@ export const AUDIT_ACTIONS = [
   "upload.saved",
   "task.reviewed",
   "month.closed",
+  "ai.brief",
+  "ai.note",
 ] as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];

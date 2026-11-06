@@ -3,6 +3,7 @@ import { buildSampleData, SAMPLE_TODAY } from "@/db/sample-data";
 import { addDays } from "./dates";
 import {
   assessRisk,
+  batchBaseline,
   latestWeekByBatch,
   decideTask,
   falseFlagRate,
@@ -147,6 +148,57 @@ describe("assessRisk with missing data", () => {
 
     expect(assessRisk(input({ attendance: empty })).band).toBe("not-enough-data");
     expect(assessRisk(input({ scores: noMarks })).band).toBe("not-enough-data");
+  });
+});
+
+describe("the learned batch baseline", () => {
+  const weeks = (present: number[]) =>
+    present.map((value, index) => ({
+      weekStart: addDays("2026-08-10", index * 7),
+      present: value,
+      total: 6,
+    }));
+  const tests = (scores: number[]) =>
+    scores.map((score, index) => ({
+      takenOn: addDays("2026-07-25", index * 18),
+      score,
+      maxScore: 300,
+    }));
+  const examWeek = {
+    attendance: weeks([6, 6, 6, 6, 3, 3, 3, 3]),
+    scores: tests([200, 200, 200, 200]),
+  };
+  const steady = {
+    attendance: weeks([6, 6, 6, 6, 6, 6, 6, 6]),
+    scores: tests([200, 200, 200, 200]),
+  };
+  const fees = [{ dueDate: "2026-07-10", amount: 100, paid: 100 }];
+  const today = "2026-11-02";
+
+  it("learns a dip the whole batch shares", () => {
+    expect(batchBaseline([examWeek, examWeek, examWeek, examWeek]).attendanceFall).toBe(50);
+  });
+
+  it("does not blame a student for a dip the whole batch shares", () => {
+    const flagged = assessRisk({ ...examWeek, instalments: fees, today });
+    const fair = assessRisk({
+      ...examWeek,
+      instalments: fees,
+      today,
+      baseline: batchBaseline([examWeek, examWeek, examWeek]),
+    });
+    expect(flagged.band).toBe("watch");
+    expect(fair.band).toBe("none");
+  });
+
+  it("still flags a student who falls while the batch holds steady", () => {
+    const baseline = batchBaseline([steady, steady, steady, examWeek]);
+    expect(baseline.attendanceFall).toBe(0);
+    expect(assessRisk({ ...examWeek, instalments: fees, today, baseline }).band).toBe("watch");
+  });
+
+  it("learns nothing from too few students", () => {
+    expect(batchBaseline([examWeek, examWeek]).attendanceFall).toBe(0);
   });
 });
 

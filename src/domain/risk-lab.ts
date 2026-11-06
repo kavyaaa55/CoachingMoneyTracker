@@ -3,8 +3,10 @@ import type { Instalment } from "./instalments";
 import type { Paise } from "./money";
 import {
   assessRisk,
+  batchBaseline,
   DEFAULT_RULES,
   type AttendanceWeek,
+  type RiskInput,
   type RiskReason,
   type RiskRules,
   type TestScore,
@@ -76,26 +78,56 @@ function firstMonday(date: IsoDate): IsoDate {
   return addDays(date, (8 - day) % 7);
 }
 
+type Snapshot = { code: string; input: Omit<RiskInput, "rules"> };
+
+/** What was known on each Monday. Worked out once, so many rules can be tried against it. */
+export function snapshots(students: LabStudent[], termStart: IsoDate, today: IsoDate): Snapshot[][] {
+  const days: Snapshot[][] = [];
+
+  for (let date = firstMonday(termStart); date <= today; date = addDays(date, 7)) {
+    const enrolled = students.filter((student) => !student.exitDate || student.exitDate > date);
+    const known = new Map(enrolled.map((student) => [student.code, knownOn(student, date)]));
+
+    const baselines = new Map(
+      [...new Set(enrolled.map((student) => student.batchId))].map((batchId) => [
+        batchId,
+        batchBaseline(
+          enrolled.filter((s) => s.batchId === batchId).map((s) => known.get(s.code)!),
+        ),
+      ]),
+    );
+
+    days.push(
+      enrolled.map((student) => ({
+        code: student.code,
+        input: {
+          ...known.get(student.code)!,
+          today: date,
+          batchLatestWeek: batchLatestOn(students, student.batchId, date),
+          baseline: baselines.get(student.batchId),
+        },
+      })),
+    );
+  }
+  return days;
+}
+
 /** Runs the rule on every Monday from the start of term, for students enrolled that day. */
 export function replayRule(
   students: LabStudent[],
   termStart: IsoDate,
   today: IsoDate,
   rules: RiskRules = DEFAULT_RULES,
+  days: Snapshot[][] = snapshots(students, termStart, today),
 ): LabRow[] {
   const flagged = new Map<string, IsoDate>();
 
-  for (let date = firstMonday(termStart); date <= today; date = addDays(date, 7)) {
-    for (const student of students) {
-      if (flagged.has(student.code) || (student.exitDate && student.exitDate <= date)) continue;
+  for (const day of days) {
+    for (const { code, input } of day) {
+      if (flagged.has(code)) continue;
 
-      const { band } = assessRisk({
-        ...knownOn(student, date),
-        today: date,
-        batchLatestWeek: batchLatestOn(students, student.batchId, date),
-        rules,
-      });
-      if (band === "watch" || band === "high") flagged.set(student.code, date);
+      const { band } = assessRisk({ ...input, rules });
+      if (band === "watch" || band === "high") flagged.set(code, input.today);
     }
   }
 
@@ -141,6 +173,63 @@ export function compareReplays(live: LabRow[], trial: LabRow[]) {
     added: flaggedIn(trial).filter((row) => !liveCodes.has(row.code)).map((row) => row.name),
     dropped: flaggedIn(live).filter((row) => !trialCodes.has(row.code)).map((row) => row.name),
   };
+}
+
+/** Below this much evidence, the lab says so rather than suggesting anything. */
+const MIN_EVIDENCE = 3;
+
+/** Catching a leaver is worth most, and flagging someone a counsellor called false costs most. */
+function scoreRows(rows: LabRow[], falseFlagCodes: Set<string>) {
+  return rows.reduce((score, row) => {
+    if (row.outcome === "caught") return score + 3;
+    if (row.outcome === "open") return score - (falseFlagCodes.has(row.code) ? 3 : 0.5);
+    return score;
+  }, 0);
+}
+
+export type RuleSuggestion =
+  | { kind: "too-little-evidence"; evidence: number }
+  | { kind: "keep-live-rule" }
+  | { kind: "better"; rules: RiskRules; live: LabRow[]; trial: LabRow[] };
+
+/**
+ * Learns from what really happened: who left, and which flags counsellors called false. It tries
+ * each set of numbers against the term and proposes the best. It never changes the live rule.
+ */
+export function suggestRules(
+  students: LabStudent[],
+  termStart: IsoDate,
+  today: IsoDate,
+  falseFlagCodes: string[],
+): RuleSuggestion {
+  const evidence = students.filter((s) => s.exitDate).length + falseFlagCodes.length;
+  if (evidence < MIN_EVIDENCE) return { kind: "too-little-evidence", evidence };
+
+  const falseCodes = new Set(falseFlagCodes);
+  const days = snapshots(students, termStart, today);
+  const live = replayRule(students, termStart, today, DEFAULT_RULES, days);
+  let best = { rules: DEFAULT_RULES, rows: live, score: scoreRows(live, falseCodes) };
+
+  for (const attendanceMild of [10, 15, 20])
+    for (const attendanceStrong of [25, 30, 40])
+      for (const testMild of [5, 10, 15])
+        for (const testStrong of [15, 20, 30])
+          for (const watchPoints of [2, 3]) {
+            if (testMild >= testStrong) continue;
+            const rules: RiskRules = {
+              attendanceDrop: { mild: attendanceMild, strong: attendanceStrong },
+              testDrop: { mild: testMild, strong: testStrong },
+              watchPoints,
+              highPoints: 4,
+            };
+            const rows = replayRule(students, termStart, today, rules, days);
+            const score = scoreRows(rows, falseCodes);
+            if (score > best.score) best = { rules, rows, score };
+          }
+
+  return best.rules === DEFAULT_RULES
+    ? { kind: "keep-live-rule" }
+    : { kind: "better", rules: best.rules, live, trial: best.rows };
 }
 
 type ReviewedFlag = { status: string; reasons: RiskReason[] };

@@ -121,7 +121,7 @@ describe("sample data", () => {
   });
 
   it("has a queued payment for each reason the matching rules can give", () => {
-    expect(unmatchedPayments).toHaveLength(3);
+    expect(unmatchedPayments).toHaveLength(4);
   });
 
   it("only pays leavers before they left, so nothing is refused on replay", () => {

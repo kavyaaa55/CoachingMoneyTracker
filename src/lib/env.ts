@@ -6,6 +6,12 @@ const schema = z.object({
   GATEWAY_WEBHOOK_SECRET: z.string().min(32),
   CRON_SECRET: z.string().min(32),
   APP_URL: z.url().default("http://localhost:3000"),
+  /** Optional. Without it, every AI step falls back to plain rules. */
+  GEMINI_API_KEY: z
+    .string()
+    .optional()
+    .transform((value) => value || undefined),
+  GEMINI_MODEL: z.string().min(1).default("gemini-2.5-flash"),
   DEMO_MODE: z
     .enum(["true", "false"])
     .default("false")

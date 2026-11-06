@@ -44,4 +44,7 @@ export async function labStudents(): Promise<{ students: LabStudent[]; termStart
 }
 
 export const allReviews = () =>
-  db.select({ status: riskFlags.taskStatus, reasons: riskFlags.reasons }).from(riskFlags);
+  db
+    .select({ code: students.code, status: riskFlags.taskStatus, reasons: riskFlags.reasons })
+    .from(riskFlags)
+    .innerJoin(students, eq(students.id, riskFlags.studentId));

@@ -13,6 +13,7 @@ import { tallyCsv, type TallyReceipt } from "./tally";
 
 const candidate = (code: string, balance: number, studentId = code, dueDate = "2026-10-10") =>
   ({
+    batch: "NEET 2027 Morning",
     instalmentId: `${code}-1`,
     studentId,
     studentCode: code,
@@ -105,6 +106,15 @@ describe("suggestMatches", () => {
     expect(
       suggestMatches(rupees(30000), null, [candidate("A", 30000), candidate("B", 30000)]),
     ).toEqual([]);
+  });
+
+  it("uses what the model read from a note, but only against real students", () => {
+    const hints = { names: ["Mohit"], instalment: 1, programme: "NEET" };
+    const list = suggestMatches(rupees(100), null, [candidate("Mohit G", 500), candidate("B", 500)], hints);
+    expect(list.map((item) => [item.studentCode, item.reason])).toEqual([["Mohit G", "payer-note"]]);
+
+    const nobody = { names: ["Nobody"], instalment: null, programme: null };
+    expect(suggestMatches(rupees(100), null, [candidate("A", 500)], nobody)).toEqual([]);
   });
 
   it("offers nothing that would not fit, and no guesses", () => {

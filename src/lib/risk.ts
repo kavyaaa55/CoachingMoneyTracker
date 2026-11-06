@@ -1,4 +1,4 @@
-import { and, asc, count, desc, eq, inArray, isNull, max, ne, or } from "drizzle-orm";
+import { and, asc, count, desc, eq, inArray, isNull, ne, or } from "drizzle-orm";
 import { db } from "@/db/client";
 import {
   attendance,
@@ -10,7 +10,13 @@ import {
   users,
 } from "@/db/schema";
 import type { IsoDate } from "@/domain/dates";
-import { assessRisk, decideTask, latestWeekByBatch, RULE_VERSION } from "@/domain/risk";
+import {
+  assessRisk,
+  batchBaseline,
+  decideTask,
+  latestWeekByBatch,
+  RULE_VERSION,
+} from "@/domain/risk";
 import { audit } from "./audit";
 import { today } from "./clock";
 import { instalmentsOf, instalmentsOfMany } from "./ledger";
@@ -56,6 +62,19 @@ export async function runRiskCheck(date: IsoDate = today()): Promise<RiskRunResu
     })),
   );
 
+  const inBatch = Map.groupBy(ids, (id) => batchOf.get(id)!);
+  const baselines = new Map(
+    [...inBatch].map(([batchId, members]) => [
+      batchId,
+      batchBaseline(
+        members.map((id) => ({
+          attendance: attendanceBy.get(id) ?? [],
+          scores: scoresBy.get(id) ?? [],
+        })),
+      ),
+    ]),
+  );
+
   const result: RiskRunResult = { checked: ids.length, flagged: 0, notEnoughData: 0 };
 
   for (const studentId of ids) {
@@ -65,6 +84,7 @@ export async function runRiskCheck(date: IsoDate = today()): Promise<RiskRunResu
       scores: scoresBy.get(studentId) ?? [],
       today: date,
       batchLatestWeek: latestWeeks.get(batchOf.get(studentId)!),
+      baseline: baselines.get(batchOf.get(studentId)!),
     });
     if (risk.band === "not-enough-data") result.notEnoughData += 1;
 
@@ -105,27 +125,40 @@ export async function runRiskCheck(date: IsoDate = today()): Promise<RiskRunResu
 
 /** Live assessment for one student, shown to staff on the ledger. */
 export async function riskOf(studentId: string, date: IsoDate = today()) {
-  const [instalments, attendanceRows, scores, [batch]] = await Promise.all([
-    instalmentsOf(studentId),
-    db.select().from(attendance).where(eq(attendance.studentId, studentId)),
-    db.select().from(testScores).where(eq(testScores.studentId, studentId)),
-    db
-      .select({ latest: max(attendance.weekStart) })
-      .from(attendance)
-      .innerJoin(students, eq(students.id, attendance.studentId))
-      .where(
+  const sameBatch = await db
+    .select({ id: students.id })
+    .from(students)
+    .where(
+      and(
+        isNull(students.exitDate),
         eq(
           students.batchId,
           db.select({ id: students.batchId }).from(students).where(eq(students.id, studentId)),
         ),
       ),
+    );
+  const memberIds = [...new Set([studentId, ...sameBatch.map((member) => member.id)])];
+
+  const [instalments, attendanceRows, scoreRows] = await Promise.all([
+    instalmentsOf(studentId),
+    db.select().from(attendance).where(inArray(attendance.studentId, memberIds)),
+    db.select().from(testScores).where(inArray(testScores.studentId, memberIds)),
   ]);
+  const attendanceBy = groupBy(attendanceRows);
+  const scoresBy = groupBy(scoreRows);
+
   return assessRisk({
     instalments,
-    attendance: attendanceRows,
-    scores,
+    attendance: attendanceBy.get(studentId) ?? [],
+    scores: scoresBy.get(studentId) ?? [],
     today: date,
-    batchLatestWeek: batch?.latest,
+    batchLatestWeek: attendanceRows.map((row) => row.weekStart).sort().at(-1),
+    baseline: batchBaseline(
+      memberIds.map((id) => ({
+        attendance: attendanceBy.get(id) ?? [],
+        scores: scoresBy.get(id) ?? [],
+      })),
+    ),
   });
 }
 
@@ -154,6 +187,8 @@ export async function listTasks(filter: TaskFilter, page: number) {
         note: riskFlags.reviewNote,
         flaggedOn: riskFlags.flaggedOn,
         reviewedOn: riskFlags.reviewedOn,
+        callBrief: riskFlags.callBrief,
+        briefSource: riskFlags.briefSource,
       })
       .from(riskFlags)
       .innerJoin(students, eq(students.id, riskFlags.studentId))

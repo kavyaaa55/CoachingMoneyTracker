@@ -183,6 +183,10 @@ export const en = {
       queueIntro:
         "Money that arrived but marks nothing paid. Suggestions follow plain rules, and a person always decides.",
       queueEmpty: "The queue is empty.",
+      payerWrote: (note: string) => `The payer wrote: "${note}"`,
+      readNote: "Read this note with AI",
+      readingNote: "Reading...",
+      noteFailed: "The note could not be read just now. Read it yourself, or try again.",
       noSuggestion: "No safe suggestion. Contact the payer, then return it if it belongs on no fee.",
       returnOpen: "Return to payer",
       returnNote: "How was it returned, and why?",
@@ -194,6 +198,7 @@ export const en = {
       reasons: {
         "exact-balance": "This balance is exactly the amount received.",
         "same-student": "The payment named this student, and it fits this instalment.",
+        "payer-note": "AI read the payer's note, and it points here. Check it before you apply.",
       },
       apply: "Apply to this instalment",
       applying: "Applying...",
@@ -224,6 +229,8 @@ export const en = {
         "upload.saved": "Corrected records by upload",
         "task.reviewed": "Reviewed a call task",
         "month.closed": "Closed a month",
+        "ai.brief": "Drafted a call guide",
+        "ai.note": "Read a payer's note with AI",
       },
     },
     navScoreboard: "Scoreboard",
@@ -591,6 +598,13 @@ export const en = {
       caveat:
         "This sample is invented, so these figures show the tool works, not that the rule predicts dropouts. The real test is Company A's own history.",
       back: "Back to call tasks",
+      learn: "Learn from what happened",
+      learnThin: (evidence: number) =>
+        `Too little to learn from yet: ${evidence} leavers and false flags so far. At least 3 are needed.`,
+      learnKeep: "The live rule is already the best fit for who left and what counsellors marked false.",
+      learnBetter: (live: number, trial: number, liveOpen: number, open: number) =>
+        `Better numbers found: ${trial} leavers flagged in time (now ${live}), and ${open} flags on students still enrolled (now ${liveOpen}). A person decides whether to adopt them.`,
+      learnTry: "Replay with these numbers",
       attendanceMild: "Attendance fall, 1 point",
       attendanceStrong: "Attendance fall, 2 points",
       testMild: "Test fall, 1 point",
@@ -632,6 +646,18 @@ export const en = {
       version: (version: string) => `Live rule: ${version}.`,
     },
     tasks: {
+      brief: {
+        draft: "Draft a call guide",
+        drafting: "Drafting...",
+        label: {
+          ai: "AI draft from Gemini. It can be wrong, so read it before you call.",
+          template: "Standard guide. No AI draft was available.",
+        },
+        open: "Thank them for their time, and say you are calling to check how things are going.",
+        aboutClasses: "Ask how the student has been finding classes lately, and listen first.",
+        aboutTests: "Ask how the student has been finding classes and tests lately, and listen first.",
+        close: "Ask what would help, and offer a meeting with a teacher.",
+      },
       openLab: "Open risk lab",
       title: "Call tasks",
       intro: "A flag only creates a call to the parent. It never changes fees or sends a parent a message. It can be wrong, so mark false flags.",

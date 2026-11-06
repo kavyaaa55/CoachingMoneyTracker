@@ -61,6 +61,7 @@ describe("the replayed term", () => {
     expect(queued.map((row) => row.unmatchedReason).sort()).toEqual([
       "amount-too-high",
       "no-instalment",
+      "no-instalment",
       "student-left",
     ]);
   });
@@ -145,7 +146,7 @@ describe("the replayed term", () => {
     expect(response.followed).toBeLessThanOrEqual(response.sent);
 
     const health = await matchingHealth(SAMPLE_TODAY);
-    expect(health.queued).toBe(3);
+    expect(health.queued).toBe(4);
     expect(health.oldestDays).toBe(5);
   });
 

@@ -66,6 +66,8 @@ export async function unmatchedQueue() {
         reference: payments.gatewayRef,
         amount: payments.amountPaise,
         reason: payments.unmatchedReason,
+        note: payments.payerNote,
+        hints: payments.noteHints,
         paidAt: payments.paidAt,
         studentId: students.id,
         studentCode: students.code,

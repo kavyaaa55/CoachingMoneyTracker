@@ -122,6 +122,7 @@ export function buildEvents(
         gatewayRef: item.gatewayRef,
         instalment: item.claims ?? null,
         amount: rupees(item.amount),
+        note: item.note,
       }),
     ),
   ]);

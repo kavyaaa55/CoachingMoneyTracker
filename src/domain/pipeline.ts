@@ -13,7 +13,13 @@ export type InstalmentRef = { code: string; sequence: number };
  * event uses, so a replayed day and a live day cannot behave differently.
  */
 export type PipelineEvent = { on: IsoDate } & (
-  | { kind: "gateway"; gatewayRef: string; instalment: InstalmentRef | null; amount: Paise }
+  | {
+      kind: "gateway";
+      gatewayRef: string;
+      instalment: InstalmentRef | null;
+      amount: Paise;
+      note?: string;
+    }
   | { kind: "counter"; gatewayRef: string; instalment: InstalmentRef; amount: Paise }
   | { kind: "upload"; centre: string; batch: string; file: UploadKind; text: string }
   | { kind: "exit"; code: string }

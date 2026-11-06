@@ -46,6 +46,8 @@ export type UnmatchedPayment = {
   amount: number;
   paidOn: IsoDate;
   claims?: { code: string; sequence: number };
+  /** What the payer typed, in the mix of Hindi and English parents really use. */
+  note?: string;
 };
 
 type PaymentProfile = "paid-up" | "all-paid" | "part-latest" | "missed-latest" | "missed-two";
@@ -394,6 +396,12 @@ export function buildSampleData(): {
         amount: 35000,
         paidOn: "2026-10-31",
         claims: { code: "STU-1005", sequence: 2 },
+      },
+      {
+        gatewayRef: "GW-TEST-UNMATCHED-0004",
+        amount: 10000,
+        paidOn: "2026-10-29",
+        note: "mohit ki doosri kist ka advance, NEET wala batch",
       },
     ],
   };

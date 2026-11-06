@@ -13,6 +13,8 @@ export const paymentEventSchema = z.object({
   instalmentRef: z.string().max(100).nullable(),
   amountPaise: z.number().int().positive(),
   paidAt: z.iso.datetime(),
+  /** What the payer wrote, if the gateway passes it on. */
+  note: z.string().trim().max(200).optional(),
 });
 
 export const MANUAL_METHODS = ["cash", "upi", "cheque", "bank_transfer"] as const;
@@ -109,6 +111,7 @@ export async function recordPayment(
           ? sql`'RCT-' || lpad(nextval('receipt_no_seq')::text, 6, '0')`
           : null,
         claimedRef: event.instalmentRef,
+        payerNote: event.note ?? null,
         unmatchedReason: matched ? null : match.reason,
         paidAt: new Date(event.paidAt),
       })

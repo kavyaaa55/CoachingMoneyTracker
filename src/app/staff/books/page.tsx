@@ -9,7 +9,7 @@ import { requireUser } from "@/lib/auth";
 import { monthReport, queueWithSuggestions } from "@/lib/books";
 import { today } from "@/lib/clock";
 import { getLocale } from "@/lib/locale";
-import { applyFromQueue, closeThisMonth, returnFromQueue } from "./actions";
+import { applyFromQueue, closeThisMonth, readNote, returnFromQueue } from "./actions";
 
 type Query = { month?: string; applied?: string; returned?: string };
 
@@ -133,6 +133,18 @@ export default async function BooksPage({ searchParams }: { searchParams: Promis
                   <p className="text-muted">
                     {t.staff.dues.queueReasons[row.reason as keyof typeof t.staff.dues.queueReasons]}
                   </p>
+                )}
+                {row.note && (
+                  <div className="flex flex-col gap-2">
+                    <p>{b.payerWrote(row.note)}</p>
+                    {!row.hints && (
+                      <div className="md:w-72">
+                        <ActionForm action={readNote} label={b.readNote} pendingLabel={b.readingNote} variant="secondary">
+                          <input type="hidden" name="paymentId" value={row.id} />
+                        </ActionForm>
+                      </div>
+                    )}
+                  </div>
                 )}
                 {row.suggestions.length === 0 ? (
                   <p>{b.noSuggestion}</p>

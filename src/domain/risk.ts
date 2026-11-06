@@ -11,7 +11,10 @@ const MIN_EARLIER_TESTS = 2;
 const MISSING_WEEKS = 2;
 
 /** Stored on each flag, so a false-flag rate always refers to a known rule. */
-export const RULE_VERSION = "v2";
+export const RULE_VERSION = "v3";
+
+/** Fewer students than this say nothing about a batch. */
+const MIN_BATCH_FOR_BASELINE = 3;
 
 /** Percentage points lost between the earlier and recent average, and the bands. */
 export type RiskRules = {
@@ -51,8 +54,13 @@ export type RiskInput = {
   today: IsoDate;
   /** The latest week recorded for anyone in the batch, to notice records that stopped. */
   batchLatestWeek?: IsoDate | null;
+  /** How far the batch as a whole has fallen, learned from its records. */
+  baseline?: Baseline;
   rules?: RiskRules;
 };
+
+/** Points the typical student in a batch has fallen. Only a student's fall beyond this counts. */
+export type Baseline = { attendanceFall: number; testFall: number };
 
 const average = (values: number[]) => values.reduce((sum, value) => sum + value, 0) / values.length;
 
@@ -67,10 +75,60 @@ function trend(percents: number[], recent: number, minEarlier: number) {
   };
 }
 
-function dropPoints({ from, to }: { from: number; to: number }, drop: RiskRules["testDrop"]) {
-  const fall = from - to;
+function dropPoints(
+  { from, to }: { from: number; to: number },
+  drop: RiskRules["testDrop"],
+  batchFall = 0,
+) {
+  const fall = from - to - batchFall;
   if (fall >= drop.strong) return 2;
   return fall >= drop.mild ? 1 : 0;
+}
+
+function attendanceTrendOf(attendance: AttendanceWeek[]) {
+  return trend(
+    attendance
+      .filter((week) => week.total > 0)
+      .sort((a, b) => a.weekStart.localeCompare(b.weekStart))
+      .map((week) => (week.present / week.total) * 100),
+    RECENT_WEEKS,
+    MIN_EARLIER_WEEKS,
+  );
+}
+
+function testTrendOf(scores: TestScore[]) {
+  return trend(
+    scores
+      .filter((test) => test.maxScore > 0)
+      .sort((a, b) => a.takenOn.localeCompare(b.takenOn))
+      .map((test) => (test.score / test.maxScore) * 100),
+    RECENT_TESTS,
+    MIN_EARLIER_TESTS,
+  );
+}
+
+function typicalFall(falls: number[]) {
+  if (falls.length < MIN_BATCH_FOR_BASELINE) return 0;
+
+  const sorted = [...falls].sort((a, b) => a - b);
+  const middle = Math.floor(sorted.length / 2);
+  const median = sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
+  return Math.max(0, median);
+}
+
+/**
+ * Learned from the batch's own records. The median means a few students in trouble cannot hide
+ * each other, while a dip the whole batch shares, such as exam week, is not blamed on anyone.
+ */
+export function batchBaseline(
+  students: { attendance: AttendanceWeek[]; scores: TestScore[] }[],
+): Baseline {
+  const fallOf = (item: { from: number; to: number } | null) => (item ? [item.from - item.to] : []);
+
+  return {
+    attendanceFall: typicalFall(students.flatMap((s) => fallOf(attendanceTrendOf(s.attendance)))),
+    testFall: typicalFall(students.flatMap((s) => fallOf(testTrendOf(s.scores)))),
+  };
 }
 
 /** Weeks this student's attendance is behind the batch, once that is long enough to matter. */
@@ -88,24 +146,11 @@ export function assessRisk({
   scores,
   today,
   batchLatestWeek,
+  baseline,
   rules = DEFAULT_RULES,
 }: RiskInput): RiskResult {
-  const attendanceTrend = trend(
-    attendance
-      .filter((week) => week.total > 0)
-      .sort((a, b) => a.weekStart.localeCompare(b.weekStart))
-      .map((week) => (week.present / week.total) * 100),
-    RECENT_WEEKS,
-    MIN_EARLIER_WEEKS,
-  );
-  const testTrend = trend(
-    scores
-      .filter((test) => test.maxScore > 0)
-      .sort((a, b) => a.takenOn.localeCompare(b.takenOn))
-      .map((test) => (test.score / test.maxScore) * 100),
-    RECENT_TESTS,
-    MIN_EARLIER_TESTS,
-  );
+  const attendanceTrend = attendanceTrendOf(attendance);
+  const testTrend = testTrendOf(scores);
 
   if (instalments.length === 0 || !attendanceTrend || !testTrend) {
     return { band: "not-enough-data", reasons: [] };
@@ -115,8 +160,12 @@ export function assessRisk({
     (item) => balanceOf(item) > 0 && daysBetween(item.dueDate, today) > 0,
   ).length;
 
-  const attendancePoints = dropPoints(attendanceTrend, rules.attendanceDrop);
-  const testPoints = dropPoints(testTrend, rules.testDrop);
+  const attendancePoints = dropPoints(
+    attendanceTrend,
+    rules.attendanceDrop,
+    baseline?.attendanceFall,
+  );
+  const testPoints = dropPoints(testTrend, rules.testDrop, baseline?.testFall);
   const missing = weeksMissing(attendance, batchLatestWeek);
   // Records that stopped count as the strongest attendance sign, not as an extra one.
   const academicPoints = (missing > 0 ? 2 : attendancePoints) + testPoints;

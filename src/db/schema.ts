@@ -14,6 +14,7 @@ import {
   uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
+import type { DraftSource, NoteHints } from "@/domain/ai";
 import type { PipelineCounts, PipelineSource } from "@/domain/pipeline";
 import type { AuditAction } from "@/lib/audit";
 import type { RiskReason } from "@/domain/risk";
@@ -165,6 +166,9 @@ export const payments = pgTable(
     claimedRef: text("claimed_ref"),
     unmatchedReason: text("unmatched_reason"),
     paidAt: timestamp("paid_at", { withTimezone: true }).notNull(),
+    /** What the payer wrote, and what the model read from it. Hints only suggest. */
+    payerNote: text("payer_note"),
+    noteHints: jsonb("note_hints").$type<NoteHints>(),
     /** The person who applied this from the queue. */
     appliedBy: uuid("applied_by").references(() => users.id),
     /** A wrong payment is never deleted. The row and its receipt stay, marked reversed. */
@@ -252,6 +256,9 @@ export const riskFlags = pgTable(
     taskStatus: taskStatusEnum("task_status").notNull().default("open"),
     reviewNote: text("review_note"),
     ruleVersion: text("rule_version").notNull().default("v1"),
+    /** A guide for the call, drafted by the model or taken from the template. */
+    callBrief: text("call_brief"),
+    briefSource: text("brief_source").$type<DraftSource>(),
     flaggedOn: date("flagged_on").notNull(),
     reviewedOn: date("reviewed_on"),
     reviewedBy: uuid("reviewed_by").references(() => users.id),

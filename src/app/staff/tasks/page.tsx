@@ -9,7 +9,7 @@ import { formatDate, messages, riskReasonLabel } from "@/i18n";
 import { requireUser } from "@/lib/auth";
 import { getLocale } from "@/lib/locale";
 import { listTasks, TASK_FILTERS, TASKS_PER_PAGE, type TaskFilter } from "@/lib/risk";
-import { reviewCallTask, runRiskCheckNow } from "./actions";
+import { draftBrief, reviewCallTask, runRiskCheckNow } from "./actions";
 
 type Query = {
   status?: string;
@@ -131,6 +131,19 @@ export default async function TasksPage({ searchParams }: { searchParams: Promis
                 {k.prefers(t.reminders.languages[task.parentLanguage])} ·{" "}
                 {k.flaggedOn(formatDate(task.flaggedOn, locale))}
               </p>
+
+              {task.callBrief && (
+                <div className="rounded-md bg-highlight px-4 py-3">
+                  <p className="text-sm text-muted">{k.brief.label[task.briefSource ?? "template"]}</p>
+                  <p className="mt-1 whitespace-pre-line">{task.callBrief}</p>
+                </div>
+              )}
+              {task.status === "open" && task.briefSource !== "ai" && (
+                <form action={draftBrief} className="md:w-64">
+                  <input type="hidden" name="taskId" value={task.id} />
+                  <SubmitButton label={k.brief.draft} pendingLabel={k.brief.drafting} variant="secondary" />
+                </form>
+              )}
 
               {task.status === "open" ? (
                 <TaskReviewForm action={reviewCallTask} taskId={task.id} labels={k.form} />

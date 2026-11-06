@@ -1,6 +1,6 @@
 import { and, desc, eq, gte, inArray, isNotNull, isNull, lt, lte, sql } from "drizzle-orm";
 import { db } from "@/db/client";
-import { monthCloses, payments, refunds, students } from "@/db/schema";
+import { batches, monthCloses, payments, refunds, students } from "@/db/schema";
 import { daysToClose, lastDayOf, receiptGaps, suggestMatches, tallyFileTotals } from "@/domain/books";
 import type { QueueCandidate } from "@/domain/books";
 import { addDays, type IsoDate } from "@/domain/dates";
@@ -116,8 +116,9 @@ export async function queueWithSuggestions() {
   const queue = await unmatchedQueue();
 
   const active = await db
-    .select({ id: students.id, code: students.code, name: students.name })
+    .select({ id: students.id, code: students.code, name: students.name, batch: batches.name })
     .from(students)
+    .innerJoin(batches, eq(batches.id, students.batchId))
     .where(isNull(students.exitDate));
   const byId = new Map(active.map((student) => [student.id, student]));
 
@@ -125,6 +126,7 @@ export async function queueWithSuggestions() {
   const candidates: QueueCandidate[] = rows
     .filter((item) => balanceOf(item) > 0)
     .map((item) => ({
+      batch: byId.get(item.studentId)!.batch,
       instalmentId: item.id,
       studentId: item.studentId,
       studentCode: byId.get(item.studentId)!.code,
@@ -138,7 +140,7 @@ export async function queueWithSuggestions() {
     total: queue.total,
     rows: queue.rows.map((row) => ({
       ...row,
-      suggestions: suggestMatches(row.amount, row.studentId, candidates),
+      suggestions: suggestMatches(row.amount, row.studentId, candidates, row.hints),
     })),
   };
 }
