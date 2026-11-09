@@ -1,6 +1,6 @@
 # Fee Tracker
 
-[![CI](https://github.com/Siddhesh-source/coaching_institute/actions/workflows/ci.yml/badge.svg)](https://github.com/Siddhesh-source/coaching_institute/actions/workflows/ci.yml)
+[![CI](https://github.com/kavyaaa55/CoachingMoneyTracker/actions/workflows/ci.yml/badge.svg)](https://github.com/kavyaaa55/CoachingMoneyTracker/actions/workflows/ci.yml)
 
 A fee portal for Company A, a Jaipur coaching institute with 4 centres and 2,600 students. Parents see what they owe and pay on a phone in seconds, in Hindi or English. Accounts staff get one view of dues across all centres, reminders that stop on payment, and refunds that follow a written rule.
 

@@ -1,6 +1,6 @@
 # Fee Tracker: Technical Design Document
 
-**GitHub:** https://github.com/Siddhesh-source/coaching_institute
+**GitHub:** https://github.com/kavyaaa55/CoachingMoneyTracker
 **Live app:** not deployed yet (see [deployment.md](../deployment.md))
 **Version:** 1.0.0 plus the unreleased changes in the [changelog](../CHANGELOG.md), 6 Nov 2026. The core slice works end to end, with optional depth and a level-up on top. Read with [key decisions](decisions.md), [mistakes and recovery](mistakes.md) and the [visual guide](../public/guide/index.html). [docs/BRIEF-CHECK.md](BRIEF-CHECK.md) lists every requirement.
 

@@ -68,8 +68,8 @@ You need Node 22 or later and Postgres 14 or later.
 1. Get the code and install dependencies.
 
    ```
-   git clone https://github.com/Siddhesh-source/coaching_institute.git
-   cd coaching_institute
+   git clone https://github.com/kavyaaa55/CoachingMoneyTracker.git
+   cd CoachingMoneyTracker
    npm install
    ```
 
@@ -208,8 +208,8 @@ The repository must be public first, or add a deploy key.
 
 ```
 cd ~
-git clone https://github.com/Siddhesh-source/coaching_institute.git
-cd coaching_institute
+git clone https://github.com/kavyaaa55/CoachingMoneyTracker.git
+cd CoachingMoneyTracker
 npm ci
 cp .env.example .env
 chmod 600 .env
@@ -248,7 +248,7 @@ After=network.target postgresql.service
 
 [Service]
 User=ubuntu
-WorkingDirectory=/home/ubuntu/coaching_institute
+WorkingDirectory=/home/ubuntu/CoachingMoneyTracker
 Environment=NODE_ENV=production
 ExecStart=/usr/bin/npm start
 Restart=always
@@ -282,7 +282,7 @@ This runs the daily pipeline, reminders then the risk check, at 9:00 in India, w
 ```
 cat > ~/run-jobs.sh <<'EOF'
 #!/bin/sh
-SECRET=$(grep '^CRON_SECRET=' /home/ubuntu/coaching_institute/.env | cut -d= -f2)
+SECRET=$(grep '^CRON_SECRET=' /home/ubuntu/CoachingMoneyTracker/.env | cut -d= -f2)
 curl -fsS -H "Authorization: Bearer $SECRET" "http://127.0.0.1:3000/api/cron/daily"
 echo
 EOF
@@ -332,8 +332,8 @@ The demo settings are not for production. For a real rollout:
 
 | Task | Commands |
 |---|---|
-| Deploy a new version | `cd ~/coaching_institute && git pull && npm ci && npm run db:migrate && npm run build && sudo systemctl restart fee-tracker` |
-| Reset the demo data | **Reset demo** on the Reviewer console, or `cd ~/coaching_institute && npm run db:seed` |
+| Deploy a new version | `cd ~/CoachingMoneyTracker && git pull && npm ci && npm run db:migrate && npm run build && sudo systemctl restart fee-tracker` |
+| Reset the demo data | **Reset demo** on the Reviewer console, or `cd ~/CoachingMoneyTracker && npm run db:seed` |
 | Read the app log | `journalctl -u fee-tracker -f` |
 | Read the job log | `tail ~/jobs.log` |
 

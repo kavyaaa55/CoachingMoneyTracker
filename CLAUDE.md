@@ -5,7 +5,7 @@ Fee portal for Company A, a Jaipur coaching institute (4 centres, 2,600 students
 ## Ground rules
 
 - **No AI attribution anywhere.** No `Co-Authored-By` trailers, no "Generated with" lines, in commits, PRs, code or docs.
-- **Push as the repo owner.** Commits use the configured git identity, Siddhesh-source.
+- **Push as the repo owner.** Commits use the configured git identity, kavyaaa55.
 - **Conventional commits.** `type(scope): summary`, for example `feat(refund): add pro-rata calculator`. Types: `feat`, `fix`, `docs`, `test`, `refactor`, `chore`, `ci`. One logical change per commit, because reviewers read the history.
 - **Keep it simple.** No new dependency, layer or abstraction unless a screen needs it today.
 - **Brief facts only.** Anything not in the brief is an assumption and goes in the table below.

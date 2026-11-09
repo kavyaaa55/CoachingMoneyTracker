@@ -74,8 +74,8 @@ You will copy a few commands into a **terminal**, the window where you type inst
 - [ ] **1. Download the app.** If it asks for access, ask the repository owner.
 
   ```
-  git clone https://github.com/Siddhesh-source/coaching_institute.git
-  cd coaching_institute
+  git clone https://github.com/kavyaaa55/CoachingMoneyTracker.git
+  cd CoachingMoneyTracker
   npm install
   ```
 

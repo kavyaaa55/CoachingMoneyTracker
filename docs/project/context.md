@@ -21,7 +21,7 @@ Fee Tracker: a 7-day solo assessment build for Company A, a Jaipur coaching inst
 ## Ground rules
 
 - No AI attribution anywhere: no `Co-Authored-By`, no "Generated with" lines, in commits, PRs, code or docs.
-- Push from the owner's account, Siddhesh-source, to `main`.
+- Push from the owner's account, kavyaaa55, to `main`.
 - Conventional commits, one logical change each. Reviewers read the history.
 - Keep it simple and modular. No new dependency or layer unless a screen needs it.
 - Brief facts only. Anything else is a labelled assumption in `CLAUDE.md` and `docs/TDD.md`.
